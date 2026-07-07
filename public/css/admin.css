@@ -1,0 +1,83 @@
+body{
+    margin:0;
+    background:#F8FAFC;
+    font-family:'Poppins',sans-serif;
+}
+
+.admin-wrapper{
+    display:flex;
+}
+
+/* Sidebar */
+
+.sidebar{
+    width:260px;
+    min-height:100vh;
+    background:#2E5E4E;
+    color:#fff;
+    position:fixed;
+    left:0;
+    top:0;
+}
+
+.logo{
+    padding:25px;
+    font-size:22px;
+    font-weight:700;
+    text-align:center;
+    border-bottom:1px solid rgba(255,255,255,.15);
+}
+
+.sidebar ul{
+    list-style:none;
+    padding:20px 0;
+    margin:0;
+}
+
+.sidebar li a{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:14px 28px;
+    color:white;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.sidebar li a:hover{
+    background:rgba(255,255,255,.12);
+}
+
+.content{
+    margin-left:260px;
+    width:100%;
+}
+
+/* Navbar */
+
+.topbar{
+    height:75px;
+    background:white;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 35px;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+
+.dashboard-card{
+    background:white;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 10px 30px rgba(0,0,0,.05);
+}
+
+.dashboard-card h5{
+    color:#64748B;
+    margin-bottom:10px;
+}
+
+.dashboard-card h3{
+    font-weight:700;
+    color:#2E5E4E;
+}
