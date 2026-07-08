@@ -4,8 +4,7 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Admin Cafe POS</title>
 
@@ -13,8 +12,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link rel="stylesheet"
-          href="{{ asset('css/admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 
 </head>
 
@@ -41,29 +39,23 @@
             </li>
 
             <li>
-                <a href="#">
+                <a href="{{ route('admin.orders.index') }}">
                     <i class="bi bi-receipt"></i>
                     Orders
                 </a>
             </li>
 
+            {{-- HISTORY --}}
             <li>
-                <a href="#">
-                    <i class="bi bi-display"></i>
-                    POS
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    <i class="bi bi-cup-hot"></i>
-                    Kitchen
+                <a href="{{ route('admin.history') }}">
+                    <i class="bi bi-clock-history"></i>
+                    History Orders
                 </a>
             </li>
 
             <li>
                 <a href="{{ route('admin.menu.index') }}">
-                    <i class="bi bi-cup"></i>
+                    <i class="bi bi-cup-hot"></i>
                     Menu
                 </a>
             </li>
@@ -75,6 +67,7 @@
                 </a>
             </li>
 
+            {{-- Belum dibuat --}}
             <li>
                 <a href="#">
                     <i class="bi bi-box"></i>
@@ -121,16 +114,18 @@
 
     </aside>
 
+    {{-- Content --}}
     <main class="content">
 
-        {{-- Navbar --}}
         <nav class="topbar">
 
-            <h4>Dashboard</h4>
+            <h4>@yield('title','Dashboard')</h4>
 
             <div>
 
                 <span class="admin-name">
+
+                    <i class="bi bi-person-circle"></i>
 
                     Hi, Admin
 
@@ -139,6 +134,26 @@
             </div>
 
         </nav>
+
+        @if(session('success'))
+
+            <div class="alert alert-success">
+
+                {{ session('success') }}
+
+            </div>
+
+        @endif
+
+        @if(session('error'))
+
+            <div class="alert alert-danger">
+
+                {{ session('error') }}
+
+            </div>
+
+        @endif
 
         @yield('content')
 

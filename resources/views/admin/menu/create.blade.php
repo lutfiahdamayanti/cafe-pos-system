@@ -1,37 +1,55 @@
 @extends('layouts.admin')
+
 @section('content')
 
 <div class="container py-4">
+
     <h3 class="fw-bold mb-4">
         Tambah Menu
     </h3>
+
     <form action="{{ route('admin.menu.store') }}"
           method="POST"
           enctype="multipart/form-data">
+
         @csrf
+
         <div class="card shadow border-0 rounded-4">
+
             <div class="card-body">
+
+                {{-- Nama Menu --}}
                 <div class="mb-3">
-                    <label>Nama Menu</label>
-                    <input type="text"
+
+                    <label class="form-label">
+                        Nama Menu
+                    </label>
+
+                    <input
+                        type="text"
                         name="name"
-                        class="form-control">
+                        class="form-control"
+                        required>
+
                 </div>
 
+                {{-- Kategori --}}
                 <div class="mb-3">
-                    <label>Kategori</label>
+
+                    <label class="form-label">
+                        Kategori
+                    </label>
 
                     <select
                         name="category_id"
-                        class="form-select">
+                        class="form-select"
+                        required>
 
                         @foreach($categories as $category)
 
-                        <option value="{{ $category->id }}">
-
-                            {{ $category->name }}
-
-                        </option>
+                            <option value="{{ $category->id }}">
+                                {{ $category->name }}
+                            </option>
 
                         @endforeach
 
@@ -39,9 +57,12 @@
 
                 </div>
 
+                {{-- Deskripsi --}}
                 <div class="mb-3">
 
-                    <label>Deskripsi</label>
+                    <label class="form-label">
+                        Deskripsi
+                    </label>
 
                     <textarea
                         name="description"
@@ -50,37 +71,66 @@
 
                 </div>
 
+                {{-- Harga --}}
                 <div class="row">
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
 
-                        <label>Harga</label>
+                        <label class="form-label">
+                            Harga Regular
+                        </label>
 
                         <input
                             type="number"
                             name="price"
-                            class="form-control">
+                            class="form-control"
+                            required>
 
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-4">
 
-                        <label>Stok</label>
+                        <label class="form-label">
+                            Tambahan Harga Large
+                        </label>
+
+                        <input
+                            type="number"
+                            name="large_price"
+                            value="5000"
+                            class="form-control">
+
+                        <small class="text-muted">
+                            Tambahan harga ukuran Large.
+                        </small>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <label class="form-label">
+                            Stok
+                        </label>
 
                         <input
                             type="number"
                             name="stock"
-                            class="form-control">
+                            value="0"
+                            class="form-control"
+                            required>
 
                     </div>
 
                 </div>
 
+                {{-- Informasi Tambahan --}}
                 <div class="row mt-3">
 
                     <div class="col-md-6">
 
-                        <label>Waktu Pembuatan (Menit)</label>
+                        <label class="form-label">
+                            Waktu Pembuatan (Menit)
+                        </label>
 
                         <input
                             type="number"
@@ -91,14 +141,16 @@
 
                     <div class="col-md-6">
 
-                        <label>Rating</label>
+                        <label class="form-label">
+                            Rating
+                        </label>
 
                         <input
                             type="number"
                             name="rating"
-                            step="0.1"
                             min="1"
                             max="5"
+                            step="0.1"
                             class="form-control">
 
                     </div>
@@ -109,7 +161,9 @@
 
                     <div class="col-md-6">
 
-                        <label>Kalori (kcal)</label>
+                        <label class="form-label">
+                            Kalori (kcal)
+                        </label>
 
                         <input
                             type="number"
@@ -120,7 +174,9 @@
 
                     <div class="col-md-6">
 
-                        <label>Informasi Alergen</label>
+                        <label class="form-label">
+                            Informasi Alergen
+                        </label>
 
                         <input
                             type="text"
@@ -132,23 +188,35 @@
 
                 </div>
 
-                <div class="mt-3">
+                {{-- Upload Foto --}}
+                <div class="mt-4">
 
-                    <label>Gambar</label>
+                    <label class="form-label">
+                        Foto Menu
+                    </label>
 
                     <input
                         type="file"
                         name="image"
-                        class="form-control">
+                        class="form-control"
+                        required>
 
                 </div>
 
-                <div class="form-check mt-3">
+                <hr>
+
+                {{-- Status Menu --}}
+                <h5 class="fw-bold mb-3">
+                    Status Menu
+                </h5>
+
+                <div class="form-check">
 
                     <input
+                        class="form-check-input"
                         type="checkbox"
                         name="promo"
-                        class="form-check-input">
+                        value="1">
 
                     <label class="form-check-label">
 
@@ -161,9 +229,10 @@
                 <div class="form-check">
 
                     <input
+                        class="form-check-input"
                         type="checkbox"
                         name="best_seller"
-                        class="form-check-input">
+                        value="1">
 
                     <label class="form-check-label">
 
@@ -176,9 +245,10 @@
                 <div class="form-check">
 
                     <input
+                        class="form-check-input"
                         type="checkbox"
                         name="new"
-                        class="form-check-input">
+                        value="1">
 
                     <label class="form-check-label">
 
@@ -187,24 +257,51 @@
                     </label>
 
                 </div>
+
+                <div class="form-check">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="is_active"
+                        value="1"
+                        checked>
+
+                    <label class="form-check-label">
+
+                        Menu Aktif
+
+                    </label>
+
+                </div>
+
+            </div>
+
+            <div class="card-footer bg-white text-end">
+
+                <button
+                    type="submit"
+                    class="btn btn-success">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Simpan Menu
+
+                </button>
+
+                <a href="{{ route('admin.menu.index') }}"
+                   class="btn btn-secondary">
+
+                    Batal
+
+                </a>
+
+            </div>
+
         </div>
-        <div class="card-footer bg-white text-end">
 
-    <button type="submit" class="btn btn-success px-4">
-        <i class="bi bi-check-circle me-1"></i>
-        Simpan Menu
-    </button>
-
-    <a href="{{ route('admin.menu.index') }}"
-       class="btn btn-secondary">
-        Batal
-    </a>
+    </form>
 
 </div>
 
-</div> {{-- penutup card --}}
-
-</form>
-
-</div>
 @endsection

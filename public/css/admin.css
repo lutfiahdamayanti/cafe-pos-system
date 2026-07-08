@@ -66,13 +66,19 @@ body{
 }
 
 .dashboard-card{
-    background:white;
-    border-radius:20px;
-    padding:30px;
-    box-shadow:0 10px 30px rgba(0,0,0,.05);
+    background:#fff;
+    border-radius:18px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0 10px 25px rgba(0,0,0,.06);
+    transition:.3s;
 }
 
-.dashboard-card h5{
+.dashboard-card:hover{
+    transform:translateY(-5px);
+}
+
+.dashboard-card h6{
     color:#64748B;
     margin-bottom:10px;
 }

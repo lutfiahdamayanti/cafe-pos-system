@@ -150,12 +150,9 @@
 
                     </div>
 
-                    <button class="btn-checkout w-100">
-
+                    <a href="{{ route('checkout') }}" class="btn btn-success w-100 mt-5">>
                         Checkout
-
-                    </button>
-
+                    </a>
                 </div>
 
             </div>
