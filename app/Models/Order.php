@@ -9,33 +9,28 @@ class Order extends Model
     protected $fillable = [
 
         'order_number',
-
         'customer_name',
-
         'phone',
-
         'table_number',
-
         'visit_type',
-
         'payment',
-
         'note',
-
         'subtotal',
-
         'tax',
-
         'service',
-
         'total',
-
         'status',
 
-        'cancel_reason',
-        'refund_reason',
-        'refund_amount',
+        'cooking_started_at',
+        'ready_at',
 
+    ];
+
+    protected $casts = [
+
+        'cooking_started_at' => 'datetime',
+
+        'ready_at' => 'datetime',
 
     ];
 

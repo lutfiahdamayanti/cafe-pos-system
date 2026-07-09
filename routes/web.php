@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MenuController as AdminMenuController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\KitchenController;
+use App\Http\Controllers\Admin\ReportController;
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/store', [CartController::class, 'store'])->name('cart.store');
@@ -70,5 +72,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
         'orders/{order}/receipt',
         [AdminOrderController::class,'receipt']
     )->name('orders.receipt');
+
+    Route::resource('kitchen', KitchenController::class)
+    ->only(['index']);
+
+    Route::get(
+        'kitchen/check-new',
+        [KitchenController::class, 'checkNew']
+    )->name('kitchen.check');
+
+    Route::get('/reports', [ReportController::class,'index'])
+        ->name('reports.index');
 
 });

@@ -45,7 +45,13 @@
                 </a>
             </li>
 
-            {{-- HISTORY --}}
+            <li>
+                <a href="{{ route('admin.kitchen.index') }}">
+                    <i class="bi bi-cup-hot"></i>
+                    Kitchen
+                </a>
+            </li>
+
             <li>
                 <a href="{{ route('admin.history') }}">
                     <i class="bi bi-clock-history"></i>
@@ -55,7 +61,7 @@
 
             <li>
                 <a href="{{ route('admin.menu.index') }}">
-                    <i class="bi bi-cup-hot"></i>
+                    <i class="bi bi-cup"></i>
                     Menu
                 </a>
             </li>
@@ -67,23 +73,8 @@
                 </a>
             </li>
 
-            {{-- Belum dibuat --}}
             <li>
-                <a href="#">
-                    <i class="bi bi-box"></i>
-                    Inventory
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    <i class="bi bi-percent"></i>
-                    Promotions
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
+                <a href="{{ route('admin.reports.index') }}">
                     <i class="bi bi-bar-chart"></i>
                     Reports
                 </a>
@@ -91,22 +82,8 @@
 
             <li>
                 <a href="#">
-                    <i class="bi bi-people"></i>
-                    Users
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
                     <i class="bi bi-shield-check"></i>
                     Audit Logs
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    <i class="bi bi-gear"></i>
-                    Settings
                 </a>
             </li>
 
@@ -162,6 +139,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+@stack('scripts')
 
 </body>
 </html>

@@ -48,17 +48,42 @@ class OrderController extends Controller
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
-            'status'=>'required'
+            'status' => 'required'
         ]);
 
-        $order->update([
-            'status'=>$request->status
-        ]);
+        // Saat Kitchen mulai memasak
+        if ($request->status == 'Processing' && $order->cooking_started_at == null) {
+
+            $order->cooking_started_at = now();
+
+        }
+
+        // Saat Kitchen selesai memasak
+        if ($request->status == 'Ready') {
+
+            $order->ready_at = now();
+
+        }
+
+        $order->status = $request->status;
+
+        $order->save();
 
         return back()->with(
             'success',
             'Status berhasil diubah.'
         );
+
+        if ($request->status == 'Accepted') {
+            $order->update([
+                'status' => 'Accepted',
+                'kitchen_notified' => false,
+            ]);
+        } else {
+            $order->update([
+                'status' => $request->status,
+            ]);
+        }
     }
 
     public function refund(Request $request, Order $order)
