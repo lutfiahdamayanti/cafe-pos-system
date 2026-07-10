@@ -117,22 +117,26 @@
 
                     <td>
 
-                        <a href="{{ route('admin.menu.edit',$menu->id) }}"
-                           class="btn btn-warning btn-sm">
-
-                            Edit
-
+                        <a href="{{ route('admin.menu.edit', $menu->id) }}"
+                            class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil"></i> Edit
                         </a>
 
-                        <button
-                            class="btn btn-danger btn-sm">
+                        <form action="{{ route('admin.menu.destroy', $menu->id) }}"
+                            method="POST"
+                            class="d-inline"
+                            onsubmit="return confirm('Yakin ingin menghapus menu ini?')">
 
-                            Hapus
+                            @csrf
+                            @method('DELETE')
 
-                        </button>
+                            <button class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i> Hapus
+                            </button>
+
+                        </form>
 
                     </td>
-
                 </tr>
 
                 @empty

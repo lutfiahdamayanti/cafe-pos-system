@@ -24,7 +24,8 @@
                     Login untuk mulai menikmati pengalaman QR Ordering yang cepat dan mudah.
                 </p>
 
-                <form>
+                <form method="POST" action="#">
+                    @csrf
 
                     <div class="mb-3">
 
@@ -38,8 +39,10 @@
 
                             <input
                                 type="email"
+                                name="email"
                                 class="form-control"
-                                placeholder="Masukkan email">
+                                placeholder="Masukkan email"
+                                required>
 
                         </div>
 
@@ -57,11 +60,19 @@
 
                             <input
                                 type="password"
+                                id="password"
+                                name="password"
                                 class="form-control"
-                                placeholder="Masukkan password">
+                                placeholder="Masukkan password"
+                                required>
 
-                            <button class="input-group-text">
-                                <i class="bi bi-eye"></i>
+                            <button
+                                type="button"
+                                class="input-group-text"
+                                id="togglePassword">
+
+                                <i class="bi bi-eye" id="eyeIcon"></i>
+
                             </button>
 
                         </div>
@@ -145,5 +156,37 @@
     </div>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const password = document.getElementById('password');
+    const toggle = document.getElementById('togglePassword');
+    const eye = document.getElementById('eyeIcon');
+
+    if (password && toggle) {
+
+        toggle.addEventListener('click', function () {
+
+            if (password.type === 'password') {
+
+                password.type = 'text';
+                eye.classList.remove('bi-eye');
+                eye.classList.add('bi-eye-slash');
+
+            } else {
+
+                password.type = 'password';
+                eye.classList.remove('bi-eye-slash');
+                eye.classList.add('bi-eye');
+
+            }
+
+        });
+
+    }
+
+});
+</script>
 
 @endsection

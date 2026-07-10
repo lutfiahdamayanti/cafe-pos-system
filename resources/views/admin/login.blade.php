@@ -27,7 +27,20 @@
                     Silakan login untuk mengelola menu, pesanan, kategori, promo, dan seluruh aktivitas Cafe & Restaurant POS System.
                 </p>
 
-                <form>
+                @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+                @endif
+
+                @if($errors->any())
+                <div class="alert alert-danger">
+                    {{ $errors->first() }}
+                </div>
+                @endif
+
+                <form method="POST" action="{{ route('admin.authenticate') }}">
+                    @csrf
 
                     <!-- Email -->
                     <div class="mb-3">
@@ -44,9 +57,17 @@
 
                             <input
                                 type="email"
+                                name="email"
                                 class="form-control"
-                                placeholder="admin@email.com">
+                                placeholder="admin@email.com"
+                                value="{{ old('email') }}"
+                                required>
 
+                            @error('email')
+                            <div class="text-danger small">
+                                {{ $message }}
+                            </div>
+                            @enderror
                         </div>
 
                     </div>
@@ -66,14 +87,17 @@
 
                             <input
                                 type="password"
+                                id="password"
+                                name="password"
                                 class="form-control"
-                                placeholder="********">
-
+                                placeholder="********"
+                                required>
                             <button
+                                type="button"
                                 class="input-group-text"
-                                type="button">
+                                id="togglePassword">
 
-                                <i class="bi bi-eye"></i>
+                                <i class="bi bi-eye" id="eyeIcon"></i>
 
                             </button>
 
@@ -81,7 +105,7 @@
 
                     </div>
 
-                    <button class="btn btn-login w-100">
+                    <button type="submit" class="btn btn-login w-100">
 
                         <i class="bi bi-box-arrow-in-right me-2"></i>
 
@@ -137,5 +161,37 @@
     </div>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const password = document.getElementById('password');
+    const toggle = document.getElementById('togglePassword');
+    const eye = document.getElementById('eyeIcon');
+
+    if (toggle && password) {
+
+        toggle.addEventListener('click', function () {
+
+            if (password.type === 'password') {
+
+                password.type = 'text';
+                eye.classList.remove('bi-eye');
+                eye.classList.add('bi-eye-slash');
+
+            } else {
+
+                password.type = 'password';
+                eye.classList.remove('bi-eye-slash');
+                eye.classList.add('bi-eye');
+
+            }
+
+        });
+
+    }
+
+});
+</script>
 
 @endsection

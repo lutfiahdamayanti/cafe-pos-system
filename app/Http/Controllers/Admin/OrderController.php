@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\AuditLog;
 
 class OrderController extends Controller
 {
@@ -69,126 +70,138 @@ class OrderController extends Controller
 
         $order->save();
 
+        AuditLog::create([
+            'user' => 'Admin',
+            'activity' => 'Mengubah status Order ' . $order->order_number . ' menjadi ' . $order->status,
+        ]);
+        
         return back()->with(
             'success',
             'Status berhasil diubah.'
         );
 
-        if ($request->status == 'Accepted') {
-            $order->update([
-                'status' => 'Accepted',
-                'kitchen_notified' => false,
-            ]);
-        } else {
-            $order->update([
-                'status' => $request->status,
-            ]);
-        }
     }
 
     public function refund(Request $request, Order $order)
     {
-    $request->validate([
+        $request->validate([
 
-        'refund_reason'=>'required',
+            'refund_reason'=>'required',
 
-        'refund_amount'=>'required|numeric'
+            'refund_amount'=>'required|numeric'
 
-    ]);
+        ]);
 
-    $order->update([
+        $order->update([
 
-        'status'=>'Refund',
+            'status'=>'Refund',
 
-        'refund_reason'=>$request->refund_reason,
+            'refund_reason'=>$request->refund_reason,
 
-        'refund_amount'=>$request->refund_amount
+            'refund_amount'=>$request->refund_amount
 
-    ]);
+        ]);
 
-    return back()->with(
-        'success',
-        'Refund berhasil.'
-    );
+        AuditLog::create([
+            'user' => 'Admin',
+            'activity' => 'Melakukan refund Order ' . $order->order_number,
+        ]);
+
+        return back()->with(
+            'success',
+            'Refund berhasil.'
+        );
+
     }
 
     public function cancel(Request $request, Order $order)
     {
-    $request->validate([
+        $request->validate([
 
-        'cancel_reason'=>'required'
+            'cancel_reason'=>'required'
 
-    ]);
+        ]);
 
-    $order->update([
+        $order->update([
 
-        'status'=>'Cancelled',
+            'status'=>'Cancelled',
 
-        'cancel_reason'=>$request->cancel_reason
+            'cancel_reason'=>$request->cancel_reason
 
-    ]);
+        ]);
 
-    return back()->with(
-        'success',
-        'Pesanan dibatalkan.'
-    );
+        AuditLog::create([
+            'user' => 'Admin',
+            'activity' => 'Membatalkan Order ' . $order->order_number,
+        ]);
+
+        return back()->with(
+            'success',
+            'Pesanan dibatalkan.'
+        );
     }
 
     public function void(Request $request, Order $order)
     {
-    $request->validate([
+        $request->validate([
 
-        'cancel_reason'=>'required'
+            'cancel_reason'=>'required'
 
-    ]);
+        ]);
 
-    $order->update([
+        $order->update([
 
-        'status'=>'Void',
+            'status'=>'Void',
 
-        'cancel_reason'=>$request->cancel_reason
+            'cancel_reason'=>$request->cancel_reason
 
-    ]);
+        ]);
 
-    return back()->with(
-        'success',
-        'Pesanan berhasil di-void.'
-    );
+        AuditLog::create([
+            'user' => 'Admin',
+            'activity' => 'Melakukan void Order ' . $order->order_number,
+        ]);
+
+        return back()->with(
+            'success',
+            'Pesanan berhasil di-void.'
+        );
     }
 
     public function history()
     {
-    $orders = Order::with('details.menu')
+        $orders = Order::with('details.menu')
 
-        ->whereIn('status',[
-            'Completed',
-            'Cancelled',
-            'Refunded'
-        ])
+            ->whereIn('status',[
+                'Completed',
+                'Cancelled',
+                'Refunded',
+                'void'
+            ])
 
-        ->latest()
+            ->latest()
 
-        ->get();
+            ->get();
 
-    return view(
-        'admin.history.index',
-        compact('orders')
-    );
+        return view(
+            'admin.history.index',
+            compact('orders')
+        );
     }
 
     public function receipt(Order $order)
     {
-    $order->load('details.menu');
+        $order->load('details.menu');
 
 
-    $pdf = Pdf::loadView(
-        'admin.orders.receipt',
-        compact('order')
-    );
+        $pdf = Pdf::loadView(
+            'admin.orders.receipt',
+            compact('order')
+        );
 
 
-    return $pdf->download(
-        'struk-'.$order->order_number.'.pdf'
-    );
+        return $pdf->download(
+            'struk-'.$order->order_number.'.pdf'
+        );
     }
 }

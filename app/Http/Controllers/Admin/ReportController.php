@@ -26,19 +26,21 @@ class ReportController extends Controller
                 break;
 
             case 'monthly':
-                $query->whereMonth('created_at', Carbon::now()->month)
-                      ->whereYear('created_at', Carbon::now()->year);
+                $query->whereMonth('created_at', now()->month)
+                      ->whereYear('created_at', now()->year);
                 break;
 
             case 'yearly':
-                $query->whereYear('created_at', Carbon::now()->year);
+                $query->whereYear('created_at', now()->year);
                 break;
 
             default:
-                $query->whereDate('created_at', Carbon::today());
+                $query->whereDate('created_at', today());
         }
 
         $orders = $query->get();
+
+        $orderIds = $orders->pluck('id');
 
         // ================= ANALISIS =================
 
@@ -56,7 +58,7 @@ class ReportController extends Controller
 
         $netRevenue = $grossRevenue - $tax - $service;
 
-        // ================= DATA GRAFIK =================
+        // ================= GRAFIK PENDAPATAN =================
 
         $labels = [];
         $data = [];
@@ -102,7 +104,7 @@ class ReportController extends Controller
 
             for ($i = 1; $i <= 12; $i++) {
 
-                $labels[] = date('M', mktime(0, 0, 0, $i, 1));
+                $labels[] = date('M', mktime(0,0,0,$i,1));
 
                 $data[] = Order::whereMonth('created_at', $i)
                     ->whereYear('created_at', now()->year)
@@ -121,13 +123,13 @@ class ReportController extends Controller
 
         $paymentData = [
 
-            Order::where('payment', 'Cash')->count(),
+            $orders->where('payment', 'Cash')->count(),
 
-            Order::where('payment', 'QRIS')->count(),
+            $orders->where('payment', 'QRIS')->count(),
 
-            Order::where('payment', 'E-Wallet')->count(),
+            $orders->where('payment', 'E-Wallet')->count(),
 
-            Order::where('payment', 'Virtual Account')->count(),
+            $orders->where('payment', 'Virtual Account')->count(),
 
         ];
 
@@ -138,6 +140,7 @@ class ReportController extends Controller
                 DB::raw('SUM(qty) as total_qty')
             )
             ->with('menu')
+            ->whereIn('order_id', $orderIds)
             ->groupBy('menu_id')
             ->orderByDesc('total_qty')
             ->take(10)
@@ -150,6 +153,7 @@ class ReportController extends Controller
                 DB::raw('SUM(qty) as total_qty')
             )
             ->with('menu')
+            ->whereIn('order_id', $orderIds)
             ->groupBy('menu_id')
             ->orderBy('total_qty')
             ->take(10)
@@ -161,6 +165,7 @@ class ReportController extends Controller
                 DB::raw('HOUR(created_at) as hour'),
                 DB::raw('COUNT(*) as total')
             )
+            ->whereIn('id', $orderIds)
             ->groupBy(DB::raw('HOUR(created_at)'))
             ->orderByDesc('total')
             ->get();
@@ -171,26 +176,29 @@ class ReportController extends Controller
                 DB::raw('DAYNAME(created_at) as day'),
                 DB::raw('COUNT(*) as total')
             )
+            ->whereIn('id', $orderIds)
             ->groupBy(DB::raw('DAYNAME(created_at)'))
             ->orderByDesc('total')
             ->get();
 
         // ================= RETURNING CUSTOMER =================
 
-        $returning = Order::select('phone')
+        $returning = $orders
             ->whereNotNull('phone')
             ->where('phone', '!=', '')
             ->groupBy('phone')
-            ->havingRaw('COUNT(*) > 1')
-            ->get()
+            ->filter(function ($group) {
+                return $group->count() > 1;
+            })
             ->count();
 
-        $newCustomer = Order::select('phone')
+        $newCustomer = $orders
             ->whereNotNull('phone')
             ->where('phone', '!=', '')
             ->groupBy('phone')
-            ->havingRaw('COUNT(*) = 1')
-            ->get()
+            ->filter(function ($group) {
+                return $group->count() == 1;
+            })
             ->count();
 
         return view('admin.reports.index', compact(
@@ -221,6 +229,7 @@ class ReportController extends Controller
 
             'returning',
             'newCustomer'
+
         ));
     }
 }

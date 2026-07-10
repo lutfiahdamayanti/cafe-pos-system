@@ -81,7 +81,7 @@
             </li>
 
             <li>
-                <a href="#">
+                <a href="{{ route('admin.audit.index') }}">
                     <i class="bi bi-shield-check"></i>
                     Audit Logs
                 </a>
