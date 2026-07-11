@@ -87,6 +87,13 @@
                 </a>
             </li>
 
+            <li>
+                <a href="{{ route('admin.qr.index') }}">
+                    <i class="bi bi-qr-code"></i>
+                    QR Ordering
+                </a>
+            </li>
+
         </ul>
 
     </aside>
@@ -98,7 +105,15 @@
 
             <h4>@yield('title','Dashboard')</h4>
 
-            <div>
+            <div class="d-flex align-items-center gap-3">
+
+                <button
+                    class="btn btn-outline-secondary btn-sm"
+                    id="darkModeToggle">
+
+                    <i class="bi bi-moon-fill"></i>
+
+                </button>
 
                 <span class="admin-name">
 
@@ -141,6 +156,27 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 @stack('scripts')
+
+<script>
+
+const toggle = document.getElementById("darkModeToggle");
+
+if(localStorage.getItem("darkMode") === "true"){
+    document.body.classList.add("dark-mode");
+}
+
+toggle.addEventListener("click", function(){
+
+    document.body.classList.toggle("dark-mode");
+
+    localStorage.setItem(
+        "darkMode",
+        document.body.classList.contains("dark-mode")
+    );
+
+});
+
+</script>
 
 </body>
 </html>

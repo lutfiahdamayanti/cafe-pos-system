@@ -27,7 +27,7 @@ class ReportController extends Controller
 
             case 'monthly':
                 $query->whereMonth('created_at', now()->month)
-                      ->whereYear('created_at', now()->year);
+                    ->whereYear('created_at', now()->year);
                 break;
 
             case 'yearly':
@@ -104,7 +104,7 @@ class ReportController extends Controller
 
             for ($i = 1; $i <= 12; $i++) {
 
-                $labels[] = date('M', mktime(0,0,0,$i,1));
+                $labels[] = date('M', mktime(0, 0, 0, $i, 1));
 
                 $data[] = Order::whereMonth('created_at', $i)
                     ->whereYear('created_at', now()->year)
@@ -136,9 +136,9 @@ class ReportController extends Controller
         // ================= TOP 10 BEST SELLER =================
 
         $bestSeller = OrderDetail::select(
-                'menu_id',
-                DB::raw('SUM(qty) as total_qty')
-            )
+            'menu_id',
+            DB::raw('SUM(qty) as total_qty')
+        )
             ->with('menu')
             ->whereIn('order_id', $orderIds)
             ->groupBy('menu_id')
@@ -149,9 +149,9 @@ class ReportController extends Controller
         // ================= TOP 10 WORST SELLER =================
 
         $worstSeller = OrderDetail::select(
-                'menu_id',
-                DB::raw('SUM(qty) as total_qty')
-            )
+            'menu_id',
+            DB::raw('SUM(qty) as total_qty')
+        )
             ->with('menu')
             ->whereIn('order_id', $orderIds)
             ->groupBy('menu_id')
@@ -162,9 +162,9 @@ class ReportController extends Controller
         // ================= PEAK HOURS =================
 
         $peakHours = Order::select(
-                DB::raw('HOUR(created_at) as hour'),
-                DB::raw('COUNT(*) as total')
-            )
+            DB::raw('HOUR(created_at) as hour'),
+            DB::raw('COUNT(*) as total')
+        )
             ->whereIn('id', $orderIds)
             ->groupBy(DB::raw('HOUR(created_at)'))
             ->orderByDesc('total')
@@ -173,9 +173,9 @@ class ReportController extends Controller
         // ================= PEAK DAYS =================
 
         $peakDays = Order::select(
-                DB::raw('DAYNAME(created_at) as day'),
-                DB::raw('COUNT(*) as total')
-            )
+            DB::raw('DAYNAME(created_at) as day'),
+            DB::raw('COUNT(*) as total')
+        )
             ->whereIn('id', $orderIds)
             ->groupBy(DB::raw('DAYNAME(created_at)'))
             ->orderByDesc('total')

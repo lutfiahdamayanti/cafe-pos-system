@@ -8,6 +8,52 @@
         Audit Logs
     </h2>
 
+    <div class="mb-3 d-flex gap-2">
+
+        <a href="{{ route('admin.audit.export.csv') }}"
+        class="btn btn-success">
+            <i class="bi bi-file-earmark-spreadsheet"></i>
+            Export CSV
+        </a>
+
+        <a href="{{ route('admin.audit.backup') }}"
+        class="btn btn-primary">
+            <i class="bi bi-download"></i>
+            Backup Database
+        </a>
+
+        <form action="{{ route('admin.audit.restore') }}"
+            method="POST"
+            enctype="multipart/form-data">
+
+            @csrf
+
+            <div class="input-group">
+
+                <input
+                    type="file"
+                    name="database"
+                    class="form-control"
+                    accept=".sql"
+                    required>
+
+                <button class="btn btn-danger">
+                    <i class="bi bi-upload"></i>
+                    Restore
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div class="card shadow-sm border-0">
 
         <div class="card-body">

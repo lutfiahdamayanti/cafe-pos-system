@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\KitchenController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\Admin\QrController;
 
 /*
 |--------------------------------------------------------------------------
@@ -103,6 +104,18 @@ Route::prefix('admin')
             Route::get('/audit-logs', [AuditLogController::class, 'index'])
                 ->name('audit.index');
 
+            Route::get('/audit/export/csv', [AuditLogController::class, 'exportCsv'])
+                ->name('audit.export.csv');
+            
+            Route::get('/audit/backup', [AuditLogController::class, 'backup'])
+                ->name('audit.backup');
+
+            Route::post('/audit-logs/restore', [AuditLogController::class, 'restore'])
+                ->name('audit.restore');
+            
+            Route::get('/qr-ordering', [QrController::class, 'index'])
+                ->name('qr.index');
+
         });
 
 
@@ -119,7 +132,7 @@ Route::prefix('admin')
 
             Route::get('/reports', [ReportController::class, 'index'])
                 ->name('reports.index');
-
+    
         });
 
 
@@ -194,3 +207,4 @@ Route::prefix('admin')
         });
 
     });
+    
