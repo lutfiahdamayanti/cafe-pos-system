@@ -11,28 +11,33 @@ class MenuController extends Controller
 {
     public function index(Request $request)
     {
-    $query = Menu::with('category');
+        // Simpan nomor meja dari QR
+        if ($request->has('table')) {
+            session(['table_number' => $request->table]);
+        }
 
-    // Search
-    if ($request->search) {
-        $query->where('name', 'like', '%' . $request->search . '%');
-    }
+        $query = Menu::with('category');
 
-    // Filter Category
-    if ($request->category) {
-        $query->whereHas('category', function ($q) use ($request) {
-            $q->where('id', $request->category);
-        });
-    }
+        // Search
+        if ($request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
 
-    $menus = $query->latest()->get();
+        // Filter Category
+        if ($request->category) {
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('id', $request->category);
+            });
+        }
 
-    $categories = Category::all();
+        $menus = $query->latest()->get();
 
-    return view('customer.menu', compact(
-        'menus',
-        'categories'
-    ));
+        $categories = Category::all();
+
+        return view('customer.menu', compact(
+            'menus',
+            'categories'
+        ));
     }
 
     public function detail($id)

@@ -33,9 +33,10 @@ class MenuController extends Controller
             'name' => 'required',
             'description' => 'required',
             'price' => 'required|numeric',
+            'large_price' => 'required|numeric',
+            'rating' => 'required|numeric|min:1|max:5',
             'stock' => 'required|integer',
             'preparation_time' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $image = null;
@@ -47,17 +48,22 @@ class MenuController extends Controller
         }
 
         $menu = Menu::create([
-            'category_id' => $request->category_id,
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'stock' => $request->stock,
-            'preparation_time' => $request->preparation_time,
-            'promo' => $request->has('promo'),
-            'best_seller' => $request->has('best_seller'),
-            'image' => $image,
+            'category_id'       => $request->category_id,
+            'name'              => $request->name,
+            'description'       => $request->description,
+            'price'             => $request->price,
+            'large_price'       => $request->large_price,
+            'stock'             => $request->stock,
+            'rating'            => $request->rating,
+            'preparation_time'  => $request->preparation_time,
+            'calories'          => $request->calories,
+            'allergen'          => $request->allergen,
+            'promo'             => $request->has('promo'),
+            'best_seller'       => $request->has('best_seller'),
+            'is_new'            => $request->has('new'),
+            'is_available'      => $request->has('is_active'),
+            'image'             => $image,
         ]);
-
         // Audit Log
         AuditLog::create([
             'user' => 'Admin',
@@ -88,9 +94,10 @@ class MenuController extends Controller
             'name' => 'required',
             'description' => 'required',
             'price' => 'required|numeric',
+            'large_price' => 'required|numeric',
+            'rating' => 'required|numeric|min:1|max:5',
             'stock' => 'required|integer',
             'preparation_time' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $menu = Menu::findOrFail($id);
@@ -109,15 +116,21 @@ class MenuController extends Controller
         }
 
         $menu->update([
-            'category_id' => $request->category_id,
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'stock' => $request->stock,
-            'preparation_time' => $request->preparation_time,
-            'promo' => $request->has('promo'),
-            'best_seller' => $request->has('best_seller'),
-            'image' => $image,
+            'category_id'       => $request->category_id,
+            'name'              => $request->name,
+            'description'       => $request->description,
+            'price'             => $request->price,
+            'large_price'       => $request->large_price,
+            'stock'             => $request->stock,
+            'rating'            => $request->rating,
+            'preparation_time'  => $request->preparation_time,
+            'calories'          => $request->calories,
+            'allergen'          => $request->allergen,
+            'promo'             => $request->has('promo'),
+            'best_seller'       => $request->has('best_seller'),
+            'is_new'            => $request->has('new'),
+            'is_available'      => $request->has('is_active'),
+            'image'             => $image,
         ]);
 
         // Audit Log

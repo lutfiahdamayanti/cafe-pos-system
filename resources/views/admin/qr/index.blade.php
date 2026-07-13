@@ -10,6 +10,20 @@
         QR Ordering Meja
     </h2>
 
+    <!-- TAMBAHKAN DI SINI -->
+    <div class="mb-4">
+
+        <a href="{{ route('admin.qr.print') }}"
+           target="_blank"
+           class="btn btn-success">
+
+            <i class="bi bi-printer"></i>
+            Print Semua QR
+
+        </a>
+
+    </div>
+
     <div class="row">
 
         @foreach($tables as $table)
@@ -26,7 +40,6 @@
 
                     {!! QrCode::size(180)->generate(url('/menu?table='.$table)) !!}
 
-                    <!-- Tambahkan di sini -->
                     <p class="small text-primary mt-2">
                         {{ url('/menu?table='.$table) }}
                     </p>

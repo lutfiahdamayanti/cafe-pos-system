@@ -116,6 +116,9 @@ Route::prefix('admin')
             Route::get('/qr-ordering', [QrController::class, 'index'])
                 ->name('qr.index');
 
+            Route::get('/qr-ordering/print', [QrController::class, 'print'])
+                ->name('qr.print');
+
         });
 
 

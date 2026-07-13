@@ -48,15 +48,34 @@
                             </div>
 
                             <div class="mb-3">
+
                                 <label class="form-label">
                                     Nomor Meja
                                 </label>
 
-                                <input
-                                    type="text"
-                                    name="table_number"
-                                    class="form-control"
-                                    placeholder="Contoh : A01">
+                                @if(session('table_number'))
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        value="{{ session('table_number') }}"
+                                        readonly>
+
+                                    <input
+                                        type="hidden"
+                                        name="table_number"
+                                        value="{{ session('table_number') }}">
+
+                                @else
+
+                                    <input
+                                        type="text"
+                                        name="table_number"
+                                        class="form-control"
+                                        placeholder="Contoh : A01">
+
+                                @endif
+
                             </div>
 
                             <div>
@@ -89,6 +108,7 @@
                                     name="visit_type"
                                     value="Dine In"
                                     id="dinein"
+                                    {{ session('table_number') ? 'checked' : '' }}
                                     required>
 
                                 <label class="form-check-label" for="dinein">
@@ -102,7 +122,8 @@
                                     type="radio"
                                     name="visit_type"
                                     value="Take Away"
-                                    id="takeaway">
+                                    id="takeaway"
+                                    {{ session('table_number') ? 'disabled' : '' }}>
 
                                 <label class="form-check-label" for="takeaway">
                                     Take Away

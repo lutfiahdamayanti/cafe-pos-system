@@ -12,6 +12,23 @@
     </div>
 </section>
 
+@if(session('table_number'))
+
+    <div class="container mt-4">
+
+        <div class="alert alert-success shadow-sm">
+
+            <i class="bi bi-qr-code"></i>
+
+            Anda sedang memesan untuk
+            <strong>Meja {{ session('table_number') }}</strong>
+
+        </div>
+
+    </div>
+
+@endif
+
 <!-- ================= MENU ================= -->
 <section class="menu-section">
     <div class="container">

@@ -52,23 +52,31 @@
 
                 <div class="row">
 
-                    <div class="col-md-6">
-                        <label>Harga</label>
-                        <input type="number"
-                               name="price"
-                               class="form-control"
-                               value="{{ old('price', $menu->price) }}">
-                    </div>
-
-                    <div class="col-md-6">
-                        <label>Stok</label>
-                        <input type="number"
-                               name="stock"
-                               class="form-control"
-                               value="{{ old('stock', $menu->stock) }}">
-                    </div>
-
+                <div class="col-md-4">
+                    <label>Harga</label>
+                    <input type="number"
+                        name="price"
+                        class="form-control"
+                        value="{{ old('price', $menu->price) }}">
                 </div>
+
+                <div class="col-md-4">
+                    <label>Tambahan Harga Large</label>
+                    <input type="number"
+                        name="large_price"
+                        class="form-control"
+                        value="{{ old('large_price', $menu->large_price) }}">
+                </div>
+
+                <div class="col-md-4">
+                    <label>Stok</label>
+                    <input type="number"
+                        name="stock"
+                        class="form-control"
+                        value="{{ old('stock', $menu->stock) }}">
+                </div>
+
+            </div>
 
                 <div class="mt-3">
                     <label>Waktu Pembuatan</label>

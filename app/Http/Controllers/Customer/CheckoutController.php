@@ -49,7 +49,7 @@ class CheckoutController extends Controller
 
         'phone' => $request->phone,
 
-        'table_number' => $request->table_number,
+        'table_number' => session('table_number') ?? $request->table_number,
 
         'visit_type' => $request->visit_type,
 
@@ -92,6 +92,7 @@ class CheckoutController extends Controller
     }
 
     Cart::truncate();
+    session()->forget('table_number');
     return redirect()->route('tracking');
     }
 }

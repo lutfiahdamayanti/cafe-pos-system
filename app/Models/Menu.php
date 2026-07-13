@@ -20,7 +20,8 @@ class Menu extends Model
     'promo',
     'best_seller',
     'is_new',
-    'is_available'
+    'is_available',
+    'large_price'
     ];
 
     public function category()

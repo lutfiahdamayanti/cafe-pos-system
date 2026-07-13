@@ -22,13 +22,15 @@ class CartController extends Controller
     {
     $menu = Menu::findOrFail($request->menu_id);
 
+    $price = $menu->price + $request->size;
+
     Cart::create([
         'menu_id' => $menu->id,
         'qty' => $request->qty,
-        'size' => $request->size,
+        'size' => $request->size == 0 ? 'Regular' : 'Large',
         'note' => $request->note,
-        'price' => $menu->price + $request->size,
-        'total' => ($menu->price + $request->size) * $request->qty,
+        'price' => $price,
+        'total' => $price * $request->qty,
     ]);
 
     return redirect()->route('cart.index')

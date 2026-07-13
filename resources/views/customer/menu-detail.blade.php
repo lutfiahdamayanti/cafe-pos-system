@@ -33,6 +33,7 @@
                         <input type="hidden" name="menu_id" value="{{ $menu->id }}">
                         <input type="hidden" name="qty" id="qty-input" value="1">
                         <input type="hidden" name="size_price" id="size-price" value="0">
+                        <input type="hidden" name="size_name" id="size-name" value="Regular">
 
                     <div class="card-body p-4">
 
@@ -104,9 +105,11 @@
                                 <input
                                     type="radio"
                                     name="size"
-                                    value="5000">
+                                    value="{{ $menu->large_price }}">
 
-                                <span>Large (+Rp5.000)</span>
+                                <span>
+                                    Large (+Rp{{ number_format($menu->large_price,0,',','.') }})
+                                </span>
 
                             </label>
 
@@ -264,6 +267,11 @@ function updateTotal(){
     const total = (basePrice + sizePrice) * qty;
 
     qtyText.innerHTML = qty;
+
+    // Tambahkan 2 baris ini
+    document.getElementById('qty-input').value = qty;
+    document.getElementById('size-price').value = sizePrice;
+
     totalText.innerHTML = formatRupiah(total);
 
 }
@@ -293,6 +301,14 @@ document.querySelectorAll('input[name="size"]').forEach(item=>{
     item.addEventListener("change",function(){
 
         sizePrice = Number(this.value);
+
+        document.getElementById("size-price").value = sizePrice;
+
+        if(sizePrice == 0){
+            document.getElementById("size-name").value = "Regular";
+        }else{
+            document.getElementById("size-name").value = "Large";
+        }
 
         updateTotal();
 

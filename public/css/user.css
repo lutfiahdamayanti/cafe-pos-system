@@ -102,3 +102,8 @@
 .line.active{
     background:#2E5E4E;
 }
+
+.card svg{
+    display:block;
+    margin:0 auto;
+}
