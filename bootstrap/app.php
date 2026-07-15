@@ -16,8 +16,15 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*'),
-        );
-    })->create();
+    ->withExceptions(function (Exceptions $exceptions) {
+
+        $exceptions->render(function (
+            Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $e,
+            Illuminate\Http\Request $request
+        ) {
+            if ($e->getStatusCode() == 403) {
+                return response()->view('errors.403', [], 403);
+            }
+        });
+    })
+    ->create();

@@ -27,44 +27,61 @@ class AuthController extends Controller
 
             $user = Auth::user();
 
+            // ================= SUPER ADMIN =================
+            if ($user->role == 'super_admin') {
+
+                return redirect()
+                    ->route('superadmin.dashboard')
+                    ->with('success', 'Selamat datang Super Admin.');
+
+            }
+
+            // ================= OWNER =================
             if ($user->role == 'owner') {
 
-                return redirect()->route('admin.dashboard')
+                return redirect()
+                    ->route('admin.dashboard')
                     ->with('success', 'Selamat datang Owner.');
 
             }
 
+            // ================= MANAGER =================
             if ($user->role == 'manager') {
 
-                return redirect()->route('admin.dashboard')
+                return redirect()
+                    ->route('admin.dashboard')
                     ->with('success', 'Selamat datang Manager.');
 
             }
 
+            // ================= CASHIER =================
             if ($user->role == 'cashier') {
 
-                return redirect()->route('admin.orders.index')
+                return redirect()
+                    ->route('admin.orders.index')
                     ->with('success', 'Selamat datang Cashier.');
 
             }
 
+            // ================= KITCHEN =================
             if ($user->role == 'kitchen') {
 
-                return redirect()->route('admin.kitchen.index')
+                return redirect()
+                    ->route('admin.kitchen.index')
                     ->with('success', 'Selamat datang Kitchen.');
 
             }
 
-            // jika role tidak dikenali
             Auth::logout();
 
             return back()->withErrors([
-                'email' => 'Role user tidak valid.'
+                'email' => 'Role tidak dikenali.'
             ]);
+
         }
 
         return back()->withErrors([
-            'email' => 'Email atau Password salah.',
+            'email' => 'Email atau Password salah.'
         ])->onlyInput('email');
     }
 

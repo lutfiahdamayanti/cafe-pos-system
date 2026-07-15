@@ -36,4 +36,15 @@ class CartController extends Controller
     return redirect()->route('cart.index')
         ->with('success', 'Menu berhasil ditambahkan ke keranjang.');
     }
+
+    public function updateQty(Request $request, $id)
+    {
+        $cart = Cart::findOrFail($id);
+
+        $cart->qty = $request->qty;
+        $cart->total = $cart->price * $cart->qty;
+        $cart->save();
+
+        return back();
+    }
 }

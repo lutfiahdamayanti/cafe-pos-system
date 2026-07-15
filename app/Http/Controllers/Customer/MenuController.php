@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Menu;
+use App\Models\Favorite;
 
 class MenuController extends Controller
 {
@@ -31,27 +32,57 @@ class MenuController extends Controller
         }
 
         $menus = $query->latest()->get();
-
         $categories = Category::all();
-
+        $favorites = Favorite::pluck('menu_id')->toArray();
         return view('customer.menu', compact(
             'menus',
-            'categories'
+            'categories',
+            'favorites'
         ));
     }
 
     public function detail($id)
-{
-    $menu = Menu::with('category')->findOrFail($id);
+    {
+        $menu = Menu::with('category')->findOrFail($id);
 
-    $recommended = Menu::where('category_id', $menu->category_id)
-        ->where('id', '!=', $menu->id)
-        ->take(4)
-        ->get();
+        $recommended = Menu::where('category_id', $menu->category_id)
+            ->where('id', '!=', $menu->id)
+            ->take(4)
+            ->get();
 
-    return view('customer.menu-detail', [
-        'menu' => $menu,
-        'recommended' => $recommended
-    ]);
-}
+        return view('customer.menu-detail', [
+            'menu' => $menu,
+            'recommended' => $recommended
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        $menus = Menu::with('category')
+            ->where('name', 'LIKE', '%' . $request->keyword . '%')
+            ->get();
+
+        return response()->json($menus);
+    }
+
+    public function favorite($id)
+    {
+        $favorite = Favorite::where('menu_id', $id)->first();
+
+        if ($favorite) {
+            $favorite->delete();
+
+            return response()->json([
+                'status' => 'removed'
+            ]);
+        }
+
+        Favorite::create([
+            'menu_id' => $id,
+        ]);
+
+        return response()->json([
+            'status' => 'added'
+        ]);
+    }
 }

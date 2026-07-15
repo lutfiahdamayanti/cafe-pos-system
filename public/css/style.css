@@ -1,3 +1,8 @@
+html,
+body{
+    width:100%;
+    overflow-x:hidden;
+}
 /* ========================= GOOGLE FONT ========================= */
 body{
     font-family:'Poppins',sans-serif;
@@ -546,21 +551,42 @@ section{
 }
 
 /* =========================== FAVORITE =========================== */
-.favorite{
+.favorite-form{
     position:absolute;
-    right:18px;
-    top:18px;
+    top:12px;
+    right:12px;
+    z-index:10;
+}
+
+.favorite-btn{
+    position:absolute;
+    top:12px;
+    right:12px;
     width:42px;
     height:42px;
     border:none;
     border-radius:50%;
-    background:white;
-    box-shadow:0 5px 15px rgba(0,0,0,.12);
+    background:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+    z-index:20;
+    box-shadow:0 4px 12px rgba(0,0,0,.15);
     transition:.3s;
 }
-.favorite:hover{
-    background:#EF4444;
-    color:white;
+
+.favorite-btn:hover{
+    transform:scale(1.08);
+}
+
+.favorite-btn i{
+    font-size:22px;
+    color:#666;
+}
+
+.favorite-btn i.text-danger{
+    color:#dc3545 !important;
 }
 
 /* =========================== CARD BODY =========================== */
@@ -635,38 +661,65 @@ section{
 }
 
 /* ============================ ABOUT ===================================== */
+/* ============================ ABOUT ===================================== */
+
 .about-hero{
-    height: 280px;
-    background:url("../images/cafe.jpeg") center center/cover no-repeat;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    /* background:#F7F4ED; */
-    text-align:center;
-    border-radius:0;
+    position: relative;
+    height: 350px;
+    background: url("../images/cafe.jpeg") center center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
 }
-.about-hero h1{
-    font-size:48px;
-    font-weight:700;
-    color:#1F2937;
-    margin-bottom:10px;
-}
-.about-hero p{
-    max-width:700px;
-    margin:10px auto 0;
-    color:#64748B;
-    font-size:18px;
-}
+
+/* Layer Blur */
 .about-hero::before{
-    content:"";
-    position:absolute;
-    inset:0;
+    content: "";
+    position: absolute;
+    inset: 0;
 
-    background:url("../images/about-banner.jpg") center center/cover no-repeat;
+    background: inherit;
 
-    filter:blur(4px) brightness(70%);
-    transform:scale(1.08);
+    filter: blur(6px);
+    transform: scale(1.1);
+
+    z-index: 1;
 }
+
+/* Layer Gelap */
+.about-hero::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0,0,0,.45);
+
+    z-index: 2;
+}
+
+/* Isi Hero */
+.about-hero .container{
+    position: relative;
+    z-index: 3;
+}
+
+.about-hero h1{
+    font-size: 52px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.about-hero p{
+    max-width: 700px;
+    margin: auto;
+    color: #fff;
+    font-size: 18px;
+    line-height: 1.8;
+}
+
 /* IMAGE */
 .about-image img{
     width:100%;

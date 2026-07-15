@@ -1,8 +1,10 @@
 @extends('layouts.app')
 
+@section('title','Tentang Kami')
+
 @section('content')
 
-<!-- HERO ABOUT -->
+<!-- ================= HERO ================= -->
 <section class="about-hero">
 
     <div class="container text-center">
@@ -10,23 +12,23 @@
         <h1>Tentang Kami</h1>
 
         <p>
-            Kenali lebih dekat perjalanan, visi, dan komitmen kami
-            dalam menghadirkan pengalaman terbaik untuk setiap pelanggan.
+            Menghadirkan pengalaman bersantap yang nyaman melalui
+            perpaduan cita rasa terbaik, suasana yang hangat,
+            dan teknologi pemesanan modern berbasis QR Code.
         </p>
 
     </div>
 
 </section>
 
-<!-- ABOUT CONTENT -->
+<!-- ================= STORY ================= -->
 <section class="about-section py-5">
 
     <div class="container">
 
         <div class="row align-items-center g-5">
 
-            <!-- IMAGE -->
-            <div class="col-md-6">
+            <div class="col-lg-6">
 
                 <div class="about-image">
 
@@ -36,27 +38,125 @@
 
             </div>
 
-            <!-- TEXT -->
-            <div class="col-md-6">
+            <div class="col-lg-6">
 
-                <h2 class="fw-bold mb-3">
-                    Kopi, Suasana, dan Cerita
+                <span class="badge bg-success mb-3">
+                    Tentang Cafe & Restaurant
+                </span>
+
+                <h2 class="fw-bold mb-4">
+
+                    Lebih dari Sekadar Tempat Menikmati Kopi
+
                 </h2>
 
                 <p class="text-muted">
-                    Coffee Shop kami berdiri dengan tujuan menghadirkan pengalaman minum kopi yang tidak hanya sekadar minuman,
-                    tetapi juga momen yang berkesan. Kami menggunakan biji kopi pilihan terbaik dari berbagai daerah di Indonesia.
+
+                    Cafe & Restaurant hadir sebagai tempat yang mengutamakan
+                    kualitas makanan, minuman, dan pelayanan.
+                    Kami percaya bahwa setiap hidangan yang disajikan harus
+                    memberikan pengalaman yang berkesan bagi setiap pelanggan.
+
                 </p>
 
                 <p class="text-muted">
-                    Dengan suasana modern dan nyaman, kami ingin menjadi tempat terbaik untuk bekerja, bersantai, maupun berkumpul bersama orang terdekat.
+
+                    Dengan konsep modern dan suasana yang nyaman,
+                    kami menghadirkan berbagai pilihan menu mulai dari
+                    kopi premium, makanan utama, dessert,
+                    hingga minuman segar yang dibuat menggunakan
+                    bahan-bahan berkualitas.
+
                 </p>
 
-                <div class="mt-4">
+                <p class="text-muted">
 
-                    <a href="{{ route('menu') }}" class="btn btn-outline-success px-4 py-2 rounded-pill">
-                        Lihat Menu
-                    </a>
+                    Untuk memberikan pelayanan yang lebih cepat dan praktis,
+                    kami juga menerapkan sistem pemesanan berbasis
+                    QR Code sehingga pelanggan dapat memesan langsung
+                    dari meja tanpa perlu menunggu pelayan.
+
+                </p>
+
+                <a href="{{ route('menu') }}"
+                   class="btn btn-success rounded-pill px-4 mt-3">
+
+                    Jelajahi Menu
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= VISION MISSION ================= -->
+<section class="py-5 bg-light">
+
+    <div class="container">
+
+        <div class="row g-4">
+
+            <div class="col-lg-6">
+
+                <div class="facility-card h-100">
+
+                    <div class="facility-icon">
+
+                        <i class="bi bi-eye-fill"></i>
+
+                    </div>
+
+                    <h3 class="fw-bold">
+
+                        Visi
+
+                    </h3>
+
+                    <p>
+
+                        Menjadi cafe dan restaurant pilihan utama
+                        yang dikenal melalui kualitas makanan,
+                        pelayanan terbaik,
+                        serta inovasi teknologi dalam pengalaman
+                        bersantap pelanggan.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-6">
+
+                <div class="facility-card h-100">
+
+                    <div class="facility-icon">
+
+                        <i class="bi bi-bullseye"></i>
+
+                    </div>
+
+                    <h3 class="fw-bold">
+
+                        Misi
+
+                    </h3>
+
+                    <ul class="text-muted">
+
+                        <li>Menyajikan makanan dan minuman berkualitas.</li>
+
+                        <li>Memberikan pelayanan yang cepat dan ramah.</li>
+
+                        <li>Menciptakan suasana cafe yang nyaman.</li>
+
+                        <li>Menghadirkan sistem pemesanan digital yang praktis.</li>
+
+                    </ul>
 
                 </div>
 
@@ -64,67 +164,175 @@
 
         </div>
 
-        <!-- FEATURE -->
-        <div class="row mt-5 g-4">
+    </div>
 
-    <div class="col-lg-4">
+</section>
 
-        <div class="facility-card">
+<!-- ================= WHY US ================= -->
+<section class="py-5">
 
-            <div class="facility-icon">
-                <i class="bi bi-cup-hot-fill"></i>
-            </div>
+    <div class="container">
 
-            <h4>Kopi Premium</h4>
+        <div class="text-center mb-5">
 
-            <p>
-                Biji kopi pilihan dengan kualitas terbaik.
+            <h2 class="fw-bold">
+
+                Kenapa Memilih Kami?
+
+            </h2>
+
+            <p class="text-secondary">
+
+                Kami berkomitmen memberikan pengalaman terbaik
+                bagi setiap pelanggan.
+
             </p>
 
         </div>
 
-    </div>
+        <div class="row g-4">
 
-    <div class="col-lg-4">
+            <div class="col-lg-3 col-md-6">
 
-        <div class="facility-card">
+                <div class="facility-card h-100">
 
-            <div class="facility-icon">
-                <i class="bi bi-people-fill"></i>
+                    <div class="facility-icon">
+
+                        <i class="bi bi-cup-hot-fill"></i>
+
+                    </div>
+
+                    <h4>
+
+                        Premium Coffee
+
+                    </h4>
+
+                    <p>
+
+                        Menggunakan biji kopi pilihan dengan cita rasa terbaik.
+
+                    </p>
+
+                </div>
+
             </div>
 
-            <h4>Suasana Nyaman</h4>
+            <div class="col-lg-3 col-md-6">
 
-            <p>
-                Tempat ideal untuk bekerja dan bersantai.
-            </p>
+                <div class="facility-card h-100">
 
-        </div>
+                    <div class="facility-icon">
 
-    </div>
+                        <i class="bi bi-egg-fried"></i>
 
-    <div class="col-lg-4">
+                    </div>
 
-        <div class="facility-card">
+                    <h4>
 
-            <div class="facility-icon">
-                <i class="bi bi-qr-code-scan"></i>
+                        Fresh Food
+
+                    </h4>
+
+                    <p>
+
+                        Seluruh menu dibuat menggunakan bahan berkualitas.
+
+                    </p>
+
+                </div>
+
             </div>
 
-            <h4>Order Mudah</h4>
+            <div class="col-lg-3 col-md-6">
 
-            <p>
-                Pemesanan cepat melalui sistem QR.
-            </p>
+                <div class="facility-card h-100">
+
+                    <div class="facility-icon">
+
+                        <i class="bi bi-house-heart-fill"></i>
+
+                    </div>
+
+                    <h4>
+
+                        Suasana Nyaman
+
+                    </h4>
+
+                    <p>
+
+                        Cocok untuk bekerja,
+                        belajar,
+                        maupun berkumpul bersama keluarga.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="facility-card h-100">
+
+                    <div class="facility-icon">
+
+                        <i class="bi bi-qr-code-scan"></i>
+
+                    </div>
+
+                    <h4>
+
+                        QR Ordering
+
+                    </h4>
+
+                    <p>
+
+                        Sistem pemesanan digital yang cepat,
+                        mudah,
+                        dan efisien.
+
+                    </p>
+
+                </div>
+
+            </div>
 
         </div>
-
-    </div>
-
-</div>
 
     </div>
 
 </section>
+
+<!-- ================= CTA =================
+<section class="py-5 bg-success text-white">
+
+    <div class="container text-center">
+
+        <h2 class="fw-bold">
+
+            Siap Menikmati Pengalaman Bersantap Bersama Kami?
+
+        </h2>
+
+        <p class="mt-3">
+
+            Jelajahi berbagai pilihan menu favorit dan lakukan
+            pemesanan dengan mudah melalui sistem QR Ordering.
+
+        </p>
+
+        <a href="{{ route('menu') }}"
+           class="btn btn-light rounded-pill px-5 mt-3">
+
+            Lihat Menu
+
+        </a>
+
+    </div>
+
+</section> -->
 
 @endsection

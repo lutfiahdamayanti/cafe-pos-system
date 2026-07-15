@@ -76,15 +76,30 @@
                         value="{{ old('stock', $menu->stock) }}">
                 </div>
 
-            </div>
-
-                <div class="mt-3">
-                    <label>Waktu Pembuatan</label>
-                    <input type="number"
-                           name="preparation_time"
-                           class="form-control"
-                           value="{{ old('preparation_time', $menu->preparation_time) }}">
                 </div>
+
+                    <div class="row mt-3">
+
+                        <div class="col-md-6">
+                            <label>Waktu Pembuatan (Menit)</label>
+                            <input type="number"
+                                name="preparation_time"
+                                class="form-control"
+                                value="{{ old('preparation_time', $menu->preparation_time) }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>Rating</label>
+                            <input type="number"
+                                name="rating"
+                                min="1"
+                                max="5"
+                                step="0.1"
+                                class="form-control"
+                                value="{{ old('rating', $menu->rating) }}">
+                        </div>
+
+                    </div>
 
                 <div class="mt-3">
                     <label>Gambar</label>

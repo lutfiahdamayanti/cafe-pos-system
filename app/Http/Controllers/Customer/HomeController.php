@@ -10,23 +10,27 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // Banner Promo
-        $promotions = Menu::where('promo', true)
+        // Promo
+        $promotions = Menu::where('promo', 1)
+            ->where('stock', '>', 0)
             ->latest()
             ->take(3)
             ->get();
 
         // Best Seller
-        $bestSellers = Menu::where('best_seller', true)
-            ->take(8)
+        $bestSellers = Menu::with('category')
+            ->where('best_seller', 1)
+            ->where('stock', '>', 0)
+            ->take(6)
             ->get();
 
         // Menu Terbaru
-        $newMenus = Menu::latest()
+        $newMenus = Menu::with('category')
+            ->where('stock', '>', 0)
+            ->latest()
             ->take(8)
             ->get();
 
-        // Semua kategori
         $categories = Category::all();
 
         return view('customer.home', compact(

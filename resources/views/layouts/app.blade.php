@@ -80,14 +80,21 @@
                     <i class="bi bi-search"></i>
                 </a>
 
-                <a href="cart" class="text-dark fs-5 position-relative">
+                @php
+                    $cartCount = \App\Models\Cart::sum('qty');
+                @endphp
+
+                <a href="{{ route('cart.index') }}" class="text-dark fs-5 position-relative">
                     <i class="bi bi-cart3"></i>
-                    <span class="position-absolute top-0 start-100 translate-middle badge bg-warning">
-                        2
-                    </span>
+
+                    @if($cartCount > 0)
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning text-dark">
+                            {{ $cartCount }}
+                        </span>
+                    @endif
                 </a>
 
-                <a href="{{ route('admin.login') }}" class="btn btn-outline-success rounded-pill px-3">
+                <a href="{{ route('login') }}" class="btn btn-outline-success rounded-pill px-3">
                     Login
                 </a>
 
@@ -125,11 +132,36 @@
             <div class="col-lg-2">
                 <h6>Navigation</h6>
                 <ul class="list-unstyled mt-3">
-                    <li><a href="/" class="text-white text-decoration-none">Home</a></li>
-                    <li><a href="#" class="text-white text-decoration-none">Menu</a></li>
-                    <li><a href="#" class="text-white text-decoration-none">Tentang</a></li>
-                    <li><a href="#" class="text-white text-decoration-none">Kontak</a></li>
-                </ul>
+
+                <li>
+                    <a href="{{ route('home') }}"
+                    class="text-white text-decoration-none">
+                        Home
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('menu') }}"
+                    class="text-white text-decoration-none">
+                        Menu
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('about') }}"
+                    class="text-white text-decoration-none">
+                        Tentang
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('contact') }}"
+                    class="text-white text-decoration-none">
+                        Kontak
+                    </a>
+                </li>
+
+            </ul>
             </div>
 
             <div class="col-lg-3">
@@ -141,14 +173,38 @@
             </div>
 
             <div class="col-lg-3">
-                <h6>Newsletter</h6>
 
-                <div class="input-group mt-3">
-                    <input type="email" class="form-control" placeholder="Email">
-                    <button class="btn btn-success">Subscribe</button>
+                <h6>Follow Us</h6>
+
+                <p class="mt-3 text-light">
+                    Ikuti kami di media sosial untuk mendapatkan promo terbaru.
+                </p>
+
+                <div class="d-flex gap-3 fs-3 mt-3">
+
+                    <a href="#"
+                    class="text-white">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+
+                    <a href="#"
+                    class="text-white">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+
+                    <a href="#"
+                    class="text-white">
+                        <i class="bi bi-tiktok"></i>
+                    </a>
+
+                    <a href="#"
+                    class="text-white">
+                        <i class="bi bi-whatsapp"></i>
+                    </a>
+
                 </div>
-            </div>
 
+            </div>
         </div>
 
         <hr class="border-secondary">
@@ -182,30 +238,19 @@
 
                     <i class="bi bi-search"></i>
 
-                    <input type="text" placeholder="Cari kopi, makanan, dessert...">
+                    <input
+                        type="text"
+                        id="searchMenu"
+                        placeholder="Cari kopi, makanan, dessert...">
 
-                </div>
+                </div>  
 
                 <!-- RESULT MINI -->
-                <div class="search-result mt-3">
+                <div class="search-result mt-3" id="searchResult">
 
-                    <div class="search-item">
-                        <img src="{{ asset('images/americano.jpg') }}">
-                        <div>
-                            <h6>Americano</h6>
-                            <small>Coffee</small>
-                        </div>
-                        <span>25K</span>
-                    </div>
-
-                    <div class="search-item">
-                        <img src="{{ asset('images/latte.jpg') }}">
-                        <div>
-                            <h6>Latte</h6>
-                            <small>Coffee</small>
-                        </div>
-                        <span>30K</span>
-                    </div>
+                    <p class="text-center text-muted">
+                        Mulai ketik nama menu...
+                    </p>
 
                 </div>
 
@@ -217,6 +262,74 @@
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+@stack('scripts')
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const input = document.getElementById("searchMenu");
+    const result = document.getElementById("searchResult");
+
+    input.addEventListener("keyup", function () {
+
+        let keyword = this.value;
+
+        if(keyword.length == 0){
+            result.innerHTML = `
+                <p class="text-center text-muted">
+                    Mulai ketik nama menu...
+                </p>
+            `;
+            return;
+        }
+
+        fetch("/search-menu?keyword=" + keyword)
+        .then(response => response.json())
+        .then(data => {
+
+            let html = "";
+
+            if(data.length == 0){
+                html = `
+                    <p class="text-center text-muted">
+                        Menu tidak ditemukan
+                    </p>
+                `;
+            }
+
+            data.forEach(menu => {
+
+                html += `
+                <div class="search-item mb-3 d-flex align-items-center">
+
+                    <img src="/images/${menu.image}"
+                        width="60"
+                        height="60"
+                        class="rounded me-3">
+
+                    <div class="flex-grow-1">
+
+                        <h6 class="mb-0">${menu.name}</h6>
+
+                        <small>${menu.category.name}</small>
+
+                    </div>
+
+                    <span class="fw-bold text-success">
+                        Rp ${Number(menu.price).toLocaleString('id-ID')}
+                    </span>
+
+                </div>
+                `;
+            });
+
+            result.innerHTML = html;
+
+        });
+
+    });
+
+});
+</script>
 </body>
 </html>

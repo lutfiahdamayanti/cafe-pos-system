@@ -32,62 +32,58 @@
 
                 @forelse($carts as $cart)
 
-                <div class="cart-item">
+                    <div class="cart-item">
 
-                    <img src="{{ asset('images/'.$cart->menu->image) }}"
-                        alt="{{ $cart->menu->name }}">
+                        <img src="{{ asset('images/'.$cart->menu->image) }}"
+                            alt="{{ $cart->menu->name }}">
 
-                    <div class="cart-info">
+                        <div class="cart-info">
 
-                        <h5>{{ $cart->menu->name }}</h5>
+                            <h5>{{ $cart->menu->name }}</h5>
 
-                        <small>
+                            <small>
+                                {{ $cart->menu->category?->name }}
+                                •
+                                {{ $cart->size == 'Large' ? 'Large' : 'Regular' }}
+                            </small>
 
-                            {{ $cart->menu->category?->name }}
-
-                            •
-
-                            @if($cart->size == 5000)
-                                Large
-                            @else
-                                Regular
+                            @if($cart->note)
+                                <p class="text-muted mb-1">
+                                    Catatan : {{ $cart->note }}
+                                </p>
                             @endif
 
-                        </small>
+                            <div class="price">
+                                Rp {{ number_format($cart->price,0,',','.') }}
+                            </div>
 
-                        @if($cart->note)
-                            <p class="text-muted mb-1">
-                                Catatan : {{ $cart->note }}
-                            </p>
-                        @endif
+                        </div>
 
-                        <div class="price">
+                        <div class="cart-action">
 
-                            Rp {{ number_format($cart->price,0,',','.') }}
+                            <form action="{{ route('cart.qty', $cart->id) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="qty" value="{{ max(1,$cart->qty-1) }}">
+                                <button type="submit">−</button>
+                            </form>
 
+                            <span>{{ $cart->qty }}</span>
+
+                            <form action="{{ route('cart.qty', $cart->id) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="qty" value="{{ $cart->qty+1 }}">
+                                <button type="submit">+</button>
+                            </form>
+
+                        </div>
+
+                        <div class="cart-total">
+                            Rp {{ number_format($cart->total,0,',','.') }}
                         </div>
 
                     </div>
 
-                    <div class="cart-action">
-
-                        <button type="button">−</button>
-
-                        <span>{{ $cart->qty }}</span>
-
-                        <button type="button">+</button>
-
-                    </div>
-
-                    <div class="cart-total">
-
-                        Rp {{ number_format($cart->total,0,',','.') }}
-
-                    </div>
-
-                </div>
-
-                @empty
+                    @empty
 
                 <div class="alert alert-warning text-center">
 
@@ -150,7 +146,7 @@
 
                     </div>
 
-                    <a href="{{ route('checkout') }}" class="btn btn-success w-100 mt-5">>
+                    <a href="{{ route('checkout') }}" class="btn btn-success w-100 mt-5">
                         Checkout
                     </a>
                 </div>

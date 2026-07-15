@@ -51,4 +51,9 @@ class User extends Authenticatable
     {
         return $this->role === 'kitchen';
     }
+
+    public function isSuperAdmin()
+    {
+        return $this->role == 'super_admin';
+    }
 }

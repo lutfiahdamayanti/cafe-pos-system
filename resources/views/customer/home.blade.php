@@ -144,44 +144,51 @@
     <div class="container">
 
         <div class="text-center mb-5">
-
-            <h2 class="fw-bold">
-                Menu Favorit
-            </h2>
-
+            <h2 class="fw-bold">Menu Favorit</h2>
             <p class="text-secondary">
                 Menu yang paling banyak dipesan pelanggan.
             </p>
-
         </div>
 
         <div class="row g-4">
 
+            @forelse($bestSellers as $menu)
+
             <div class="col-lg-4">
 
-                <div class="card menu-card hover-card shadow rounded-4">
+                <div class="card menu-card hover-card shadow rounded-4 h-100">
 
-                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=900"
+                    <img src="{{ asset('images/'.$menu->image) }}"
                         class="card-img-top"
-                        alt="Pizza">
+                        style="height:220px;object-fit:cover;"
+                        alt="{{ $menu->name }}">
 
-                    <div class="card-body">
+                    <div class="card-body d-flex flex-column">
 
-                        <h5 class="fw-bold">
-                            Cheese Pizza
+                        <span class="text-success small">
+                            {{ $menu->category->name }}
+                        </span>
+
+                        <h5 class="fw-bold mt-2">
+                            {{ $menu->name }}
                         </h5>
 
                         <p class="text-secondary">
-                            Pizza dengan topping keju premium yang lezat.
+                            {{ Str::limit($menu->description,70) }}
                         </p>
 
-                        <h4 class="text-success fw-bold">
-                            Rp45.000
-                        </h4>
+                        <div class="mt-auto">
 
-                        <a href="#" class="btn btn-success rounded-pill w-100 mt-3">
-                            Order Sekarang
-                        </a>
+                            <h4 class="text-success fw-bold">
+                                Rp {{ number_format($menu->price,0,',','.') }}
+                            </h4>
+
+                            <a href="{{ route('menu.detail',$menu->id) }}"
+                                class="btn btn-success rounded-pill w-100 mt-3">
+                                Lihat Detail
+                            </a>
+
+                        </div>
 
                     </div>
 
@@ -189,69 +196,13 @@
 
             </div>
 
-            <div class="col-lg-4">
+            @empty
 
-                <div class="card menu-card hover-card shadow rounded-4">
-
-                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=900"
-                        class="card-img-top"
-                        alt="Steak">
-
-                    <div class="card-body">
-
-                        <h5 class="fw-bold">
-                            Beef Steak
-                        </h5>
-
-                        <p class="text-secondary">
-                            Daging sapi pilihan dengan saus spesial.
-                        </p>
-
-                        <h4 class="text-success fw-bold">
-                            Rp75.000
-                        </h4>
-
-                        <a href="#" class="btn btn-success rounded-pill w-100 mt-3">
-                            Order Sekarang
-                        </a>
-
-                    </div>
-
-                </div>
-
+            <div class="col-12 text-center">
+                <p>Belum ada menu favorit.</p>
             </div>
 
-            <div class="col-lg-4">
-
-                <div class="card menu-card hover-card shadow rounded-4">
-
-                    <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900"
-                        class="card-img-top"
-                        alt="Coffee">
-
-                    <div class="card-body">
-
-                        <h5 class="fw-bold">
-                            Cappuccino
-                        </h5>
-
-                        <p class="text-secondary">
-                            Kopi premium dengan foam yang lembut.
-                        </p>
-
-                        <h4 class="text-success fw-bold">
-                            Rp28.000
-                        </h4>
-
-                        <a href="#" class="btn btn-success rounded-pill w-100 mt-3">
-                            Order Sekarang
-                        </a>
-
-                    </div>
-
-                </div>
-
-            </div>
+            @endforelse
 
         </div>
 
@@ -355,7 +306,7 @@
 
                     <div class="promo-image">
 
-                        <img src="{{ asset('storage/'.$promo->image) }}"
+                        <img src="{{ asset('images/'.$promo->image) }}"
                             alt="{{ $promo->name }}">
 
                         <span class="badge-promo">
