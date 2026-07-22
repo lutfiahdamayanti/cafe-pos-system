@@ -9,29 +9,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('order_details', function (Blueprint $table) {
-
             $table->id();
-
             $table->foreignId('order_id')
                     ->constrained()
                     ->cascadeOnDelete();
-
             $table->foreignId('menu_id')
                     ->constrained()
                     ->cascadeOnDelete();
-
             $table->integer('qty');
-
             $table->string('size')->nullable();
-
+            $table->text('options')->nullable();
             $table->double('price');
-
             $table->double('total');
-
             $table->text('note')->nullable();
-
             $table->timestamps();
-
         });
     }
 

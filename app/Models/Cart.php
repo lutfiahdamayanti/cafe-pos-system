@@ -9,12 +9,14 @@ class Cart extends Model
     protected $fillable = [
         'menu_id',
         'qty',
-        'size',
-        'sugar_level',
-        'ice_level',
+        'options',
         'note',
         'price',
         'total',
+    ];
+
+    protected $casts = [
+        'options' => 'array',
     ];
 
     public function menu()

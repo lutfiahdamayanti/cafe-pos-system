@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Menu;
 use App\Models\Favorite;
+use App\Models\MenuOption;
+use App\Models\MenuOptionValue; 
 
 class MenuController extends Controller
 {
@@ -43,17 +45,20 @@ class MenuController extends Controller
 
     public function detail($id)
     {
-        $menu = Menu::with('category')->findOrFail($id);
+        $menu = Menu::with([
+            'category',
+            'options.values'
+        ])->findOrFail($id);
 
         $recommended = Menu::where('category_id', $menu->category_id)
             ->where('id', '!=', $menu->id)
             ->take(4)
             ->get();
 
-        return view('customer.menu-detail', [
-            'menu' => $menu,
-            'recommended' => $recommended
-        ]);
+        return view('customer.menu-detail', compact(
+            'menu',
+            'recommended'
+        ));
     }
 
     public function search(Request $request)

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 
 class CheckoutController extends Controller
@@ -13,7 +14,6 @@ class CheckoutController extends Controller
     public function index()
     {
         $carts = Cart::with('menu')->get();
-
         $subtotal = $carts->sum('total');
         $tax = $subtotal * 0.11;
         $service = 3000;
@@ -31,64 +31,64 @@ class CheckoutController extends Controller
     public function store(Request $request)
     {
     $carts = Cart::with('menu')->get();
-
     if ($carts->isEmpty()) {
         return back()->with('error', 'Keranjang masih kosong.');
     }
-
     $subtotal = $carts->sum('total');
     $tax = $subtotal * 0.11;
     $service = 3000;
     $grandTotal = $subtotal + $tax + $service;
 
     $order = Order::create([
-
         'order_number' => 'ORD'.date('YmdHis'),
-
         'customer_name' => $request->customer_name,
-
         'phone' => $request->phone,
-
         'table_number' => session('table_number') ?? $request->table_number,
-
         'visit_type' => $request->visit_type,
-
         'payment' => $request->payment,
-
         'note' => $request->note,
-
         'subtotal' => $subtotal,
-
         'tax' => $tax,
-
         'service' => $service,
-
         'total' => $grandTotal,
-
         'status' => 'Pending',
-
     ]);
 
-    foreach($carts as $cart){
+    $customer = Customer::firstOrCreate(
+    [
+        'phone' => $request->phone
+    ],
+    [
+        'name' => $request->customer_name,
+        'email' => $request->email,
+        'visit_count' => 1,
+        'total_spending' => $grandTotal,
+        'last_visit' => now(),
+    ]
+    );
 
-        OrderDetail::create([
-
-            'order_id' => $order->id,
-
-            'menu_id' => $cart->menu_id,
-
-            'qty' => $cart->qty,
-
-            'size' => $cart->size,
-
-            'price' => $cart->price,
-
-            'total' => $cart->total,
-
-            'note' => $cart->note,
-
+    if(!$customer->wasRecentlyCreated){
+        $customer->update([
+            'name' => $request->customer_name,
+            'visit_count' => $customer->visit_count + 1,
+            'total_spending' => $customer->total_spending + $grandTotal,
+            'last_visit' => now(),
         ]);
+    }
 
+    foreach($carts as $cart){
+        OrderDetail::create([
+            'order_id' => $order->id,
+            'menu_id' => $cart->menu_id,
+            'qty' => $cart->qty,
+            'size' => $cart->size,
+            'options' => $cart->options,
+            'price' => $cart->price,
+            'total' => $cart->total,
+            'note' => $cart->note,
+        ]);
+        $menu = $cart->menu;
+        $menu->decrement('stock', $cart->qty);
     }
 
     Cart::truncate();

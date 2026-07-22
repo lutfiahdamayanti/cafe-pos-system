@@ -11,25 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('carts', function (Blueprint $table) {
+    Schema::create('carts', function (Blueprint $table) {   
         $table->id();
-
-        $table->foreignId('menu_id')->constrained()->onDelete('cascade');
-
+        $table->foreignId('menu_id')
+            ->constrained()
+            ->onDelete('cascade');
         $table->integer('qty')->default(1);
 
-        $table->string('size')->default('Regular');
-
-        $table->string('sugar_level')->nullable();
-
-        $table->string('ice_level')->nullable();
-
+        // Menyimpan semua pilihan menu
+        $table->json('options')->nullable();
         $table->text('note')->nullable();
-
         $table->integer('price');
-
         $table->integer('total');
-
         $table->timestamps();
     });
     }

@@ -22,10 +22,12 @@ use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\QrController;
 use App\Http\Controllers\Admin\SuperAdminController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\PosController;
 
 /* ========================================= CUSTOMER ========================================*/
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::view('/about', 'customer.about')->name('about');
+Route::get('/', [MenuController::class, 'index'])
+    ->name('home');Route::view('/about', 'customer.about')->name('about');
 Route::view('/contact', 'customer.contact')->name('contact');
 Route::get('/menu', [MenuController::class, 'index'])->name('menu');
 Route::get('/menu/{id}', [MenuController::class, 'detail'])->name('menu.detail');
@@ -54,19 +56,14 @@ Route::view('/login', 'auth.login')
 Route::view('/register', 'auth.register')
     ->name('register');
 
-
 /* =================================== ADMIN AUTH =============================================*/
 Route::prefix('admin')->name('admin.')->group(function () {
-
     Route::get('/login', [AuthController::class, 'login'])
         ->name('login');
-
     Route::post('/login', [AuthController::class, 'authenticate'])
         ->name('authenticate');
-
     Route::post('/logout', [AuthController::class, 'logout'])
         ->name('logout');
-
 });
 
 /* ======================== SUPER ADMIN =====================*/
@@ -119,6 +116,12 @@ Route::prefix('admin')
                 ->name('dashboard');
             Route::get('/reports', [ReportController::class, 'index'])
                 ->name('reports.index');
+            Route::get('/', [DashboardController::class,'index'])
+                ->name('dashboard');
+            Route::get('/reports',[ReportController::class,'index'])
+                ->name('reports.index');
+            Route::resource('customers', CustomerController::class)
+                ->only(['index']);
         });
 
         /* ======================================= OWNER, MANAGER & CASHIER ====================================*/
@@ -142,6 +145,20 @@ Route::prefix('admin')
                 'orders/{order}/receipt',
                 [AdminOrderController::class, 'receipt']
             )->name('orders.receipt');
+            Route::get('/pos', [PosController::class,'index'])
+                ->name('pos.index');
+            Route::post('/pos', [PosController::class,'store'])
+                ->name('pos.store');
+            Route::resource('kitchen', KitchenController::class)
+                ->only(['index']);
+            Route::get(
+                'kitchen/check-new',
+                [KitchenController::class, 'checkNew']
+            )->name('kitchen.check');
+            Route::get(
+                'orders/{order}/kitchen-ticket',
+                [AdminOrderController::class, 'kitchenTicket']
+            )->name('orders.kitchen-ticket');
         });
 
         /* ============================== OWNER, MANAGER, CASHIER & KITCHEN =========================*/
@@ -154,12 +171,12 @@ Route::prefix('admin')
         });
 
         /* ============================= OWNER, MANAGER & KITCHEN =====================*/
-        Route::middleware('role:owner,manager,kitchen')->group(function () {
-            Route::resource('kitchen', KitchenController::class)
-                ->only(['index']);
-            Route::get(
-                'kitchen/check-new',
-                [KitchenController::class, 'checkNew']
-            )->name('kitchen.check');
-        });
+        // Route::middleware('role:owner,manager,kitchen')->group(function () {
+        //     Route::resource('kitchen', KitchenController::class)
+        //         ->only(['index']);
+        //     Route::get(
+        //         'kitchen/check-new',
+        //         [KitchenController::class, 'checkNew']
+        //     )->name('kitchen.check');
+        // });
     });

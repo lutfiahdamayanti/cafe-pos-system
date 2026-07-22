@@ -61,6 +61,12 @@
                     </a>
                 </li>
 
+                <li>
+                    <a href="{{ route('admin.customers.index') }}">
+                        <i class="bi bi-people"></i>
+                        Customers
+                    </a>
+                </li>
             @endif
 
 
@@ -102,9 +108,23 @@
             @if(in_array(Auth::user()->role,['owner','manager','cashier']))
 
                 <li>
+                    <a href="{{ route('admin.pos.index') }}">
+                        <i class="bi bi-cart-plus"></i>
+                        New Order
+                    </a>
+                </li>  
+
+                <li>
                     <a href="{{ route('admin.orders.index') }}">
                         <i class="bi bi-receipt"></i>
                         Orders
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ route('admin.kitchen.index') }}">
+                        <i class="bi bi-cup-hot"></i>
+                        Proses Pesanan
                     </a>
                 </li>
 
@@ -118,7 +138,7 @@
             @endif
 
 
-            {{-- OWNER, MANAGER, KITCHEN --}}
+            <!-- {{-- OWNER, MANAGER, KITCHEN --}}
             @if(in_array(Auth::user()->role,['owner','manager','kitchen']))
 
                 <li>
@@ -127,8 +147,8 @@
                         Kitchen
                     </a>
                 </li>
-
-            @endif
+                
+            @endif -->
 
         </ul>
 
@@ -153,29 +173,56 @@
 
         <nav class="topbar">
 
-            <h4>@yield('title','Dashboard')</h4>
+            <div>
+
+                <h4 class="mb-0 fw-bold text-white">
+
+                    @yield('title')
+
+                </h4>
+
+                <small class="text-light">
+
+                    Cafe POS Management System
+
+                </small>
+
+            </div>
 
             <div class="d-flex align-items-center gap-3">
 
                 <button
-                    class="btn btn-outline-secondary btn-sm"
+                    class="btn btn-light"
                     id="darkModeToggle">
 
-                    <i class="bi bi-moon-fill"></i>
+                    <i class="bi bi-moon-stars-fill"></i>
 
                 </button>
+                <div class="d-flex align-items-center">
 
-                <span class="admin-name">
+                    <div class="avatar-circle">
 
-                    <i class="bi bi-person-circle"></i>
+                        <i class="bi bi-person-fill"></i>
 
-                    Hi, {{ Auth::user()->name }}
+                    </div>
 
-                    <small class="d-block text-muted">
-                        {{ ucfirst(str_replace('_',' ', Auth::user()->role)) }}
-                    </small>
+                    <div class="ms-3">
 
-                </span>
+                        <div class="fw-semibold text-white">
+
+                            {{ Auth::user()->name }}
+
+                        </div>
+
+                        <small class="text-light">
+
+                            {{ ucfirst(str_replace('_',' ',Auth::user()->role)) }}
+
+                        </small>
+
+                    </div>
+
+                </div>
             </div>
 
         </nav>

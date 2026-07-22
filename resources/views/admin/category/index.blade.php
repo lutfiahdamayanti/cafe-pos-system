@@ -1,15 +1,14 @@
 @extends('layouts.admin')
-
+@section('title','Category')
 @section('content')
 
 <div class="container py-4">
 
     <div class="d-flex justify-content-between mb-4">
 
-        <h3>Kategori</h3>
-
         <a href="{{ route('admin.category.create') }}"
            class="btn btn-success">
+           <i class="bi bi-plus-circle"></i>
 
             Tambah Kategori
 
@@ -43,7 +42,10 @@
 
                 <td>{{ $category->name }}</td>
 
-                <td>{{ $category->icon }}</td>
+                <td>
+                    <i class="bi {{ $category->icon }} me-2"></i>
+                    {{ $category->icon }}
+                </td>
 
             </tr>
 

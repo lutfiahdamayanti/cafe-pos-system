@@ -1,27 +1,22 @@
 <?php
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
 
 class OrderDetail extends Model
 {
     protected $fillable = [
+    'order_id',
+    'menu_id',
+    'qty',
+    'size',
+    'options',
+    'price',
+    'total',
+    'note'
+    ];
 
-        'order_id',
-
-        'menu_id',
-
-        'qty',
-
-        'size',
-
-        'price',
-
-        'total',
-
-        'note'
-
+    protected $casts = [
+        'options' => 'array',
     ];
 
     public function order()

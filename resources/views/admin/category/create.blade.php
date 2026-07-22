@@ -1,11 +1,9 @@
 @extends('layouts.admin')
-
+@section('title','Create Category')
 @section('content')
 
 <div class="container py-4">
-
-    <h3>Tambah Kategori</h3>
-
+    
     <form action="{{ route('admin.category.store') }}"
           method="POST">
 
@@ -24,13 +22,32 @@
 
         <div class="mb-3">
 
-            <label>Icon</label>
+            <label class="form-label">Icon</label>
 
-            <input
-                type="text"
+            <select
                 name="icon"
-                class="form-control"
-                placeholder="☕">
+                class="form-select"
+                required>
+
+                <option value="">-- Pilih Icon --</option>
+
+                <option value="bi-basket-fill">
+                    🍽️ Food
+                </option>
+
+                <option value="bi-cup-straw">
+                    🥤 Drink
+                </option>
+
+                <option value="bi-cup-hot-fill">
+                    ☕ Coffee
+                </option>
+
+                <option value="bi-cake2-fill">
+                    🍰 Dessert
+                </option>
+
+            </select>
 
         </div>
 

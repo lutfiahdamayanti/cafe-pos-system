@@ -8,10 +8,6 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <h2 class="fw-bold">
-            Kitchen Display System
-        </h2>
-
         <span class="badge bg-success fs-6">
             {{ $orders->count() }} Pesanan
         </span>

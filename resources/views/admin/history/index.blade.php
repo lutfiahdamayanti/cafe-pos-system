@@ -8,12 +8,6 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <h2 class="fw-bold">
-
-            Riwayat Pesanan
-
-        </h2>
-
         <span class="badge bg-success">
 
             {{ $orders->count() }} Data

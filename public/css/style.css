@@ -5,10 +5,11 @@ body{
 }
 /* ========================= GOOGLE FONT ========================= */
 body{
-    font-family:'Poppins',sans-serif;
+   font-family:'Poppins',sans-serif;
     background:#FCFBF8;
     color:#1F2937;
     scroll-behavior:smooth;
+    padding-top:75px;
 }
 
 /* ========================= COLOR ========================= */
@@ -36,10 +37,12 @@ section{
 
 /* ========================= NAVBAR ========================= */
 .navbar{
-    background:rgba(255,255,255,.92)!important;
-    backdrop-filter:blur(15px);
-    transition:.4s;
-    padding:18px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    background: #fff;
 }
 .navbar.scrolled{
     padding:12px 0;

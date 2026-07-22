@@ -10,6 +10,7 @@ class Menu extends Model
     'category_id',
     'name',
     'description',
+    'ingredients',
     'price',
     'image',
     'rating',
@@ -32,5 +33,10 @@ class Menu extends Model
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);
+    }
+
+    public function options()
+    {
+        return $this->hasMany(MenuOption::class);
     }
 }

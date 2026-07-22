@@ -24,14 +24,14 @@
 <body>
 
 <!-- ================= NAVBAR ================= -->
-<nav class="navbar navbar-expand-lg sticky-top">
-
+<nav class="navbar navbar-expand-lg fixed-top bg-white shadow-sm">
+    
     <div class="container">
 
         <!-- LOGO -->
         <a class="navbar-brand d-flex align-items-center gap-3" href="/">
 
-            <img src="{{ asset('images/logo.png') }}" width="45" height="45" alt="logo">
+            <img src="{{ asset('images/hot.png') }}" width="45" height="45" alt="logo">
 
             <div class="lh-sm">
                 <div class="fw-bold" style="color:#2E5E4E;">
@@ -51,9 +51,9 @@
 
             <ul class="navbar-nav mx-auto">
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link active" href="/">Home</a>
-                </li>
+                </li> -->
 
                 <li class="nav-item">
                     <a class="nav-link" href="menu">Menu</a>
@@ -94,13 +94,13 @@
                     @endif
                 </a>
 
-                <a href="{{ route('login') }}" class="btn btn-outline-success rounded-pill px-3">
+                <!-- <a href="{{ route('login') }}" class="btn btn-outline-success rounded-pill px-3">
                     Login
                 </a>
 
                 <a href="menu" class="btn btn-success rounded-pill px-3">
                     Order Now
-                </a>
+                </a> -->
 
             </div>
 

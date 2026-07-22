@@ -1,311 +1,194 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-
-<meta charset="UTF-8">
-
-<title>Struk Pesanan</title>
-
-<style>
-
-body {
-
-    font-family: Arial, sans-serif;
-
-    font-size: 12px;
-
-}
-
-.container {
-
-    width: 100%;
-
-}
-
-.header {
-
-    text-align: center;
-
-}
-
-.header h2 {
-
-    margin-bottom: 5px;
-
-}
-
-.line {
-
-    border-top: 1px dashed #000;
-
-    margin: 10px 0;
-
-}
-
-
-table {
-
-    width: 100%;
-
-    border-collapse: collapse;
-
-}
-
-
-td {
-
-    padding: 5px 0;
-
-}
-
-
-.text-right {
-
-    text-align:right;
-
-}
-
-
-.total {
-
-    font-size:14px;
-
-    font-weight:bold;
-
-}
-
-
-.footer {
-
-    text-align:center;
-
-    margin-top:20px;
-
-}
-
-
-</style>
-
+    <meta charset="UTF-8">
+    <title>Struk Pembayaran</title>
+    <style>
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 12px;
+            color: #333;
+            margin: 20px;
+        }
+        .header {
+            text-align: center;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 2px 0;
+            font-size: 11px;
+            color: #666;
+        }
+        .line {
+            border-top: 1px dashed #555;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td {
+            padding: 4px 0;
+            vertical-align: top;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .small {
+            font-size: 11px;
+            color: #666;
+        }
+        .total {
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11px;
+            color: #666;
+        }
+    </style>
 </head>
-
-
 <body>
 
-
-<div class="container">
-
-
 <div class="header">
-
-    <h2>Cafe POS</h2>
-
-    <p>
-        Struk Pembayaran
-    </p>
-
+    <h2>☕ CAFE</h2>
+    <p>Coffee • Food • Dessert</p>
+    <p>Jl. Malioboro, Yogyakarta</p>
+    <p>Telp. 081234567890</p>
 </div>
 
-
 <div class="line"></div>
-
-
 <table>
+    <tr>
+        <td>No. Order</td>
+        <td class="text-right">
+            {{ $order->order_number }}
+        </td>
+    </tr>
 
+    <tr>
+        <td>Tanggal</td>
+        <td class="text-right">
+            {{ $order->created_at->format('d M Y H:i') }}
+        </td>
+    </tr>
 
-<tr>
+    <tr>
+        <td>Pelanggan</td>
+        <td class="text-right">
+            {{ $order->customer_name }}
+        </td>
+    </tr>
 
-<td>
-No Order
-</td>
+    <tr>
+        <td>No HP</td>
+        <td class="text-right">
+            {{ $order->phone }}
+        </td>
+    </tr>
 
-<td class="text-right">
+    <tr>
+        <td>Nomor Meja</td>
+        <td class="text-right">
+            {{ $order->table_number }}
+        </td>
+    </tr>
 
-{{ $order->order_number }}
+    <tr>
+        <td>Pembayaran</td>
+        <td class="text-right">
+            {{ $order->payment }}
+        </td>
+    </tr>
 
-</td>
-
-</tr>
-
-
-<tr>
-
-<td>
-Tanggal
-</td>
-
-<td class="text-right">
-
-{{ $order->created_at->format('d-m-Y H:i') }}
-
-</td>
-
-</tr>
-
-
-<tr>
-
-<td>
-Customer
-</td>
-
-<td class="text-right">
-
-{{ $order->customer_name }}
-
-</td>
-
-</tr>
-
-
-<tr>
-
-<td>
-Pembayaran
-</td>
-
-<td class="text-right">
-
-{{ $order->payment }}
-
-</td>
-
-</tr>
-
-
+    <tr>
+        <td>Status</td>
+        <td class="text-right">
+            {{ $order->status }}
+        </td>
+    </tr>
 </table>
 
-
 <div class="line"></div>
-
-
-
 <table>
+    @foreach($order->details as $detail)
+    <tr>
+        <td>
+            <strong>
+                {{ $detail->menu->name }}
+            </strong>
+            @if($detail->options)
+            @foreach($detail->options as $key => $value)
+            <br>
+                <span class="small">
+                    • {{ $key }} : {{ $value }}
+                </span>
+                @endforeach
+                @endif
+            <br>
 
-
-@foreach($order->details as $detail)
-
-<tr>
-
-<td>
-
-{{ $detail->menu->name }}
-
-<br>
-
-x{{ $detail->qty }}
-
-</td>
-
-
-<td class="text-right">
-
-Rp {{ number_format($detail->total,0,',','.') }}
-
-</td>
-
-
-</tr>
-
-
-@endforeach
-
-
+            <span class="small">
+                {{ $detail->qty }}
+                x
+                Rp {{ number_format($detail->price,0,',','.') }}
+            </span>
+        </td>
+        <td class="text-right">
+            Rp {{ number_format($detail->total,0,',','.') }}
+        </td>
+    </tr>
+    @endforeach
 </table>
 
-
 <div class="line"></div>
-
-
-
 <table>
+    <tr>
+        <td>Subtotal</td>
+        <td class="text-right">
+            Rp {{ number_format($order->subtotal,0,',','.') }}
+        </td>
+    </tr>
 
+    <tr>
+        <td>PPN (11%)</td>
+        <td class="text-right">
+            Rp {{ number_format($order->tax,0,',','.') }}
+        </td>
+    </tr>
 
-<tr>
+    <tr>
+        <td>Biaya Layanan</td>
+        <td class="text-right">
+            Rp {{ number_format($order->service,0,',','.') }}
+        </td>
+    </tr>
 
-<td>
-Subtotal
-</td>
+    <tr>
+        <td class="total">
+            TOTAL
+        </td>
 
-<td class="text-right">
-
-Rp {{ number_format($order->subtotal,0,',','.') }}
-
-</td>
-
-</tr>
-
-
-<tr>
-
-<td>
-Pajak
-</td>
-
-<td class="text-right">
-
-Rp {{ number_format($order->tax,0,',','.') }}
-
-</td>
-
-</tr>
-
-
-<tr>
-
-<td>
-Service
-</td>
-
-<td class="text-right">
-
-Rp {{ number_format($order->service,0,',','.') }}
-
-</td>
-
-</tr>
-
-
-<tr>
-
-<td class="total">
-
-TOTAL
-
-</td>
-
-<td class="text-right total">
-
-Rp {{ number_format($order->total,0,',','.') }}
-
-</td>
-
-</tr>
-
-
+        <td class="text-right total">
+            Rp {{ number_format($order->total,0,',','.') }}
+        </td>
+    </tr>
 </table>
 
-
-
 <div class="line"></div>
-
-
 <div class="footer">
-
-<p>
-Status : {{ $order->status }}
-</p>
-
-<p>
-Terima kasih sudah berkunjung ☕
-</p>
-
+    <strong>
+        Terima Kasih ☕
+    </strong>
+    
+    <br><br>
+    Semoga harimu menyenangkan.
+    <br>
+    Sampai jumpa kembali di Cafe ❤️
 </div>
-
-
-</div>
-
-
 </body>
-
 </html>

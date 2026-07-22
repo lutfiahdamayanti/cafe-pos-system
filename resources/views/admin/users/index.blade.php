@@ -6,8 +6,6 @@
 
 <div class="d-flex justify-content-between mb-4">
 
-    <h3>Kelola User</h3>
-
     <a href="{{ route('superadmin.users.create') }}"
         class="btn btn-success">
 
