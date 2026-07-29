@@ -1,7 +1,5 @@
 @extends('layouts.app')
-
 @section('title', 'Menu')
-
 @section('content')
 
 <!-- ================= HERO ================= -->
@@ -13,20 +11,13 @@
 </section>
 
 @if(session('table_number'))
-
     <div class="container mt-4">
-
         <div class="alert alert-success shadow-sm">
-
             <i class="bi bi-qr-code"></i>
-
             Anda sedang memesan untuk
             <strong>Meja {{ session('table_number') }}</strong>
-
         </div>
-
     </div>
-
 @endif
 
 <!-- ================= MENU ================= -->
@@ -65,13 +56,9 @@
 
         <!-- Menu -->
         <div class="row g-4">
-
         @forelse($menus as $menu)
-
         <div class="col-xl-3 col-lg-4 col-md-6">
-
             <div class="menu-card h-100">
-
             <!-- IMAGE -->
             <div class="menu-image">
 
@@ -105,14 +92,11 @@
                         @else
                             <i class="bi bi-heart"></i>
                         @endif
-
                     </button>
-
             </div>
 
             <!-- BODY -->
             <div class="menu-body d-flex flex-column">
-
                 <span class="category">
                     {{ $menu->category->name }}
                 </span>
@@ -142,7 +126,6 @@
                 @endif
 
                 <div class="menu-bottom mt-auto">
-
                     <h5>
                         Rp {{ number_format($menu->price,0,',','.') }}
                     </h5>
@@ -151,21 +134,14 @@
                     class="btn btn-order">
                         Detail
                     </a>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
     @empty
-
         <div class="col-12 text-center py-5">
-
             <i class="bi bi-search display-3 text-secondary"></i>
-
             <h3 class="mt-3">
                 Menu Tidak Ditemukan
             </h3>
@@ -173,13 +149,8 @@
             <p class="text-muted">
                 Coba gunakan kata kunci lain.
             </p>
-
         </div>
-
     @endforelse
-
-</div>
-    </div>
 </section>
 @endsection
 @push('scripts')

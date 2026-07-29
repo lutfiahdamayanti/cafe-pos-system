@@ -109,7 +109,7 @@
     <tr>
         <td>Status</td>
         <td class="text-right">
-            {{ $order->status }}
+            {{ statusIndonesia($order->status) }}
         </td>
     </tr>
 </table>

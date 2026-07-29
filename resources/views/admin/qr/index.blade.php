@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','QR Ordering')
+@section('title','QR Pemesanan')
 @section('content')
 
 <div class="container-fluid">

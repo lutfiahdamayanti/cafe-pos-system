@@ -664,11 +664,10 @@ section{
 }
 
 /* ============================ ABOUT ===================================== */
-/* ============================ ABOUT ===================================== */
 
 .about-hero{
     position: relative;
-    height: 350px;
+    height: 280px;
     background: url("../images/cafe.jpeg") center center/cover no-repeat;
     display: flex;
     align-items: center;
@@ -728,6 +727,12 @@ section{
     width:100%;
     border-radius:20px;
     box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+/* Paragraf Tentang */
+.about-section p{
+    text-align: justify;
+    line-height: 1.9;
 }
 
 /* ========================= CONTACT HERO ========================= */
@@ -803,20 +808,41 @@ section{
     overflow:hidden;
     box-shadow:0 10px 30px rgba(0,0,0,.08);
 }
+/* ========================= CART HERO ========================= */
 .cart-hero{
+    position: relative;
     height: 200px;
-    background:#F7F4ED;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-align: center;
 }
+
+.cart-hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:url("../images/makan.jpeg") center center/cover no-repeat;
+    filter: blur(4px) brightness(60%);
+    transform: scale(1.08);
+    z-index:0;
+}
+
+.cart-hero .container{
+    position:relative;
+    z-index:2;
+}
+
 .cart-hero h1{
+    color:#fff;
     font-size:42px;
     font-weight:700;
 }
+
 .cart-hero p{
-    color:#64748B;
+    color:#fff;
+    font-size:16px;
 }
 
 /* ITEM */

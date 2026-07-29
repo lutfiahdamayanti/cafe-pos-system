@@ -25,20 +25,15 @@
 
 <!-- ================= NAVBAR ================= -->
 <nav class="navbar navbar-expand-lg fixed-top bg-white shadow-sm">
-    
     <div class="container">
-
         <!-- LOGO -->
         <a class="navbar-brand d-flex align-items-center gap-3" href="/">
-
             <img src="{{ asset('images/hot.png') }}" width="45" height="45" alt="logo">
-
             <div class="lh-sm">
                 <div class="fw-bold" style="color:#2E5E4E;">
                     Cafe & Restaurant
                 </div>
             </div>
-
         </a>
 
         <!-- TOGGLER -->
@@ -48,34 +43,30 @@
 
         <!-- MENU -->
         <div class="collapse navbar-collapse" id="navbarNav">
-
             <ul class="navbar-nav mx-auto">
-
                 <!-- <li class="nav-item">
                     <a class="nav-link active" href="/">Home</a>
                 </li> -->
 
                 <li class="nav-item">
-                    <a class="nav-link" href="menu">Menu</a>
+                    <a class="nav-link" href="{{ route('menu') }}">Menu</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="facilities">Fasilitas</a>
+                    <a class="nav-link" href="{{ route('facilities') }}">Fasilitas</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="about">Tentang</a>
+                    <a class="nav-link" href="{{ route('about') }}">Tentang</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="contact">Kontak</a>
+                    <a class="nav-link" href="{{ route('contact') }}">Kontak</a>
                 </li>
-
             </ul>
 
             <!-- RIGHT ACTION -->
             <div class="d-flex align-items-center gap-3">
-
                 <a href="#" class="text-dark fs-5" data-bs-toggle="modal" data-bs-target="#searchModal">
                     <i class="bi bi-search"></i>
                 </a>
@@ -101,13 +92,9 @@
                 <a href="menu" class="btn btn-success rounded-pill px-3">
                     Order Now
                 </a> -->
-
             </div>
-
         </div>
-
     </div>
-
 </nav>
 
 <!-- ================= CONTENT ================= -->
@@ -117,71 +104,70 @@
 
 <!-- ================= FOOTER ================= -->
 <footer class="bg-dark text-white mt-5">
-
     <div class="container py-5">
-
         <div class="row g-4">
-
             <div class="col-lg-4">
                 <h4 class="fw-bold">Cafe & Restaurant</h4>
                 <p class="text-light mt-3">
-                    Fresh food, premium coffee, and seamless QR ordering experience.
+                    Menyajikan makanan segar, kopi berkualitas, dan pengalaman pemesanan yang mudah melalui QR Code.
                 </p>
             </div>
 
             <div class="col-lg-2">
-                <h6>Navigation</h6>
+                <h6>Navigasi</h6>
                 <ul class="list-unstyled mt-3">
+                    <!-- <li>
+                        <a href="{{ route('home') }}"
+                        class="text-white text-decoration-none">
+                            Home
+                        </a>
+                    </li> -->
 
-                <li>
-                    <a href="{{ route('home') }}"
-                    class="text-white text-decoration-none">
-                        Home
-                    </a>
-                </li>
+                    <li>
+                        <a href="{{ route('menu') }}"
+                        class="text-white text-decoration-none">
+                            Menu
+                        </a>
+                    </li>
 
-                <li>
-                    <a href="{{ route('menu') }}"
-                    class="text-white text-decoration-none">
-                        Menu
-                    </a>
-                </li>
+                    <li>
+                        <a href="{{ route('facilities') }}"
+                        class="text-white text-decoration-none">
+                            Fasilitas
+                        </a>
+                    </li>
 
-                <li>
-                    <a href="{{ route('about') }}"
-                    class="text-white text-decoration-none">
-                        Tentang
-                    </a>
-                </li>
+                    <li>
+                        <a href="{{ route('about') }}"
+                        class="text-white text-decoration-none">
+                            Tentang
+                        </a>
+                    </li>
 
-                <li>
-                    <a href="{{ route('contact') }}"
-                    class="text-white text-decoration-none">
-                        Kontak
-                    </a>
-                </li>
-
-            </ul>
+                    <li>
+                        <a href="{{ route('contact') }}"
+                        class="text-white text-decoration-none">
+                            Kontak
+                        </a>
+                    </li>
+                </ul>
             </div>
 
             <div class="col-lg-3">
-                <h6>Opening Hours</h6>
+                <h6>Jam Operasional</h6>
                 <p class="mt-3">
-                    Everyday<br>
+                    Setiap Hari<br>
                     08:00 - 22:00
                 </p>
             </div>
 
             <div class="col-lg-3">
-
-                <h6>Follow Us</h6>
-
+                <h6>Ikuti Kami</h6>
                 <p class="mt-3 text-light">
                     Ikuti kami di media sosial untuk mendapatkan promo terbaru.
                 </p>
 
                 <div class="d-flex gap-3 fs-3 mt-3">
-
                     <a href="#"
                     class="text-white">
                         <i class="bi bi-instagram"></i>
@@ -201,9 +187,7 @@
                     class="text-white">
                         <i class="bi bi-whatsapp"></i>
                     </a>
-
                 </div>
-
             </div>
         </div>
 
@@ -212,54 +196,36 @@
         <p class="text-center mb-0">
             © {{ date('Y') }} Cafe & Restaurant. All rights reserved.
         </p>
-
     </div>
-
 </footer>
 
 <!-- SEARCH POPUP MODAL -->
 <div class="modal fade" id="searchModal" tabindex="-1">
-
     <div class="modal-dialog modal-dialog-centered">
-
         <div class="modal-content search-popup">
-
             <div class="modal-header border-0">
-
                 <h5 class="modal-title">Cari Menu</h5>
-
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-
             </div>
 
             <div class="modal-body">
-
                 <div class="search-input-box">
-
                     <i class="bi bi-search"></i>
-
                     <input
                         type="text"
                         id="searchMenu"
                         placeholder="Cari kopi, makanan, dessert...">
-
                 </div>  
 
                 <!-- RESULT MINI -->
                 <div class="search-result mt-3" id="searchResult">
-
                     <p class="text-center text-muted">
                         Mulai ketik nama menu...
                     </p>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 @stack('scripts')

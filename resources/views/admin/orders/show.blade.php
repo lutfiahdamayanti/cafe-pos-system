@@ -41,32 +41,26 @@
                         <strong>No Order</strong><br>
                         {{ $order->order_number }}
                     </p>
-
                     <p>
                         <strong>Nama</strong><br>
                         {{ $order->customer_name }}
                     </p>
-
                     <p>
                         <strong>No HP</strong><br>
                         {{ $order->phone }}
                     </p>
-
                     <p>
                         <strong>Nomor Meja</strong><br>
                         {{ $order->table_number ?? '-' }}
                     </p>
-
                     <p>
                         <strong>Tipe</strong><br>
                         {{ $order->visit_type }}
                     </p>
-
                     <p>
                         <strong>Pembayaran</strong><br>
                         {{ $order->payment }}
                     </p>
-
                     <p>
                         <strong>Catatan</strong><br>
                         {{ $order->note ?? '-' }}
@@ -105,15 +99,12 @@
                                     @endforeach
                                 @endif
                             </td>
-
                             <td>
                                 {{ $detail->qty }}
                             </td>
-
                             <td>
                                 Rp {{ number_format($detail->price,0,',','.') }}
                             </td>
-
                             <td>
                                 Rp {{ number_format($detail->total,0,',','.') }}
                             </td>
@@ -135,7 +126,7 @@
             <div class="card shadow border-0 rounded-4">
                 <div class="card-body">
                     <h5 class="fw-bold mb-3">
-                        Update Status
+                        Perbarui Status
                     </h5>
                     <form
                         action="{{ route('admin.orders.status',$order->id) }}"
@@ -160,7 +151,7 @@
                                     <option
                                         value="{{ $status }}"
                                         {{ $order->status==$status?'selected':'' }}>
-                                        {{ $status }}
+                                        {{ statusIndonesia($status) }}
                                     </option>
                                     @endforeach
                                 </select>
@@ -169,66 +160,81 @@
                             <div class="col-md-4">
                                 <button
                                     class="btn btn-success w-100">
-                                    Update Status
+                                    Perbarui Status
                                 </button>
                             </div>
 
-                            <div class="card shadow border-0 rounded-4 mt-4">
-                                <div class="card-body">
-                                    <h5 class="fw-bold mb-3">
-                                        Refund / Void / Cancel
-                                    </h5>
-
-                                    <form
-                                        action="{{ route('admin.orders.refund',$order->id) }}"
-                                        method="POST">
-                                        @csrf
-
-                                        <div class="mb-3">
-                                            <label class="form-label">
-                                                Jenis Tindakan
-                                            </label>
-
-                                            <select
-                                                name="refund_type"
-                                                class="form-select"
-                                                required>
-
-                                                <option value="">Pilih</option>
-
-                                                <option value="Refund">
-                                                    Refund
-                                                </option>
-
-                                                <option value="Void">
-                                                    Void
-                                                </option>
-
-                                                <option value="Cancel">
-                                                    Cancel Order
-                                                </option>
-                                            </select>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label">
-                                                Alasan
-                                            </label>
-                                            <textarea
-                                                name="refund_reason"
-                                                rows="4"
-                                                class="form-control"
-                                                required></textarea>
-                                        </div>
-
-                                        <button
-                                            class="btn btn-danger">
-                                            Proses
-                                        </button>
-                                    </form>
-                                </div>
+                            @if($order->status == 'Void')
+                            <div class="alert alert-warning mt-3">
+                                Status Tindakan : <strong>Void</strong>
                             </div>
+                            @endif
+
+                            @if($order->status == 'Refund')
+                            <div class="alert alert-danger mt-3">
+                                Status Tindakan : <strong>Pengembalian Dana</strong>
+                            </div>
+                            @endif
+
+                            @if($order->status == 'Cancelled')
+                            <div class="alert alert-secondary mt-3">
+                                Status Tindakan : <strong>Pembatalan</strong>
+                            </div>
+                            @endif
                         </div>
+                    </form>
+                </div>
+            </div>
+            <div class="card shadow border-0 rounded-4 mt-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">
+                        Pengembalian Dana / Void / Pembatalan
+                    </h5>
+                    <form
+                        action="{{ route('admin.orders.refund',$order->id) }}"
+                        method="POST">
+                        @csrf
+                        @method('PATCH')
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Jenis Tindakan
+                            </label>
+                            <select
+                                name="refund_type"
+                                class="form-select"
+                                required>
+                                <option value="">Pilih</option>
+                                <option value="Refund"
+                                    {{ $order->action_status == 'Refund' ? 'selected' : '' }}>
+                                    Pengembalian Dana
+                                </option>
+                                <option value="Void"
+                                    {{ $order->action_status == 'Void' ? 'selected' : '' }}>
+                                    Void
+                                </option>
+                                <option value="Cancel"
+                                    {{ $order->action_status == 'Cancel' ? 'selected' : '' }}>
+                                    Pembatalan
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">
+                                Alasan
+                            </label>
+                            <textarea
+                                name="refund_reason"
+                                rows="4"
+                                class="form-control"
+                                required></textarea>
+                        </div>
+
+                        <button
+                            class="btn btn-danger">
+                            Proses
+                        </button>
                     </form>
                 </div>
             </div>

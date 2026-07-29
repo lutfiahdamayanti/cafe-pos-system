@@ -20,6 +20,7 @@ class Order extends Model
         'service',
         'total',
         'status',
+        'action_status',
 
         'cooking_started_at',
         'ready_at',

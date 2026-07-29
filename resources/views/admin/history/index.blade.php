@@ -1,138 +1,114 @@
 @extends('layouts.admin')
-
 @section('title','Riwayat Pesanan')
-
 @section('content')
 
 <div class="container-fluid">
-
     <div class="d-flex justify-content-between align-items-center mb-4">
-
         <span class="badge bg-success">
-
             {{ $orders->count() }} Data
-
         </span>
-
     </div>
 
     <div class="card shadow border-0 rounded-4">
-
         <div class="card-body">
-
             <table class="table table-hover align-middle">
-
                 <thead class="table-light">
-
                     <tr>
-
-                        <th>No Order</th>
-
+                        <th>No Pesanan</th>
                         <th>Pelanggan</th>
-
                         <th>Total</th>
-
                         <th>Status</th>
-
                         <th>Tanggal</th>
-
                         <th>Aksi</th>
-
                     </tr>
-
                 </thead>
 
                 <tbody>
 
-                @forelse($orders as $order)
+                    @forelse($orders as $order)
 
-                <tr>
+                    <tr>
 
-                    <td>
+                        <td>
+                            {{ $order->order_number }}
+                        </td>
 
-                        {{ $order->order_number }}
+                        <td>
+                            {{ $order->customer_name }}
+                        </td>
 
-                    </td>
+                        <td>
+                            Rp {{ number_format($order->total,0,',','.') }}
+                        </td>
 
-                    <td>
+                        <td>
 
-                        {{ $order->customer_name }}
+                            @php
+                                $color = match($order->status){
+                                    'Completed' => 'success',
+                                    'Cancelled' => 'danger',
+                                    'Refunded' => 'warning',
+                                    'Refund' => 'warning',
+                                    'Void' => 'secondary',
+                                    default => 'secondary'
+                                };
+                            @endphp
 
-                    </td>
+                            <span class="badge bg-{{ $color }}">
+                                @switch($order->status)
 
-                    <td>
+                                    @case('Completed')
+                                        Selesai
+                                        @break
 
-                        Rp {{ number_format($order->total,0,',','.') }}
+                                    @case('Cancelled')
+                                        Dibatalkan
+                                        @break
 
-                    </td>
+                                    @case('Refund')
+                                    @case('Refunded')
+                                        Pengembalian Dana
+                                        @break
 
-                    <td>
+                                    @case('Void')
+                                        Void
+                                        @break
 
-                        @php
+                                    @default
+                                        {{ statusIndonesia($order->status) }}
 
-                            $color = match($order->status){
+                                @endswitch
+                            </span>
 
-                                'Completed' => 'success',
+                        </td>
 
-                                'Cancelled' => 'danger',
+                        <td>
+                            {{ $order->created_at->format('d M Y H:i') }}
+                        </td>
 
-                                'Refunded' => 'warning',
+                        <td>
+                            <a href="{{ route('admin.orders.show',$order->id) }}"
+                               class="btn btn-primary btn-sm">
+                                Detail
+                            </a>
+                        </td>
 
-                                default => 'secondary'
+                    </tr>
 
-                            };
+                    @empty
 
-                        @endphp
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            Belum ada riwayat pesanan.
+                        </td>
+                    </tr>
 
-                        <span class="badge bg-{{ $color }}">
-
-                            {{ $order->status }}
-
-                        </span>
-
-                    </td>
-
-                    <td>
-
-                        {{ $order->created_at->format('d M Y H:i') }}
-
-                    </td>
-
-                    <td>
-
-                        <a href="{{ route('admin.orders.show',$order->id) }}"
-                           class="btn btn-primary btn-sm">
-
-                            Detail
-
-                        </a>
-
-                    </td>
-
-                </tr>
-
-                @empty
-
-                <tr>
-
-                    <td colspan="6" class="text-center">
-
-                        Belum ada riwayat.
-
-                    </td>
-
-                </tr>
-
-                @endforelse
+                    @endforelse
 
                 </tbody>
 
             </table>
-
         </div>
-
     </div>
-
 </div>
-
 @endsection

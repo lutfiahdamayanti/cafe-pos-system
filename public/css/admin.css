@@ -277,3 +277,96 @@ body.dark-mode .btn-outline-secondary{
 .add-menu{
     margin-top:auto;
 }
+
+/* ==========================
+   SUPER ADMIN
+========================== */
+
+.super-hero{
+    background:linear-gradient(135deg,#2E5E4E,#234337);
+    color:#fff;
+    border-radius:22px;
+    padding:35px 45px;
+    margin-bottom:35px;
+    overflow:hidden;
+}
+
+.hero-content{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.hero-content h2{
+    font-size:34px;
+    font-weight:700;
+    margin-bottom:12px;
+}
+
+.hero-content p{
+    max-width:650px;
+    color:rgba(255,255,255,.88);
+    margin-bottom:0;
+}
+
+.hero-icon i{
+    font-size:110px;
+    opacity:.15;
+}
+
+/* Card */
+
+.super-card{
+    background:#fff;
+    border-radius:22px;
+    padding:45px;
+    text-align:center;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.super-card:hover{
+    transform:translateY(-6px);
+}
+
+.super-user-icon{
+    width:90px;
+    height:90px;
+    margin:auto;
+    margin-bottom:20px;
+    border-radius:50%;
+    background:#2E5E4E;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.super-user-icon i{
+    color:#fff;
+    font-size:38px;
+}
+
+.super-card h3{
+    font-weight:700;
+    margin-bottom:15px;
+}
+
+.super-card p{
+    color:#6b7280;
+    margin-bottom:30px;
+    line-height:1.7;
+}
+
+.btn-super{
+    background:#2E5E4E;
+    color:#fff;
+    padding:12px 30px;
+    border-radius:12px;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.btn-super:hover{
+    background:#234337;
+    color:#fff;
+}

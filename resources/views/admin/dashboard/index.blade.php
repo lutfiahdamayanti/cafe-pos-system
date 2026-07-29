@@ -17,42 +17,42 @@
     <div class="row g-4 mb-5">
         <div class="col-lg-2 col-md-4">
             <div class="dashboard-card">
-                <h6>Total Order</h6>
+                <h6>Total Pesanan</h6>
                 <h3>{{ $totalOrders }}</h3>
             </div>
         </div>
 
         <div class="col-lg-2 col-md-4">
             <div class="dashboard-card">
-                <h6>Revenue</h6>
+                <h6>Pendapatan</h6>
                 <h3>Rp {{ number_format($revenue,0,',','.') }}</h3>
             </div>
         </div>
 
         <div class="col-lg-2 col-md-4">
             <div class="dashboard-card">
-                <h6>Pending</h6>
+                <h6>Menunggu</h6>
                 <h3>{{ $pending }}</h3>
             </div>
         </div>
 
         <div class="col-lg-2 col-md-4">
             <div class="dashboard-card">
-                <h6>Processing</h6>
+                <h6>Diproses</h6>
                 <h3>{{ $processing }}</h3>
             </div>
         </div>
 
         <div class="col-lg-2 col-md-4">
             <div class="dashboard-card">
-                <h6>Ready</h6>
+                <h6>Siap Disajikan</h6>
                 <h3>{{ $ready }}</h3>
             </div>
         </div>
 
         <div class="col-lg-2 col-md-4">
             <div class="dashboard-card">
-                <h6>Cancelled</h6>
+                <h6>Batal</h6>
                 <h3>{{ $cancel }}</h3>
             </div>
         </div>
@@ -63,41 +63,74 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h4 class="fw-bold mb-0">
-                    Live Orders
+                    Pesanan Aktif
                 </h4>
 
                 <span class="badge bg-success">
-                    {{ $orders->count() }} Active Orders
+                    {{ $orders->count() }} Pesanan Aktif
                 </span>
             </div>
 
-            <div class="row mb-4">
-                <div class="col-md-6">
-                    <input
-                        type="text"
-                        class="form-control"
-                        placeholder="Cari Nomor Order / Nama Pelanggan">
-                </div>
+            <form method="GET" action="{{ route('admin.dashboard') }}">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Cari Nomor Order / Nama Pelanggan"
+                            value="{{ request('search') }}">
+                    </div>
 
-                <div class="col-md-3">
-                    <select class="form-select">
-                        <option>Semua Status</option>
-                        <option>Pending</option>
-                        <option>Accepted</option>
-                        <option>Processing</option>
-                        <option>Ready</option>
-                        <option>Completed</option>
-                        <option>Cancelled</option>
-                    </select>
-                </div>
+                    <div class="col-md-3">
+                        <select name="status" class="form-select">
+                            <option value="">Semua Status</option>
 
-            </div>
+                            <option value="Pending"
+                                {{ request('status')=='Pending' ? 'selected' : '' }}>
+                                Menunggu
+                            </option>
+
+                            <option value="Accepted"
+                                {{ request('status')=='Accepted' ? 'selected' : '' }}>
+                                Diterima
+                            </option>
+
+                            <option value="Processing"
+                                {{ request('status')=='Processing' ? 'selected' : '' }}>
+                                Diproses
+                            </option>
+
+                            <option value="Ready"
+                                {{ request('status')=='Ready' ? 'selected' : '' }}>
+                                Siap Disajikan
+                            </option>
+
+                            <option value="Completed"
+                                {{ request('status')=='Completed' ? 'selected' : '' }}>
+                                Selesai
+                            </option>
+
+                            <option value="Cancelled"
+                                {{ request('status')=='Cancelled' ? 'selected' : '' }}>
+                                Dibatalkan
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <button class="btn btn-success w-100">
+                            Cari
+                        </button>
+                    </div>
+                </div>
+            </form>
 
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th>No Order</th>
+                            <th>No Pesanan</th>
                             <th>Pelanggan</th>
                             <th>Item</th>
                             <th>Catatan</th>
@@ -161,39 +194,39 @@
 
                                             <option value="Pending"
                                                 {{ $order->status=='Pending' ? 'selected' : '' }}>
-                                                Pending
+                                                Menunggu
                                             </option>
 
                                             <option value="Accepted"
                                                 {{ $order->status=='Accepted' ? 'selected' : '' }}>
-                                                Accepted
+                                                Diterima
                                             </option>
 
                                             <option value="Processing"
                                                 {{ $order->status=='Processing' ? 'selected' : '' }}>
-                                                Processing
+                                                Diproses
                                             </option>
 
                                             <option value="Ready"
                                                 {{ $order->status=='Ready' ? 'selected' : '' }}>
-                                                Ready
+                                                Siap Disajikan
                                             </option>
 
                                             <option value="Completed"
                                                 {{ $order->status=='Completed' ? 'selected' : '' }}>
-                                                Completed
+                                                Selesai
                                             </option>
 
                                             <option value="Cancelled"
                                                 {{ $order->status=='Cancelled' ? 'selected' : '' }}>
-                                                Cancelled
+                                                Dibatalkan
                                             </option>
                                         </select>
 
                                         <button
                                             type="submit"
                                             class="btn btn-success btn-sm">
-                                            Update
+                                            Perbarui
                                         </button>
                                     </div>
                                 </form>

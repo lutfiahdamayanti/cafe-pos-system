@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','Audit Logs')
+@section('title','Log Audit')
 @section('content')
 
 <div class="container-fluid">
@@ -7,13 +7,13 @@
         <a href="{{ route('admin.audit.export.csv') }}"
         class="btn btn-success">
             <i class="bi bi-file-earmark-spreadsheet"></i>
-            Export CSV
+            Ekspor CSV
         </a>
 
         <a href="{{ route('admin.audit.backup') }}"
         class="btn btn-primary">
             <i class="bi bi-download"></i>
-            Backup Database
+            Cadangkan Database
         </a>
 
         <form action="{{ route('admin.audit.restore') }}"
@@ -30,7 +30,7 @@
 
                 <button class="btn btn-danger">
                     <i class="bi bi-upload"></i>
-                    Restore
+                    Pulihkan Database
                 </button>
             </div>
         </form>
@@ -48,8 +48,8 @@
                 <thead class="table-light">
                     <tr>
                         <th>No</th>
-                        <th>User</th>
-                        <th>Activity</th>
+                        <th>Pengguna</th>
+                        <th>Aktivitas</th>
                         <th>Waktu</th>
                     </tr>
                 </thead>

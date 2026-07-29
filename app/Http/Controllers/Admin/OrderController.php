@@ -65,22 +65,37 @@ class OrderController extends Controller
     public function refund(Request $request, Order $order)
     {
         $request->validate([
-            'refund_reason'=>'required',
-            'refund_amount'=>'required|numeric'
+            'refund_type' => 'required',
+            'refund_reason' => 'required'
         ]);
-        $order->update([
-            'status'=>'Refund',
-            'refund_reason'=>$request->refund_reason,
-            'refund_amount'=>$request->refund_amount
-        ]);
-        AuditLog::create([
-            'user' => 'Admin',
-            'activity' => 'Melakukan refund Order ' . $order->order_number,
-        ]);
-        return back()->with(
-            'success',
-            'Refund berhasil.'
-        );
+
+        if($request->refund_type == 'Void'){
+
+            $order->update([
+                'action_status' => 'Void'
+            ]);
+
+        }elseif($request->refund_type == 'Refund'){
+
+            $request->validate([
+                'refund_amount'=>'required|numeric'
+            ]);
+
+            $order->update([
+                'action_status' => 'Refund',
+                'refund_reason'=>$request->refund_reason,
+                'refund_amount'=>$request->refund_amount
+            ]);
+
+        }elseif($request->refund_type == 'Cancel'){
+
+            $order->update([
+                'action_status'=>'Cancel'
+            ]);
+
+        }
+
+        return back()->with('success','Berhasil.');
     }
 
     public function cancel(Request $request, Order $order)

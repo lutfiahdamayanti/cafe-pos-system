@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','Reporting & Analytics')
+@section('title','Laporan & Analisis')
 @section('content')
 
 <div class="container-fluid">
@@ -32,14 +32,14 @@
     <div class="row g-4 mb-5">
         <div class="col-lg-3 col-md-6">
             <div class="dashboard-card">
-                <h6>Total Order</h6>
+                <h6>Total Pesanan</h6>
                 <h3>{{ $orders->count() }}</h3>
             </div>
         </div>
 
         <div class="col-lg-3 col-md-6">
             <div class="dashboard-card">
-                <h6>Gross Revenue</h6>
+                <h6>Pendapatan Kotor</h6>
                 <h3 class="text-success">
                     Rp {{ number_format($grossRevenue,0,',','.') }}
                 </h3>
@@ -48,7 +48,7 @@
 
         <div class="col-lg-3 col-md-6">
             <div class="dashboard-card">
-                <h6>Net Revenue</h6>
+                <h6>Pendapatan Bersih</h6>
                 <h3>
                     Rp {{ number_format($netRevenue,0,',','.') }}
                 </h3>
@@ -69,7 +69,7 @@
     <div class="row g-4 mb-5">
         <div class="col-lg-3 col-md-6">
             <div class="dashboard-card">
-                <h6>Service Charge</h6>
+                <h6>Biaya Layanan</h6>
                 <h3>
                     Rp {{ number_format($service,0,',','.') }}
                 </h3>
@@ -78,7 +78,7 @@
 
         <div class="col-lg-3 col-md-6">
             <div class="dashboard-card">
-                <h6>Completed</h6>
+                <h6>Selesai</h6>
                 <h3 class="text-success">
                     {{ $completed }}
                 </h3>
@@ -87,7 +87,7 @@
 
         <div class="col-lg-3 col-md-6">
             <div class="dashboard-card">
-                <h6>Cancelled</h6>
+                <h6>Dibatalkan</h6>
                 <h3 class="text-danger">
                     {{ $cancelled }}
                 </h3>
@@ -96,7 +96,7 @@
 
         <div class="col-lg-3 col-md-6">
             <div class="dashboard-card">
-                <h6>Refund</h6>
+                <h6>Pengembalian Dana</h6>
                 <h3 class="text-warning">
                     {{ $refund }}
                 </h3>
@@ -108,14 +108,14 @@
     <div class="card shadow-sm border-0">
         <div class="card-body">
             <h4 class="fw-bold mb-4">
-                Daftar Order
+                Daftar Pesanan
             </h4>
 
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th>No Order</th>
+                            <th>No Pesanan</th>
                             <th>Pelanggan</th>
                             <th>Pembayaran</th>
                             <th>Status</th>
@@ -142,32 +142,32 @@
                             <td>
                                 @if($order->status == 'Pending')
                                     <span class="badge bg-warning">
-                                        Pending
+                                        Menunggu
                                     </span>
 
                                 @elseif($order->status == 'Accepted')
                                     <span class="badge bg-primary">
-                                        Accepted
+                                        Diterima
                                     </span>
 
                                 @elseif($order->status == 'Processing')
                                     <span class="badge bg-info">
-                                        Processing
+                                        Diproses
                                     </span>
 
                                 @elseif($order->status == 'Ready')
                                     <span class="badge bg-secondary">
-                                        Ready
+                                        Siap Disajikan
                                     </span>
 
                                 @elseif($order->status == 'Completed')
                                     <span class="badge bg-success">
-                                        Completed
+                                        Selesai
                                     </span>
 
                                 @else
                                     <span class="badge bg-danger">
-                                        Cancelled
+                                        Dibatalkan
                                     </span>
                                 @endif
                             </td>
@@ -220,7 +220,7 @@
     <div class="card shadow-sm border-0 mt-4">
         <div class="card-body">
             <h4 class="fw-bold mb-4">
-                Top 10 Best Seller
+                10 Menu Best Seller
             </h4>
 
             <table class="table table-bordered">
@@ -247,7 +247,7 @@
     <div class="card shadow-sm border-0 mt-4">
         <div class="card-body">
             <h4 class="fw-bold mb-4">
-                Top 10 Worst Seller
+                10 Menu Kurang Laris
             </h4>
 
             <table class="table table-bordered">
@@ -273,14 +273,14 @@
     <div class="card shadow-sm border-0 mt-4">
         <div class="card-body">
             <h4 class="fw-bold mb-4">
-                Peak Hours
+                Jam Tersibuk
             </h4>
 
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>Jam</th>
-                        <th>Jumlah Order</th>
+                        <th>Jumlah Pesanan</th>
                     </tr>
                 </thead>
 
@@ -299,14 +299,14 @@
     <div class="card shadow-sm border-0 mt-4">
         <div class="card-body">
             <h4 class="fw-bold mb-4">
-                Peak Days
+                Hari Tersibuk
             </h4>
 
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>Hari</th>
-                        <th>Jumlah Order</th>
+                        <th>Jumlah Pesanan</th>
                     </tr>
                 </thead>
 
@@ -325,15 +325,15 @@
     <div class="card shadow-sm border-0 mt-4">
         <div class="card-body">
             <h4 class="fw-bold mb-4">
-                Returning Customer vs New Customer
+                Pelanggan Lama vs Pelanggan Baru
             </h4>
 
             <div class="d-flex justify-content-center">
                 <div style="width:350px; height:350px;">
                     <canvas id="customerChart"></canvas>
                     <div class="mt-3 text-center">
-                        <p>Returning Customer: <strong>{{ $returning }}</strong></p>
-                        <p>New Customer: <strong>{{ $newCustomer }}</strong></p>
+                        <p>Pelanggan Lama: <strong>{{ $returning }}</strong></p>
+                        <p>Pelanggan Baru: <strong>{{ $newCustomer }}</strong></p>
                     </div>
                 </div>
             </div>

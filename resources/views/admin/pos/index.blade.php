@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','New Order')
+@section('title','Pesanan Baru')
 @section('content')
 
 <div class="row">
@@ -263,17 +263,9 @@ function renderCart(){
     <h5> Total : Rp ${total.toLocaleString()} </h5> `;
 }
 
-
-
-
 document.querySelectorAll('.add-menu')
-
 .forEach(btn=>{
-
-
 btn.addEventListener('click',function(){
-
-
 
 let card = this.closest(".card-body");
 
@@ -310,22 +302,22 @@ let note = card.querySelector(".note").value;
 let id = this.dataset.id;
 let name = this.dataset.name;
 
-let found = cart.find(
+let found = cart.find(item => {
 
-item=>item.id==id
+    return (
+        item.id == id &&
+        item.size == sizeValue &&
+        JSON.stringify(item.options) == JSON.stringify(options) &&
+        item.note == note
+    );
 
-);
-
-
+});
 
 if(found){
 
-
 found.qty++;
 
-
 }else{
-
 
 cart.push({
 
@@ -339,26 +331,13 @@ cart.push({
 
 });
 
-
 }
-
-
 
 renderCart();
 
-
-
 });
 
-
 });
-
-
-
 </script>
-
-
 @endpush
-
-
 @endsection

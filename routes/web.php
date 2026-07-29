@@ -49,6 +49,10 @@ Route::post('/cart/{id}/qty', [CartController::class, 'updateQty'])
     ->name('cart.qty');
 Route::post('/favorite/{id}', [MenuController::class,'favorite'])
     ->name('favorite.toggle');
+Route::get('/reset-table', function () {
+    session()->forget('table_number');
+    return redirect('/');
+});
 
 /* ===================================== CUSTOMER AUTH ==========================================*/
 Route::view('/login', 'auth.login')

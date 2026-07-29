@@ -71,9 +71,7 @@
                             <h2
                                 class="fw-bold text-success mb-4"
                                 id="price-display">
-
                                 Rp {{ number_format($menu->price,0,',','.') }}
-
                             </h2>
 
                             @if($menu->ingredients)
@@ -84,17 +82,11 @@
 
                                     <div class="card border-0 bg-light rounded-4">
                                         <ul class="list-group list-group-flush">
-
                                             @foreach(explode("\n",$menu->ingredients) as $item)
-
                                             <li class="list-group-item">
-
                                                 🟢 {{ $item }}
-
                                             </li>
-
                                             @endforeach
-
                                         </ul>
                                     </div>
                                 </div>
@@ -140,52 +132,36 @@
 
                             {{-- QTY --}}
                             <div class="d-flex justify-content-between align-items-center mt-4">
-
                                 <div class="qty-box">
-
                                     <button type="button" id="minus">−</button>
-
                                     <span id="qty">1</span>
-
                                     <button type="button" id="plus">+</button>
-
                                 </div>
 
                                 <div class="text-end">
-
                                     <small class="text-muted">
                                         Total
                                     </small>
-
                                     <h3
                                         id="total-price"
                                         class="text-success fw-bold mb-0">
-
                                         Rp {{ number_format($menu->price,0,',','.') }}
-
                                     </h3>
-
                                 </div>
-
                             </div>
                         </div>
                         
                         @if($menu->stock > 0)
                         <button
                             class="btn btn-success w-100 py-3 rounded-4 mt-4">
-
                             <i class="bi bi-cart-plus"></i>
-
                             Tambah ke Keranjang
-
                         </button>
                         @else
                         <button
                             class="btn btn-secondary w-100 py-3 rounded-4 mt-4"
                             disabled>
-
                             Stok Habis
-
                         </button>
                         @endif
                     </form>

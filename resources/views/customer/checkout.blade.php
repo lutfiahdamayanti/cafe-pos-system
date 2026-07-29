@@ -1,24 +1,18 @@
 @extends('layouts.app')
-
 @section('title', 'Checkout')
-
 @section('content')
 
 <section class="py-5">
     <div class="container">
-
         <form action="{{ route('checkout.store') }}" method="POST">
             @csrf
-
             <div class="row g-4">
 
                 {{-- ================= LEFT ================= --}}
                 <div class="col-lg-8">
-
                     {{-- Data Pelanggan --}}
                     <div class="card shadow border-0 rounded-4 mb-4">
                         <div class="card-body p-4">
-
                             <h4 class="fw-bold mb-4">
                                 Data Pelanggan
                             </h4>
@@ -48,7 +42,6 @@
                             </div>
 
                             <div class="mb-3">
-
                                 <label class="form-label">
                                     Nomor Meja
                                 </label>
@@ -67,13 +60,11 @@
                                         value="{{ session('table_number') }}">
 
                                 @else
-
                                     <input
                                         type="text"
                                         name="table_number"
                                         class="form-control"
                                         placeholder="Contoh : A01">
-
                                 @endif
 
                             </div>
@@ -89,14 +80,12 @@
                                     class="form-control"
                                     placeholder="Tambahkan catatan jika ada..."></textarea>
                             </div>
-
                         </div>
                     </div>
 
                     {{-- Tipe Kunjungan --}}
                     <div class="card shadow border-0 rounded-4 mb-4">
                         <div class="card-body p-4">
-
                             <h4 class="fw-bold mb-3">
                                 Tipe Kunjungan
                             </h4>
@@ -112,7 +101,7 @@
                                     required>
 
                                 <label class="form-check-label" for="dinein">
-                                    Dine In
+                                    Makan Di Tempat
                                 </label>
                             </div>
 
@@ -126,10 +115,9 @@
                                     {{ session('table_number') ? 'disabled' : '' }}>
 
                                 <label class="form-check-label" for="takeaway">
-                                    Take Away
+                                    Bawa Pulang
                                 </label>
                             </div>
-
                         </div>
                     </div>
 
@@ -193,15 +181,12 @@
                                     Cash ke Kasir
                                 </label>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
 
                 {{-- ================= RIGHT ================= --}}
                 <div class="col-lg-4">
-
                     <div class="card shadow border-0 rounded-4">
                         <div class="card-body p-4">
 
@@ -210,12 +195,9 @@
                             </h4>
 
                             @foreach($carts as $cart)
-
                                 <div class="d-flex justify-content-between mb-3">
-
                                     <div>
                                         <strong>{{ $cart->menu->name }}</strong><br>
-
                                         <small class="text-muted">
                                             Qty : {{ $cart->qty }}
                                         </small>
@@ -224,16 +206,13 @@
                                     <div class="fw-semibold">
                                         Rp {{ number_format($cart->total,0,',','.') }}
                                     </div>
-
                                 </div>
-
                             @endforeach
 
                             <hr>
 
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Subtotal</span>
-
                                 <span>
                                     Rp {{ number_format($subtotal,0,',','.') }}
                                 </span>
@@ -241,7 +220,6 @@
 
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Pajak (11%)</span>
-
                                 <span>
                                     Rp {{ number_format($tax,0,',','.') }}
                                 </span>
@@ -249,7 +227,6 @@
 
                             <div class="d-flex justify-content-between mb-3">
                                 <span>Service</span>
-
                                 <span>
                                     Rp {{ number_format($service,0,',','.') }}
                                 </span>
@@ -258,35 +235,24 @@
                             <hr>
 
                             <div class="d-flex justify-content-between fw-bold fs-5 mb-4">
-
                                 <span>Total</span>
-
                                 <span class="text-success">
                                     Rp {{ number_format($grandTotal,0,',','.') }}
                                 </span>
-
                             </div>
 
                             <div class="d-grid">
                                 <button
                                     type="submit"
                                     class="btn btn-success btn-lg rounded-pill">
-
                                     Buat Pesanan
-
                                 </button>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
-
             </div>
-
         </form>
-
     </div>
 </section>
-
 @endsection

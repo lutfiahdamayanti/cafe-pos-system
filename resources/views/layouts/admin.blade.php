@@ -1,39 +1,25 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Admin Cafe POS</title>
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
-
 </head>
 
 <body>
-
 <div class="admin-wrapper">
-
     {{-- Sidebar --}}
     <aside class="sidebar">
-
         <div class="logo">
-
             <h3>Cafe POS</h3>
-
         </div>
 
         <ul>
-
             {{-- SUPER ADMIN --}}
             @if(Auth::user()->role == 'super_admin')
-
                 <li>
                     <a href="{{ route('superadmin.users.index') }}">
                         <i class="bi bi-people-fill"></i>
@@ -46,7 +32,6 @@
 
             {{-- OWNER & MANAGER --}}
             @if(in_array(Auth::user()->role,['owner','manager']))
-
                 <li>
                     <a href="{{ route('admin.dashboard') }}">
                         <i class="bi bi-grid"></i>
@@ -57,22 +42,20 @@
                 <li>
                     <a href="{{ route('admin.reports.index') }}">
                         <i class="bi bi-bar-chart"></i>
-                        Reports
+                        Laporan
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ route('admin.customers.index') }}">
                         <i class="bi bi-people"></i>
-                        Customers
+                        Pelanggan
                     </a>
                 </li>
             @endif
 
-
             {{-- OWNER --}}
             @if(Auth::user()->role == 'owner')
-
                 <li>
                     <a href="{{ route('admin.menu.index') }}">
                         <i class="bi bi-cup"></i>
@@ -83,41 +66,38 @@
                 <li>
                     <a href="{{ route('admin.category.index') }}">
                         <i class="bi bi-tags"></i>
-                        Categories
+                        Kategori
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ route('admin.audit.index') }}">
                         <i class="bi bi-shield-check"></i>
-                        Audit Logs
+                        Log Audit
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ route('admin.qr.index') }}">
                         <i class="bi bi-qr-code"></i>
-                        QR Ordering
+                        QR Pemesanan
                     </a>
                 </li>
-
             @endif
-
 
             {{-- OWNER, MANAGER, CASHIER --}}
             @if(in_array(Auth::user()->role,['owner','manager','cashier']))
-
                 <li>
                     <a href="{{ route('admin.pos.index') }}">
                         <i class="bi bi-cart-plus"></i>
-                        New Order
+                        Pesanan Baru
                     </a>
                 </li>  
 
                 <li>
                     <a href="{{ route('admin.orders.index') }}">
                         <i class="bi bi-receipt"></i>
-                        Orders
+                        Pesanan
                     </a>
                 </li>
 
@@ -131,126 +111,80 @@
                 <li>
                     <a href="{{ route('admin.history') }}">
                         <i class="bi bi-clock-history"></i>
-                        History Orders
+                        Riwayat Pesanan
                     </a>
                 </li>
-
             @endif
-
 
             <!-- {{-- OWNER, MANAGER, KITCHEN --}}
             @if(in_array(Auth::user()->role,['owner','manager','kitchen']))
-
                 <li>
                     <a href="{{ route('admin.kitchen.index') }}">
                         <i class="bi bi-cup-hot"></i>
                         Kitchen
                     </a>
                 </li>
-                
             @endif -->
-
         </ul>
 
         <form action="{{ route('admin.logout') }}" method="POST" class="mt-4">
-
             @csrf
-
             <button class="btn btn-danger w-100">
-
                 <i class="bi bi-box-arrow-right"></i>
-
                 Logout
-
             </button>
-
         </form>
-
     </aside>
 
     {{-- Content --}}
     <main class="content">
-
         <nav class="topbar">
-
             <div>
-
                 <h4 class="mb-0 fw-bold text-white">
-
                     @yield('title')
-
                 </h4>
-
                 <small class="text-light">
-
                     Cafe POS Management System
-
                 </small>
-
             </div>
 
             <div class="d-flex align-items-center gap-3">
-
                 <button
                     class="btn btn-light"
                     id="darkModeToggle">
-
                     <i class="bi bi-moon-stars-fill"></i>
-
                 </button>
+
                 <div class="d-flex align-items-center">
-
                     <div class="avatar-circle">
-
                         <i class="bi bi-person-fill"></i>
-
                     </div>
 
                     <div class="ms-3">
-
                         <div class="fw-semibold text-white">
-
                             {{ Auth::user()->name }}
-
                         </div>
-
                         <small class="text-light">
-
                             {{ ucfirst(str_replace('_',' ',Auth::user()->role)) }}
-
                         </small>
-
                     </div>
-
                 </div>
             </div>
-
         </nav>
 
         @if(session('success'))
-
             <div class="alert alert-success">
-
                 {{ session('success') }}
-
             </div>
-
         @endif
 
         @if(session('error'))
-
             <div class="alert alert-danger">
-
                 {{ session('error') }}
-
             </div>
-
         @endif
-
         @yield('content')
-
     </main>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

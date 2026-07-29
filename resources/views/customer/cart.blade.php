@@ -5,6 +5,8 @@
     $tax = $subtotal * 0.11;
     $service = 3000;
     $grandTotal = $subtotal + $tax + $service;
+
+    
 @endphp
 <section class="cart-hero">
     <div class="container text-center">

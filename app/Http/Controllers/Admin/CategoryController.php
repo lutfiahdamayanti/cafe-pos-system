@@ -35,4 +35,35 @@ class CategoryController extends Controller
         return redirect()->route('admin.category.index')
             ->with('success','Kategori berhasil ditambahkan');
     }
+
+    public function edit(Category $category)
+    {
+        return view('admin.category.edit', compact('category'));
+    }
+
+    public function update(Request $request, Category $category)
+    {
+        $request->validate([
+            'name' => 'required',
+            'icon' => 'nullable'
+        ]);
+
+        $category->update([
+            'name' => $request->name,
+            'icon' => $request->icon
+        ]);
+
+        return redirect()
+            ->route('admin.category.index')
+            ->with('success', 'Kategori berhasil diperbarui.');
+    }
+
+    public function destroy(Category $category)
+    {
+        $category->delete();
+
+        return redirect()
+            ->route('admin.category.index')
+            ->with('success', 'Kategori berhasil dihapus.');
+    }
 }
