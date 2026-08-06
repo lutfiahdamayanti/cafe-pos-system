@@ -67,4 +67,15 @@ class CartController extends Controller
 
         return back();
     }
+
+    public function destroy($id)
+    {
+        $cart = Cart::findOrFail($id);
+
+        $cart->delete();
+
+        return response()->json([
+            'success' => true
+        ]);
+    }
 }

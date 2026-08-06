@@ -53,6 +53,10 @@ Route::get('/reset-table', function () {
     session()->forget('table_number');
     return redirect('/');
 });
+Route::get('/tracking/status/{id}', [OrderController::class,'status'])
+    ->name('tracking.status');
+Route::delete('/cart/{id}', [CartController::class, 'destroy'])
+    ->name('cart.destroy');
 
 /* ===================================== CUSTOMER AUTH ==========================================*/
 Route::view('/login', 'auth.login')
@@ -101,8 +105,6 @@ Route::prefix('admin')
             Route::resource('category', CategoryController::class);
             Route::get('/audit-logs', [AuditLogController::class, 'index'])
                 ->name('audit.index');
-            Route::get('/audit/export/csv', [AuditLogController::class, 'exportCsv'])
-                ->name('audit.export.csv');
             Route::get('/audit/backup', [AuditLogController::class, 'backup'])
                 ->name('audit.backup');
             Route::post('/audit-logs/restore', [AuditLogController::class, 'restore'])
@@ -126,6 +128,8 @@ Route::prefix('admin')
                 ->name('reports.index');
             Route::resource('customers', CustomerController::class)
                 ->only(['index']);
+            Route::get('/customers/export/csv', [CustomerController::class, 'exportCsv'])
+                ->name('customers.export.csv');
         });
 
         /* ======================================= OWNER, MANAGER & CASHIER ====================================*/

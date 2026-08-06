@@ -39,8 +39,19 @@ class CheckoutController extends Controller
     $service = 3000;
     $grandTotal = $subtotal + $tax + $service;
 
+    $today = now()->format('Y-m-d');
+    $queueNumber = Order::whereDate('created_at', $today)->count() + 1;
+    $queueDelay = ($queueNumber - 1) * 3;
+    $estimatedTime = $queueDelay;
+    foreach ($carts as $cart) {
+        $estimatedTime += $cart->menu->preparation_time * $cart->qty;
+    }
+
     $order = Order::create([
         'order_number' => 'ORD'.date('YmdHis'),
+        'queue_number' => $queueNumber,
+        'estimated_time' => $estimatedTime,
+
         'customer_name' => $request->customer_name,
         'phone' => $request->phone,
         'table_number' => session('table_number') ?? $request->table_number,

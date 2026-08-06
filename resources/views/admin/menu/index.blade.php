@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','Menu')
+@section('title','Daftar Menu')
 @section('content')
 
 <div class="container-fluid py-4">

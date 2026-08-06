@@ -370,3 +370,9 @@ body.dark-mode .btn-outline-secondary{
     background:#234337;
     color:#fff;
 }
+
+/* ================= ROLE BADGE ================= */
+.badge-owner{
+    background: #6f42c1;
+    color: #fff !important;
+}

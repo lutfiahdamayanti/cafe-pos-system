@@ -49,19 +49,31 @@
                 </li> -->
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('menu') }}">Menu</a>
+                    <a class="nav-link {{ request()->routeIs('menu*') ? 'active' : '' }}"
+                        href="{{ route('menu') }}">
+                        Menu
+                    </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('facilities') }}">Fasilitas</a>
+                    <a class="nav-link {{ request()->routeIs('facilities') ? 'active' : '' }}"
+                        href="{{ route('facilities') }}">
+                        Fasilitas
+                    </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('about') }}">Tentang</a>
+                    <a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}"
+                        href="{{ route('about') }}">
+                        Tentang
+                    </a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('contact') }}">Kontak</a>
+                    <a class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}"
+                        href="{{ route('contact') }}">
+                        Kontak
+                    </a>
                 </li>
             </ul>
 
@@ -228,7 +240,42 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @stack('scripts')
+@if(session('success'))
+<script>
+Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: 'success',
+    title: '{{ session("success") }}',
+    showConfirmButton: false,
+    timer: 2500,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.style.marginTop = '80px';
+    }
+});
+
+</script>
+@endif
+
+@if(session('error'))
+<script>
+Swal.fire({
+    toast: true,
+    position: 'top-end',
+    icon: 'error',
+    title: '{{ session("error") }}',
+    showConfirmButton: false,
+    timer: 2500,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.style.marginTop = '80px';
+    }
+});
+</script>
+@endif
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -266,7 +313,9 @@ document.addEventListener("DOMContentLoaded", function () {
             data.forEach(menu => {
 
                 html += `
-                <div class="search-item mb-3 d-flex align-items-center">
+                <div class="search-item mb-3 d-flex align-items-center"
+                    onclick="window.location.href='{{ url('/menu') }}/${menu.id}'"
+                    style="cursor:pointer;">
 
                     <img src="/images/${menu.image}"
                         width="60"

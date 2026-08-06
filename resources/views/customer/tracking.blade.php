@@ -30,48 +30,104 @@ if($currentStep === false){
 
         <div class="card shadow border-0 rounded-4 p-4 mx-auto" style="max-width:800px;">
             {{-- Informasi Pesanan --}}
-            <div class="mb-4">
-                <h5 class="fw-bold">
-                    Nomor Pesanan
-                    <span class="text-success">
-                        #{{ $order->order_number }}
-                    </span>
-                </h5>
+            <div class="row g-3 mb-4">
 
-                <p class="mb-1">
-                    <strong>Nama Pelanggan :</strong>
-                    {{ $order->customer_name }}
-                </p>
+                <div class="col-md-6">
+                    <div class="border rounded-3 p-3 h-100">
+                        <small class="text-muted">
+                            <i class="bi bi-receipt me-1"></i> Nomor Pesanan
+                        </small>
+                        <h6 class="fw-bold text-success mt-1">
+                            #{{ $order->order_number }}
+                        </h6>
+                    </div>
+                </div>
 
-                <p class="mb-1">
-                    <strong>Nomor HP :</strong>
-                    {{ $order->phone }}
-                </p>
+                <div class="col-md-6">
+                    <div class="border rounded-3 p-3 h-100">
+                        <small class="text-muted">
+                            <i class="bi bi-ticket-perforated me-1"></i> Nomor Antrean
+                        </small>
+                        <h6 class="fw-bold mt-1">
+                            {{ str_pad($order->queue_number,3,'0',STR_PAD_LEFT) }}
+                        </h6>
+                    </div>
+                </div>
 
-                <p class="mb-1">
-                    <strong>Metode Pembayaran :</strong>
-                    {{ $order->payment }}
-                </p>
+                <div class="col-md-6">
+                    <div class="border rounded-3 p-3 h-100">
+                        <small class="text-muted">
+                            <i class="bi bi-clock me-1"></i> Estimasi Waktu
+                        </small>
+                        <h6 class="fw-bold mt-1">
+                            ± {{ $order->estimated_time }} menit
+                        </h6>
+                    </div>
+                </div>
 
-                <p class="mb-0">
-                    <strong>Status Saat Ini :</strong>
-                    <span class="badge bg-success">
-                        {{ statusIndonesia($order->status) }}
-                    </span>
-                </p>
+                <div class="col-md-6">
+                    <div class="border rounded-3 p-3 h-100">
+                        <small class="text-muted">
+                            <i class="bi bi-clipboard-check me-1"></i> Status
+                        </small>
+                        <h6 class="mt-1">
+                            <span class="badge bg-success" id="statusBadge">
+                                {{ statusIndonesia($order->status) }}
+                            </span>
+                        </h6>
+                    </div>
+                </div>
 
-                <p class="mt-2 mb-0">
-                    <strong>Total Pembayaran :</strong>
-                    <span class="text-success fw-bold">
-                        Rp {{ number_format($order->total,0,',','.') }}
-                    </span>
-                </p>
+                <div class="col-md-6">
+                    <div class="border rounded-3 p-3 h-100">
+                        <small class="text-muted">
+                            <i class="bi bi-person me-1"></i> Pelanggan
+                        </small>
+                        <h6 class="fw-bold mt-1">
+                            {{ $order->customer_name }}
+                        </h6>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="border rounded-3 p-3 h-100">
+                        <small class="text-muted">
+                            <i class="bi bi-telephone me-1"></i> Nomor HP
+                        </small>
+                        <h6 class="fw-bold mt-1">
+                            {{ $order->phone }}
+                        </h6>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="border rounded-3 p-3 h-100">
+                        <small class="text-muted">
+                            <i class="bi bi-credit-card me-1"></i> Pembayaran
+                        </small>
+                        <h6 class="fw-bold mt-1">
+                            {{ $order->payment }}
+                        </h6>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="border rounded-3 p-3 h-100">
+                        <small class="text-muted">
+                            <i class="bi bi-cash-coin me-1"></i> Total
+                        </small>
+                        <h6 class="fw-bold text-success mt-1">
+                            Rp {{ number_format($order->total,0,',','.') }}
+                        </h6>
+                    </div>
+                </div>
+
             </div>
 
             <hr>
 
             {{-- Tracking --}}
-            <div class="tracking mt-4">
+            <div class="tracking mt-4" id="trackingTimeline">
                 @foreach($steps as $index => $step)
                     <div class="tracking-step {{ $index <= $currentStep ? 'active' : '' }}">
                         <div class="circle">
@@ -177,4 +233,68 @@ if($currentStep === false){
         </div>
     </div>
 </section>
+@push('scripts')
+<script>
+
+let currentStatus = "{{ $order->status }}";
+
+const statusLabels = {
+    Pending: "Menunggu",
+    Accepted: "Diterima",
+    Processing: "Sedang Diproses",
+    Ready: "Siap Disajikan",
+    Completed: "Selesai"
+};
+
+setInterval(function(){
+
+    fetch("{{ route('tracking.status',$order->id) }}")
+    .then(response => response.json())
+    .then(data => {
+
+        if(data.status !== currentStatus){
+
+            // Simpan status baru sebelum reload
+            localStorage.setItem(
+                'tracking_status_toast',
+                data.status
+            );
+
+            currentStatus = data.status;
+
+            location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Gagal mengecek status pesanan:', error);
+    });
+
+}, 3000);
+
+
+// Tampilkan toast setelah halaman selesai reload
+const newStatus = localStorage.getItem('tracking_status_toast');
+
+if(newStatus){
+
+    localStorage.removeItem('tracking_status_toast');
+
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        icon: 'success',
+        title: 'Status Pesanan Diperbarui',
+        text: 'Pesanan kamu sekarang: ' + (statusLabels[newStatus] ?? newStatus),
+        showConfirmButton: false,
+        timer: 3500,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.style.marginTop = '80px';
+        }
+    });
+
+}
+
+</script>
+@endpush
 @endsection

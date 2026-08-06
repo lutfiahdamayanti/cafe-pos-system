@@ -4,12 +4,6 @@
 
 <div class="container-fluid">
     <div class="mb-3 d-flex gap-2">
-        <a href="{{ route('admin.audit.export.csv') }}"
-        class="btn btn-success">
-            <i class="bi bi-file-earmark-spreadsheet"></i>
-            Ekspor CSV
-        </a>
-
         <a href="{{ route('admin.audit.backup') }}"
         class="btn btn-primary">
             <i class="bi bi-download"></i>

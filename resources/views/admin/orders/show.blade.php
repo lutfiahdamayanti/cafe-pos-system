@@ -1,12 +1,12 @@
 @extends('layouts.admin')
-@section('title','Detail Order')
+@section('title','Detail Pesanan')
 @section('content')
 
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold">
+        <!-- <h2 class="fw-bold">
             Detail Pesanan
-        </h2>
+        </h2> -->
 
         <div class="d-flex gap-2">
             <a href="{{ route('admin.orders.receipt',$order->id) }}"
@@ -18,7 +18,7 @@
             <a href="{{ route('admin.orders.kitchen-ticket',$order->id) }}"
                 class="btn btn-warning">
                 <i class="bi bi-cup-hot"></i>
-                Kitchen Ticket
+                Tiket Dapur
             </a>
 
             <a href="{{ route('admin.orders.index') }}"

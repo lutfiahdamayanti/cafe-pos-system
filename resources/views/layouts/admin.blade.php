@@ -155,19 +155,47 @@
                     <i class="bi bi-moon-stars-fill"></i>
                 </button>
 
-                <div class="d-flex align-items-center">
-                    <div class="avatar-circle">
-                        <i class="bi bi-person-fill"></i>
-                    </div>
-
-                    <div class="ms-3">
-                        <div class="fw-semibold text-white">
-                            {{ Auth::user()->name }}
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-decoration-none" data-bs-toggle="dropdown" 
+                    aria-expanded="false">
+                        <div class="avatar-circle">
+                            <i class="bi bi-person-fill"></i>
                         </div>
-                        <small class="text-light">
-                            {{ ucfirst(str_replace('_',' ',Auth::user()->role)) }}
-                        </small>
-                    </div>
+
+                        <div class="ms-3 text-start">
+                            <div class="fw-semibold text-white">
+                                {{ Auth::user()->name }}
+                            </div>
+
+                            <small class="text-light">
+                                {{ ucfirst(str_replace('_',' ',Auth::user()->role)) }}
+                            </small>
+                        </div>
+                        <i class="bi bi-chevron-down text-white ms-2"></i>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end profile-dropdown shadow border-0">
+                        <li class="px-3 py-3">
+                            <div class="fw-bold">
+                                {{ Auth::user()->name }}
+                            </div>
+
+                            <small class="text-muted">
+                                {{ Auth::user()->email }}
+                            </small>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+
+                            <form action="{{ route('admin.logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right me-2"></i>
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </nav>
