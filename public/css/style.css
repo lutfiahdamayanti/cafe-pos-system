@@ -167,7 +167,7 @@ section{
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: url("../images/cafe.jpeg") center center/cover no-repeat;
+    background: url("../images/menu.jpeg") center center/cover no-repeat;
 }
 .menu-hero::before{
     content:"";
@@ -660,7 +660,7 @@ section{
 .about-hero{
     position: relative;
     height: 280px;
-    background: url("../images/cafe.jpeg") center center/cover no-repeat;
+    background: url("../images/tentang.jpeg") center center/cover no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -694,16 +694,16 @@ section{
     z-index: 3;
 }
 .about-hero h1{
-    font-size: 52px;
+    font-size: 40px;
     font-weight: 700;
     color: #fff;
     margin-bottom: 15px;
 }
 .about-hero p{
-    max-width: 700px;
+    max-width: 650px;
     margin: auto;
     color: #fff;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.8;
 }
 
@@ -802,7 +802,7 @@ section{
     content:"";
     position:absolute;
     inset:0;
-    background:url("../images/cafe.jpeg") center center/cover no-repeat;
+    background:url("../images/kontak.jpeg") center center/cover no-repeat;
     filter: blur(3px) brightness(60%);
     transform: scale(1.08);
     z-index:0;
@@ -992,10 +992,10 @@ section{
     background:#23493D;
 }
 
-/* ========================= FACILITIES HERO ========================= */
+/* ========================= FACILITIES HERO =========================
 .facilities-hero{
-    background-image:url("../images/cafe.jpeg");
-}
+    background-image:url("../images/fasilitas.jpeg");
+} */
 
 /* ========================= FACILITIES HERO ========================= */
 .facilities-hero{
@@ -1005,7 +1005,7 @@ section{
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: url("../images/cafe.jpeg") center center/cover no-repeat;
+    background: url("../images/fasilitas.jpeg") center center/cover no-repeat;
 }
 .facilities-hero::before{
     content:"";

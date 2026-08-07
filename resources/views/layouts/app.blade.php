@@ -206,7 +206,9 @@
         <hr class="border-secondary">
 
         <p class="text-center mb-0">
-            © {{ date('Y') }} Cafe & Restaurant. All rights reserved.
+            © {{ date('Y') }} Cafe & Restaurant
+            <span class="mx-2">•</span>
+            Created by <strong>lupii</strong>
         </p>
     </div>
 </footer>
