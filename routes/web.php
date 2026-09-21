@@ -58,12 +58,6 @@ Route::get('/tracking/status/{id}', [OrderController::class,'status'])
 Route::delete('/cart/{id}', [CartController::class, 'destroy'])
     ->name('cart.destroy');
 
-/* ===================================== CUSTOMER AUTH ==========================================*/
-Route::view('/login', 'auth.login')
-    ->name('login');
-Route::view('/register', 'auth.register')
-    ->name('register');
-
 /* =================================== ADMIN AUTH =============================================*/
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'login'])

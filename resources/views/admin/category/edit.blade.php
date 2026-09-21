@@ -9,40 +9,30 @@
         </div>
 
         <div class="card-body">
-            <form action="{{ route('admin.category.update',$category->id) }}"
-                  method="POST">
+            <form action="{{ route('admin.category.update',$category->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
                 <div class="mb-3">
                     <label>Nama Kategori</label>
-
-                    <input type="text"
-                           name="name"
-                           class="form-control"
-                           value="{{ old('name',$category->name) }}"
-                           required>
+                    <input type="text" name="name" class="form-control"
+                        value="{{ old('name',$category->name) }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label>Icon (Bootstrap Icon)</label>
-
-                    <input type="text"
-                           name="icon"
-                           class="form-control"
-                           value="{{ old('icon',$category->icon) }}">
+                    <input type="text" name="icon" class="form-control"
+                        value="{{ old('icon',$category->icon) }}">
                 </div>
 
-                <button class="btn btn-success">
-                    Update
-                </button>
+                <button class="btn btn-success">Update</button>
 
-                <a href="{{ route('admin.category.index') }}"
-                   class="btn btn-secondary">
+                <a href="{{ route('admin.category.index') }}" class="btn btn-secondary">
                     Kembali
                 </a>
             </form>
         </div>
     </div>
 </div>
+
 @endsection

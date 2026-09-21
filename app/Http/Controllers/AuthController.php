@@ -64,13 +64,13 @@ class AuthController extends Controller
             }
 
             // ================= KITCHEN =================
-            if ($user->role == 'kitchen') {
+            // if ($user->role == 'kitchen') {
 
-                return redirect()
-                    ->route('admin.kitchen.index')
-                    ->with('success', 'Selamat datang Kitchen.');
+            //     return redirect()
+            //         ->route('admin.kitchen.index')
+            //         ->with('success', 'Selamat datang Kitchen.');
 
-            }
+            // }
 
             Auth::logout();
 

@@ -7,41 +7,19 @@
         <form action="{{ route('superadmin.users.update',$user) }}" method="POST">
             @csrf
             @method('PUT')
-
             <div class="mb-3">
                 <label>Nama</label>
-                <input
-                type="text"
-                name="name"
-                class="form-control"
-                value="{{ $user->name }}">
+                <input type="text" name="name" class="form-control" value="{{ $user->name }}">
             </div>
-
             <div class="mb-3">
                 <label>Email</label>
-                <input
-                type="email"
-                name="email"
-                class="form-control"
-                value="{{ $user->email }}">
+                <input type="email" name="email" class="form-control" value="{{ $user->email }}">
             </div>
-
             <div class="mb-3">
-                <label class="form-label">
-                    Password Baru
-                </label>
-
-                <input
-                    type="password"
-                    name="password"
-                    class="form-control"
-                    placeholder="Masukkan password baru">
-
-                <small class="text-muted">
-                    Kosongkan jika tidak ingin mengubah password.
-                </small>
+                <label class="form-label">Password Baru</label>
+                <input type="password" name="password" class="form-control" placeholder="Masukkan password baru">
+                <small class="text-muted">Kosongkan jika tidak ingin mengubah password.</small>
             </div>
-
             <div class="mb-3">
                 <label>Role</label>
                 <select name="role" class="form-control">
@@ -51,14 +29,8 @@
                     <option value="kitchen" {{ $user->role=='kitchen'?'selected':'' }}>Kitchen</option>
                 </select>
             </div>
-
-            <button class="btn btn-primary">
-                Update
-            </button>
-
-            <a href="{{ route('superadmin.users.index') }}" class="btn btn-secondary">
-                Kembali
-            </a>
+            <button class="btn btn-primary">Update</button>
+            <a href="{{ route('superadmin.users.index') }}" class="btn btn-secondary">Kembali</a>
         </form>
     </div>
 </div>

@@ -4,13 +4,8 @@
 
 <div class="container-fluid">
     <div class="mb-4">
-        <h5 class="fw-bold">
-            Selamat Datang, {{ Auth::user()->name }} 👋
-        </h5>
-
-        <p class="text-muted mb-0">
-            Berikut ringkasan aktivitas Cafe POS hari ini.
-        </p>
+        <h5 class="fw-bold">Selamat Datang, {{ Auth::user()->name }} 👋</h5>
+        <p class="text-muted mb-0">Berikut ringkasan aktivitas Cafe POS hari ini.</p>
     </div>
 
     {{-- ================= METRIC ================= --}}
@@ -62,22 +57,14 @@
     <div class="card shadow border-0 mb-5">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="fw-bold mb-0">
-                    Pesanan Aktif
-                </h4>
-
-                <span class="badge bg-success">
-                    {{ $orders->count() }} Pesanan Aktif
-                </span>
+                <h4 class="fw-bold mb-0">Pesanan Aktif</h4>
+                <span class="badge bg-success">{{ $orders->count() }} Pesanan Aktif</span>
             </div>
 
             <form method="GET" action="{{ route('admin.dashboard') }}">
                 <div class="row mb-4">
                     <div class="col-md-6">
-                        <input
-                            type="text"
-                            name="search"
-                            class="form-control"
+                        <input type="text" name="search" class="form-control"
                             placeholder="Cari Nomor Order / Nama Pelanggan"
                             value="{{ request('search') }}">
                     </div>
@@ -85,43 +72,29 @@
                     <div class="col-md-3">
                         <select name="status" class="form-select">
                             <option value="">Semua Status</option>
-
-                            <option value="Pending"
-                                {{ request('status')=='Pending' ? 'selected' : '' }}>
+                            <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>
                                 Menunggu
                             </option>
-
-                            <option value="Accepted"
-                                {{ request('status')=='Accepted' ? 'selected' : '' }}>
+                            <option value="Accepted" {{ request('status') == 'Accepted' ? 'selected' : '' }}>
                                 Diterima
                             </option>
-
-                            <option value="Processing"
-                                {{ request('status')=='Processing' ? 'selected' : '' }}>
+                            <option value="Processing" {{ request('status') == 'Processing' ? 'selected' : '' }}>
                                 Diproses
                             </option>
-
-                            <option value="Ready"
-                                {{ request('status')=='Ready' ? 'selected' : '' }}>
+                            <option value="Ready" {{ request('status') == 'Ready' ? 'selected' : '' }}>
                                 Siap Disajikan
                             </option>
-
-                            <option value="Completed"
-                                {{ request('status')=='Completed' ? 'selected' : '' }}>
+                            <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>
                                 Selesai
                             </option>
-
-                            <option value="Cancelled"
-                                {{ request('status')=='Cancelled' ? 'selected' : '' }}>
+                            <option value="Cancelled" {{ request('status') == 'Cancelled' ? 'selected' : '' }}>
                                 Dibatalkan
                             </option>
                         </select>
                     </div>
 
                     <div class="col-md-3">
-                        <button class="btn btn-success w-100">
-                            Cari
-                        </button>
+                        <button class="btn btn-success w-100">Cari</button>
                     </div>
                 </div>
             </form>
@@ -141,106 +114,63 @@
                     </thead>
 
                     <tbody>
-
                         @forelse($orders as $order)
+                            <tr>
+                                <td>{{ $order->order_number }}</td>
 
-                        <tr>
-                            <td>
-                                {{ $order->order_number }}
-                            </td>
+                                <td>
+                                    <strong>{{ $order->customer_name }}</strong><br>
+                                    <small class="text-muted">{{ $order->phone }}</small>
+                                </td>
 
-                            <td>
-                                <strong>{{ $order->customer_name }}</strong>
+                                <td>
+                                    @foreach($order->details as $detail)
+                                        {{ $detail->menu->name }} x{{ $detail->qty }}<br>
+                                    @endforeach
+                                </td>
 
-                                <br>
+                                <td>{{ $order->note ?? '-' }}</td>
+                                <td>{{ $order->payment }}</td>
+                                <td>Rp {{ number_format($order->total,0,',','.') }}</td>
 
-                                <small class="text-muted">
-                                    {{ $order->phone }}
-                                </small>
-                            </td>
+                                <td>
+                                    <form action="{{ route('admin.orders.status',$order->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
 
-                            <td>
-                                @foreach($order->details as $detail)
-                                    {{ $detail->menu->name }}
-                                    x{{ $detail->qty }}
-                                    <br>
-                                @endforeach
-                            </td>
+                                        <div class="d-flex gap-2">
+                                            <select name="status" class="form-select form-select-sm">
+                                                <option value="Pending" {{ $order->status == 'Pending' ? 'selected' : '' }}>
+                                                    Menunggu
+                                                </option>
+                                                <option value="Accepted" {{ $order->status == 'Accepted' ? 'selected' : '' }}>
+                                                    Diterima
+                                                </option>
+                                                <option value="Processing" {{ $order->status == 'Processing' ? 'selected' : '' }}>
+                                                    Diproses
+                                                </option>
+                                                <option value="Ready" {{ $order->status == 'Ready' ? 'selected' : '' }}>
+                                                    Siap Disajikan
+                                                </option>
+                                                <option value="Completed" {{ $order->status == 'Completed' ? 'selected' : '' }}>
+                                                    Selesai
+                                                </option>
+                                                <option value="Cancelled" {{ $order->status == 'Cancelled' ? 'selected' : '' }}>
+                                                    Dibatalkan
+                                                </option>
+                                            </select>
 
-                            <td>
-                                {{ $order->note ?? '-' }}
-                            </td>
-
-                            <td>
-                                {{ $order->payment }}
-                            </td>
-
-                            <td>
-                                Rp {{ number_format($order->total,0,',','.') }}
-                            </td>
-
-                            <td>
-                                <form
-                                    action="{{ route('admin.orders.status',$order->id) }}"
-                                    method="POST">
-
-                                    @csrf
-                                    @method('PATCH')
-
-                                    <div class="d-flex gap-2">
-                                        <select
-                                            name="status"
-                                            class="form-select form-select-sm">
-
-                                            <option value="Pending"
-                                                {{ $order->status=='Pending' ? 'selected' : '' }}>
-                                                Menunggu
-                                            </option>
-
-                                            <option value="Accepted"
-                                                {{ $order->status=='Accepted' ? 'selected' : '' }}>
-                                                Diterima
-                                            </option>
-
-                                            <option value="Processing"
-                                                {{ $order->status=='Processing' ? 'selected' : '' }}>
-                                                Diproses
-                                            </option>
-
-                                            <option value="Ready"
-                                                {{ $order->status=='Ready' ? 'selected' : '' }}>
-                                                Siap Disajikan
-                                            </option>
-
-                                            <option value="Completed"
-                                                {{ $order->status=='Completed' ? 'selected' : '' }}>
-                                                Selesai
-                                            </option>
-
-                                            <option value="Cancelled"
-                                                {{ $order->status=='Cancelled' ? 'selected' : '' }}>
-                                                Dibatalkan
-                                            </option>
-                                        </select>
-
-                                        <button
-                                            type="submit"
-                                            class="btn btn-success btn-sm">
-                                            Perbarui
-                                        </button>
-                                    </div>
-                                </form>
-                            </td>
-                        </tr>
-
+                                            <button type="submit" class="btn btn-success btn-sm">
+                                                Perbarui
+                                            </button>
+                                        </div>
+                                    </form>
+                                </td>
+                            </tr>
                         @empty
-
-                        <tr>
-                            <td colspan="7" class="text-center">
-                                Belum ada pesanan.
-                            </td>
-                        </tr>
-                        
+                            <tr>
+                                <td colspan="7" class="text-center">Belum ada pesanan.</td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -248,4 +178,5 @@
         </div>
     </div>
 </div>
+
 @endsection
