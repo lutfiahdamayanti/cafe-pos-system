@@ -70,7 +70,7 @@
                     @endif
                 </a>
 
-                <!-- <a href="{{ route('login') }}" class="btn btn-outline-success rounded-pill px-3">
+                <!-- <a href="{{ route('admin.login') }}" class="btn btn-outline-success rounded-pill px-3">
                     Login
                 </a>
 
