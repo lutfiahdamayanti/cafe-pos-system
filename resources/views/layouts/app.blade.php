@@ -75,13 +75,7 @@
                     @endif
                 </a>
 
-                <!-- <a href="{{ route('login') }}" class="btn btn-outline-success rounded-pill px-3">
-                    Login
-                </a>
-
-                <a href="menu" class="btn btn-success rounded-pill px-3">
-                    Order Now
-                </a> -->
+                
             </div>
         </div>
     </div>
