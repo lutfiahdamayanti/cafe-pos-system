@@ -69,8 +69,8 @@
                             <form action="{{ route('cart.destroy', $cart->id) }}" method="POST" onsubmit="return confirm('Hapus {{ $cart->menu->name }} dari keranjang?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="delete-cart-btn" data-id="{{ $cart->id }}">
-                                    <i class="bi bi-trash"></i>
+                                <button type="button" class="delete-cart-btn" data-id="{{ $cart->id }}" title="Hapus">
+                                    <i class="bi bi-trash3"></i>
                                 </button>
                             </form>
                         </div>
@@ -117,6 +117,74 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('.plus-btn, .minus-btn').forEach(button => {
+        button.addEventListener('click', function () {
+
+            const cartId = this.dataset.id;
+            const qtyElement = document.getElementById(`qty-${cartId}`);
+            const cartItem = this.closest('.cart-item');
+
+            let currentQty = parseInt(qtyElement.textContent);
+
+            if (this.classList.contains('plus-btn')) {
+                currentQty++;
+            } else {
+                if (currentQty > 1) {
+                    currentQty--;
+                } else {
+                    return;
+                }
+            }
+
+            qtyElement.textContent = currentQty;
+
+            const priceElement = cartItem.querySelector('.price');
+            const totalElement = cartItem.querySelector('.cart-total');
+
+            const price = parseInt(
+                priceElement.textContent.replace(/\D/g, '')
+            );
+
+            const itemTotal = price * currentQty;
+
+            totalElement.textContent =
+                'Rp ' + itemTotal.toLocaleString('id-ID');
+
+            fetch(`/cart/${cartId}/qty`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    qty: currentQty
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Gagal mengubah jumlah pesanan');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+
+                // kalau gagal, kembalikan qty sebelumnya
+                const oldQty = this.classList.contains('plus-btn')
+                    ? currentQty - 1
+                    : currentQty + 1;
+
+                qtyElement.textContent = oldQty;
+
+                const oldTotal = price * oldQty;
+
+                totalElement.textContent =
+                    'Rp ' + oldTotal.toLocaleString('id-ID');
+
+                alert('Gagal mengubah jumlah pesanan.');
+            });
+        });
+    });
     document.querySelectorAll('.delete-cart-btn').forEach(button=>{
         button.addEventListener('click',function(){
             const cartId=this.dataset.id;

@@ -44,15 +44,12 @@
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('menu*') ? 'active' : '' }}" href="{{ route('menu') }}">Menu</a>
                 </li>
-
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('facilities') ? 'active' : '' }}" href="{{ route('facilities') }}">Fasilitas</a>
                 </li>
-
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}">Tentang</a>
                 </li>
-
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}" href="{{ route('contact') }}">Kontak</a>
                 </li>
@@ -64,9 +61,7 @@
                     <i class="bi bi-search"></i>
                 </a>
 
-                @php
-                    $cartCount = \App\Models\Cart::sum('qty');
-                @endphp
+                @php $cartCount = \App\Models\Cart::sum('qty'); @endphp
 
                 <a href="{{ route('cart.index') }}" class="text-dark fs-5 position-relative">
                     <i class="bi bi-cart3"></i>
@@ -75,7 +70,13 @@
                     @endif
                 </a>
 
-                
+                <!-- <a href="{{ route('login') }}" class="btn btn-outline-success rounded-pill px-3">
+                    Login
+                </a>
+
+                <a href="menu" class="btn btn-success rounded-pill px-3">
+                    Order Now
+                </a> -->
             </div>
         </div>
     </div>
@@ -103,19 +104,10 @@
                             Home
                         </a>
                     </li> -->
-
-                    <li>
-                        <a href="{{ route('menu') }}" class="text-white text-decoration-none">Menu</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('facilities') }}" class="text-white text-decoration-none">Fasilitas</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('about') }}" class="text-white text-decoration-none">Tentang</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('contact') }}" class="text-white text-decoration-none">Kontak</a>
-                    </li>
+                    <li><a href="{{ route('menu') }}" class="text-white text-decoration-none">Menu</a></li>
+                    <li><a href="{{ route('facilities') }}" class="text-white text-decoration-none">Fasilitas</a></li>
+                    <li><a href="{{ route('about') }}" class="text-white text-decoration-none">Tentang</a></li>
+                    <li><a href="{{ route('contact') }}" class="text-white text-decoration-none">Kontak</a></li>
                 </ul>
             </div>
 
@@ -127,7 +119,6 @@
             <div class="col-lg-3">
                 <h6>Ikuti Kami</h6>
                 <p class="mt-3 text-light">Ikuti kami di media sosial untuk mendapatkan promo terbaru.</p>
-
                 <div class="d-flex gap-3 fs-3 mt-3">
                     <a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
                     <a href="#" class="text-white"><i class="bi bi-facebook"></i></a>
@@ -161,8 +152,6 @@
                     <i class="bi bi-search"></i>
                     <input type="text" id="searchMenu" placeholder="Cari kopi, makanan, dessert...">
                 </div>
-
-                <!-- RESULT MINI -->
                 <div class="search-result mt-3" id="searchResult">
                     <p class="text-center text-muted">Mulai ketik nama menu...</p>
                 </div>
