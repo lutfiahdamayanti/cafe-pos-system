@@ -411,11 +411,8 @@ footer a:hover{color:#F59E0B!important}
     border-radius:12px;font-weight:600;
 }
 .btn-checkout:hover{background:#23493D}
-
-/* ========================= FACILITIES HERO =========================
-.facilities-hero{
-    background-image:url("../images/fasilitas.jpeg");
-} */
+.delete-cart-btn {border: none;background: transparent;color: #9a9a9a;font-size: 18px;padding: 6px;cursor: pointer;transition: all 0.2s ease;}
+.delete-cart-btn:hover {color: #dc3545;transform: scale(1.1);}
 
 /* ========================= FACILITIES HERO ========================= */
 .facilities-hero{
