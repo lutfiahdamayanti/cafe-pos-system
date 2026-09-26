@@ -6,8 +6,8 @@
     <div class="container">
         <form action="{{ route('checkout.store') }}" method="POST">
             @csrf
-            <div class="row g-4">
 
+            <div class="row g-4">
                 {{-- ================= LEFT ================= --}}
                 <div class="col-lg-8">
 
@@ -26,13 +26,14 @@
                                 <input type="text" name="phone" class="form-control" required>
                             </div>
 
-                            <div class="mb-3">
+                            <div class="mb-3" id="table-wrapper">
                                 <label class="form-label">Nomor Meja</label>
+
                                 @if(session('table_number'))
                                     <input type="text" class="form-control" value="{{ session('table_number') }}" readonly>
                                     <input type="hidden" name="table_number" value="{{ session('table_number') }}">
                                 @else
-                                    <input type="text" name="table_number" class="form-control" placeholder="Contoh : A01">
+                                    <input type="text" name="table_number" id="table_number" class="form-control" placeholder="Contoh : A01">
                                 @endif
                             </div>
 
@@ -43,19 +44,29 @@
                         </div>
                     </div>
 
-                    {{-- Tipe Kunjungan --}}
+                    {{-- Tipe Pesanan --}}
                     <div class="card shadow border-0 rounded-4 mb-4">
                         <div class="card-body p-4">
-                            <h4 class="fw-bold mb-3">Tipe Kunjungan</h4>
+                            <h4 class="fw-bold mb-3">Jenis Pesanan</h4>
 
                             <div class="form-check mb-2">
-                                <input class="form-check-input" type="radio" name="visit_type" value="Dine In" id="dinein" {{ session(*'table_number')* ? *'checked'* : *''* }} required>
-                                <label class="form-check-label" for="dinein">Makan Di Tempat</label>
+                                <input class="form-check-input" type="radio" name="visit_type" value="Dine In" id="dinein" required {{ session('table_number') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="dinein">Dine In</label>
+                            </div>
+
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="visit_type" value="Pickup" id="pickup" {{ !session('table_number') ? 'checked' : '' }}>
+                                <label class="form-check-label" for="pickup">Pickup</label>
+                            </div>
+
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="visit_type" value="Delivery" id="delivery">
+                                <label class="form-check-label" for="delivery">Delivery</label>
                             </div>
 
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="visit_type" value="Take Away" id="takeaway" {{ session(*'table_number')* ? *'disabled'* : *''* }}>
-                                <label class="form-check-label" for="takeaway">Bawa Pulang</label>
+                                <input class="form-check-input" type="radio" name="visit_type" value="Pre-order" id="preorder">
+                                <label class="form-check-label" for="preorder">Pre-order</label>
                             </div>
                         </div>
                     </div>
@@ -134,10 +145,45 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </form>
     </div>
 </section>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const visitTypes = document.querySelectorAll('input[name="visit_type"]');
+    const tableWrapper = document.getElementById('table-wrapper');
+    const tableNumber = document.getElementById('table_number');
+
+    function updateTable() {
+        const selected = document.querySelector('input[name="visit_type"]:checked');
+        if (!selected) return;
+
+        if (selected.value === 'Dine In') {
+            tableWrapper.style.display = 'block';
+
+            if (tableNumber) {
+                tableNumber.required = true;
+            }
+        } else {
+            tableWrapper.style.display = 'none';
+
+            if (tableNumber) {
+                tableNumber.required = false;
+                tableNumber.value = '';
+            }
+        }
+    }
+
+    visitTypes.forEach(function (radio) {
+        radio.addEventListener('change', updateTable);
+    });
+
+    updateTable();
+});
+</script>
+@endpush
 
 @endsection

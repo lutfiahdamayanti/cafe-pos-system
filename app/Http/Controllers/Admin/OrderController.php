@@ -41,11 +41,9 @@ class OrderController extends Controller
         $request->validate([
             'status' => 'required'
         ]);
-        // Saat Kitchen mulai memasak
         if ($request->status == 'Processing' && $order->cooking_started_at == null) {
             $order->cooking_started_at = now();
         }
-        // Saat Kitchen selesai memasak
         if ($request->status == 'Ready') {
             $order->ready_at = now();
 
@@ -160,6 +158,8 @@ class OrderController extends Controller
             'admin.orders.receipt',
             compact('order')
         );
+
+        $pdf->setPaper([0, 0, 226.77, 450]);
         return $pdf->download(
             'struk-'.$order->order_number.'.pdf'
         );

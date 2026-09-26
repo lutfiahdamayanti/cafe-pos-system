@@ -14,22 +14,14 @@ class PosController extends Controller
     public function index()
     {
         $menus = Menu::with('options.values')->get();
+        $customers = Customer::orderBy('name')->get();
 
         $tables = [
-            'A01',
-            'A02',
-            'A03',
-            'A04',
-            'A05',
-            'A06',
-            'A07',
-            'A08'
+            'A01','A02','A03','A04',
+            'A05','A06','A07','A08'
         ];
 
-        return view(
-            'admin.pos.index',
-            compact('menus', 'tables')
-        );
+        return view('admin.pos.index', compact('menus', 'tables', 'customers'));
     }
 
     public function store(Request $request)
@@ -37,32 +29,27 @@ class PosController extends Controller
         $request->validate([
             'customer_name' => 'required',
             'phone' => 'required',
-            'table_number' => 'required',
-            'payment' => 'required',
+            'visit_type' => 'required|in:Dine In,Pickup,Delivery,Pre-order',
+            'table_number' => 'nullable',
+            'payments' => 'required|array|min:1',
+            'payments.*.method' => 'required|in:Cash,QRIS,E-Wallet,Virtual Account',
+            'payments.*.amount' => 'required|numeric|min:0',
+            'discount' => 'nullable|numeric|min:0',
             'menus' => 'required|array|min:1',
         ]);
 
         $subtotal = 0;
 
-        // ==========================
-        // Hitung Total
-        // ==========================
         foreach ($request->menus as $item) {
-
             $menu = Menu::with('options.values')->findOrFail($item['id']);
-
             $price = $menu->price;
 
-            // Ukuran Large
             if (!empty($item['size']) && $item['size'] == 'Large') {
                 $price += $menu->large_price;
             }
 
-            // Tambahan harga option
             if (!empty($item['options'])) {
-
                 foreach ($item['options'] as $valueId) {
-
                     $value = \App\Models\MenuOptionValue::find($valueId);
 
                     if ($value) {
@@ -74,33 +61,47 @@ class PosController extends Controller
             $subtotal += ($price * $item['qty']);
         }
 
-        $tax = $subtotal * 0.11;
-        $service = 3000;
-        $total = $subtotal + $tax + $service;
+        $discount = $request->discount ?? 0;
 
-        // ==========================
-        // Simpan Order
-        // ==========================
+        if ($discount > $subtotal) {
+            $discount = $subtotal;
+        }
+
+        $afterDiscount = $subtotal - $discount;
+        $tax = round($afterDiscount * 0.11);
+        $service = 3000;
+        $total = round($afterDiscount + $tax + $service);
+        $paymentTotal = collect($request->payments)->sum('amount');
+
+        if ($paymentTotal != (int) $total) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'payments' => 'Total pembayaran harus sama dengan total pesanan.'
+                ]);
+        }
+
         $order = Order::create([
             'order_number'  => 'ORD' . date('YmdHis'),
             'customer_name' => $request->customer_name,
             'phone'         => $request->phone,
             'table_number'  => $request->table_number,
-            'payment'       => $request->payment,
+            'visit_type'    => $request->visit_type,
+            'payment' => collect($request->payments)
+                ->map(function ($payment) {
+                    return $payment['method'] . ': Rp ' . number_format($payment['amount'], 0, ',', '.');
+                })
+                ->implode(', '),
             'subtotal'      => $subtotal,
+            'discount'      => $discount,
             'tax'           => $tax,
             'service'       => $service,
             'total'         => $total,
             'status'        => 'Pending'
         ]);
 
-        // ==========================
-        // Simpan Detail Order
-        // ==========================
         foreach ($request->menus as $item) {
-
             $menu = Menu::findOrFail($item['id']);
-
             $price = $menu->price;
 
             if (!empty($item['size']) && $item['size'] == 'Large') {
@@ -111,15 +112,11 @@ class PosController extends Controller
             $extraPrice = 0;
 
             if (!empty($item['options'])) {
-
                 foreach ($item['options'] as $valueId) {
-
                     $value = \App\Models\MenuOptionValue::with('option')->find($valueId);
 
                     if ($value) {
-
                         $selectedOptions[$value->option->name] = $value->value;
-
                         $extraPrice += $value->extra_price;
                     }
                 }
@@ -141,13 +138,8 @@ class PosController extends Controller
             $menu->decrement('stock', $item['qty']);
         }
 
-        // ==========================
-        // Customer
-        // ==========================
         $customer = Customer::firstOrCreate(
-            [
-                'phone' => $request->phone
-            ],
+            ['phone' => $request->phone],
             [
                 'name' => $request->customer_name,
                 'visit_count' => 1,
@@ -157,7 +149,6 @@ class PosController extends Controller
         );
 
         if (!$customer->wasRecentlyCreated) {
-
             $customer->update([
                 'name' => $request->customer_name,
                 'visit_count' => $customer->visit_count + 1,

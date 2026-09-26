@@ -54,7 +54,9 @@ class CheckoutController extends Controller
 
         'customer_name' => $request->customer_name,
         'phone' => $request->phone,
-        'table_number' => session('table_number') ?? $request->table_number,
+        'table_number' => $request->visit_type === 'Dine In'
+            ? (session('table_number') ?? $request->table_number)
+            : null,        
         'visit_type' => $request->visit_type,
         'payment' => $request->payment,
         'note' => $request->note,

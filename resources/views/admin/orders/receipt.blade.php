@@ -4,17 +4,21 @@
     <meta charset="UTF-8">
     <title>Struk Pembayaran</title>
     <style>
-        body{font-family:DejaVu Sans,sans-serif;font-size:12px;color:#333;margin:20px}
-        .header{text-align:center}
-        .header h2{margin:0;font-size:24px}
-        .header p{margin:2px 0;font-size:11px;color:#666}
-        .line{border-top:1px dashed #555;margin:10px 0}
-        table{width:100%;border-collapse:collapse}
-        td{padding:4px 0;vertical-align:top}
-        .text-right{text-align:right}
-        .small{font-size:11px;color:#666}
-        .total{font-size:15px;font-weight:bold}
-        .footer{text-align:center;margin-top:20px;font-size:11px;color:#666}
+        @page { margin: 0; }
+        * { box-sizing: border-box; }
+        body {font-family: DejaVu Sans, sans-serif;font-size: 11px;color: #222;margin: 0;padding: 10px;}
+        .header { text-align: center; }
+        .header h2 {margin: 0 0 5px;font-size: 20px;font-weight: bold;}
+        .header p { margin: 2px 0; font-size: 10px; }
+        .line { border-top: 1px dashed #333; margin: 8px 0; }
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 3px 0; vertical-align: top; font-size: 10px; }
+        td:first-child { padding-right: 8px; }
+        .text-right { text-align: right; }
+        .small { font-size: 9px; color: #444; }
+        .total { font-size: 13px; font-weight: bold; }
+        .footer { text-align: center; margin-top: 12px; font-size: 9px; }
+        .footer strong { font-size: 11px; }
     </style>
 </head>
 <body>
@@ -57,12 +61,10 @@
     <div class="line"></div>
     <table>
         <tr><td>Subtotal</td><td class="text-right">Rp {{ number_format($order->subtotal,0,',','.') }}</td></tr>
+        <tr><td>Diskon</td><td class="text-right">Rp {{ number_format($order->discount ?? 0,0,',','.') }}</td></tr>
         <tr><td>PPN (11%)</td><td class="text-right">Rp {{ number_format($order->tax,0,',','.') }}</td></tr>
         <tr><td>Biaya Layanan</td><td class="text-right">Rp {{ number_format($order->service,0,',','.') }}</td></tr>
-        <tr>
-            <td class="total">TOTAL</td>
-            <td class="text-right total">Rp {{ number_format($order->total,0,',','.') }}</td>
-        </tr>
+        <tr><td class="total">TOTAL</td><td class="text-right total">Rp {{ number_format($order->total,0,',','.') }}</td></tr>
     </table>
 
     <div class="line"></div>

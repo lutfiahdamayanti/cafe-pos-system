@@ -16,6 +16,7 @@ class Order extends Model
         'payment',
         'note',
         'subtotal',
+        'discount',
         'tax',
         'service',
         'total',
