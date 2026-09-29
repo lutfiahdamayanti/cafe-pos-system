@@ -37,10 +37,49 @@
                         <i class="bi bi-bar-chart"></i> Laporan
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('admin.customers.index') }}">
-                        <i class="bi bi-people"></i> Pelanggan
+                {{-- DROPDOWN CRM PELANGGAN --}}
+                <li class="sidebar-dropdown">
+                    <a href="#crmSubmenu" data-bs-toggle="collapse" class="d-flex align-items-center justify-content-between {{ request()->is('admin/customers*') ? 'active-parent' : '' }}" aria-expanded="{{ request()->is('admin/customers*') ? 'true' : 'false' }}">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-people-fill text-warning"></i>
+                            <span>CRM Pelanggan</span>
+                        </div>
+                        <i class="bi bi-chevron-down dropdown-arrow"></i>
                     </a>
+                    <div class="collapse {{ request()->is('admin/customers*') ? 'show' : '' }}" id="crmSubmenu">
+                        <ul class="sidebar-submenu">
+                            <li>
+                                <a href="{{ route('admin.customers.database') }}" class="{{ request()->routeIs('admin.customers.database', 'admin.customers.index', 'admin.customers.create', 'admin.customers.show', 'admin.customers.edit') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-database"></i> Database Pelanggan
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.customers.riwayat-pembelian') }}" class="{{ request()->routeIs('admin.customers.riwayat-pembelian') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-clock-history"></i> Riwayat Pembelian
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.customers.membership-tier') }}" class="{{ request()->routeIs('admin.customers.membership-tier') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-award"></i> Membership Tier
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.customers.poin-pelanggan') }}" class="{{ request()->routeIs('admin.customers.poin-pelanggan') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-coin text-warning"></i> Poin Pelanggan
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.customers.menu-favorit') }}" class="{{ request()->routeIs('admin.customers.menu-favorit') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-heart-fill text-danger"></i> Menu Favorit
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.customers.birthday-reminder') }}" class="{{ request()->routeIs('admin.customers.birthday-reminder', 'admin.customers.birthdays') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-cake2-fill text-warning"></i> Birthday Reminder
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
             @endif
 

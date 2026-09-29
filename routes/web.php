@@ -110,20 +110,38 @@ Route::prefix('admin')
         });
 
 
-        /* =================================== OWNER & MANAGER =========================================*/
+        /* =================================== OWNER & MANAGER (CRM & LAPORAN) =========================================*/
         Route::middleware('role:owner,manager')->group(function () {
             Route::get('/', [DashboardController::class, 'index'])
                 ->name('dashboard');
             Route::get('/reports', [ReportController::class, 'index'])
                 ->name('reports.index');
-            Route::get('/', [DashboardController::class,'index'])
-                ->name('dashboard');
-            Route::get('/reports',[ReportController::class,'index'])
-                ->name('reports.index');
-            Route::resource('customers', CustomerController::class)
-                ->only(['index']);
+
+            // ========================= CRM PELANGGAN SUB-MENUS =========================
+            Route::get('/customers/database-pelanggan', [CustomerController::class, 'databasePelanggan'])
+                ->name('customers.database');
+            Route::get('/customers/riwayat-pembelian', [CustomerController::class, 'riwayatPembelian'])
+                ->name('customers.riwayat-pembelian');
+            Route::get('/customers/membership-tier', [CustomerController::class, 'membershipTier'])
+                ->name('customers.membership-tier');
+            Route::post('/customers/{customer}/update-tier', [CustomerController::class, 'updateMemberTier'])
+                ->name('customers.update-tier');
+            Route::get('/customers/poin-pelanggan', [CustomerController::class, 'poinPelanggan'])
+                ->name('customers.poin-pelanggan');
+            Route::get('/customers/menu-favorit', [CustomerController::class, 'menuFavorit'])
+                ->name('customers.menu-favorit');
+            Route::get('/customers/birthday-reminder', [CustomerController::class, 'birthdayReminder'])
+                ->name('customers.birthday-reminder');
+            Route::get('/customers/birthdays', [CustomerController::class, 'birthdayReminder'])
+                ->name('customers.birthdays');
+
             Route::get('/customers/export/csv', [CustomerController::class, 'exportCsv'])
                 ->name('customers.export.csv');
+            Route::post('/customers/recalculate-tiers', [CustomerController::class, 'recalculateTiers'])
+                ->name('customers.recalculate-tiers');
+            Route::post('/customers/{customer}/adjust-points', [CustomerController::class, 'adjustPoints'])
+                ->name('customers.adjust-points');
+            Route::resource('customers', CustomerController::class);
         });
 
         /* ======================================= OWNER, MANAGER & CASHIER ====================================*/

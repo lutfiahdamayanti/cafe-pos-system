@@ -116,3 +116,81 @@ body.dark-mode .btn-outline-secondary{color:#fff;border-color:#888}
 
 /* ================= ROLE BADGE ================= */
 .badge-owner{background:#6f42c1;color:#fff !important}
+
+/* ================= CRM & MEMBERSHIP STYLES ================= */
+.sidebar ul li a.active{background:#198754;color:#fff;font-weight:600}
+.badge-tier-bronze{background:linear-gradient(135deg, #cd7f32, #8b4513);color:#fff;font-weight:600;padding:6px 12px;border-radius:20px}
+.badge-tier-silver{background:linear-gradient(135deg, #a8b2bc, #6c757d);color:#fff;font-weight:600;padding:6px 12px;border-radius:20px}
+.badge-tier-gold{background:linear-gradient(135deg, #ffd700, #d4af37);color:#212529;font-weight:700;padding:6px 12px;border-radius:20px;box-shadow:0 2px 6px rgba(212,175,55,0.4)}
+.badge-tier-platinum{background:linear-gradient(135deg, #7952b3, #432874);color:#fff;font-weight:700;padding:6px 12px;border-radius:20px;box-shadow:0 2px 8px rgba(121,82,179,0.4)}
+
+.member-card-vip {
+    border-radius: 18px;
+    padding: 24px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+.member-card-vip.tier-bronze { background: linear-gradient(135deg, #3d2616, #804a26); }
+.member-card-vip.tier-silver { background: linear-gradient(135deg, #2b333a, #5c6773); }
+.member-card-vip.tier-gold { background: linear-gradient(135deg, #443407, #997819); }
+.member-card-vip.tier-platinum { background: linear-gradient(135deg, #28143d, #5a2e8c); }
+
+.member-card-vip::after {
+    content: '';
+    position: absolute;
+    right: -30px;
+    bottom: -30px;
+    width: 140px;
+    height: 140px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+}
+
+/* ================= SIDEBAR DROPDOWN & SUBMENUS ================= */
+.sidebar-dropdown > a {
+    cursor: pointer;
+}
+.sidebar-dropdown > a.active-parent {
+    background: rgba(25, 135, 84, 0.2);
+    color: #fff;
+    border-left: 3px solid #198754;
+}
+.sidebar-dropdown > a .dropdown-arrow {
+    font-size: 11px;
+    transition: transform 0.3s ease;
+}
+.sidebar-dropdown > a[aria-expanded="true"] .dropdown-arrow {
+    transform: rotate(180deg);
+}
+.sidebar-submenu {
+    list-style: none !important;
+    padding: 4px 0 6px 14px !important;
+    margin: 4px 10px 8px 16px !important;
+    border-left: 2px solid rgba(255, 255, 255, 0.15);
+}
+.sidebar-submenu li {
+    margin: 3px 0 !important;
+}
+.sidebar-submenu li a {
+    padding: 7px 12px !important;
+    font-size: 13px !important;
+    gap: 9px !important;
+    border-radius: 8px !important;
+    color: #9ca3af !important;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.sidebar-submenu li a:hover {
+    background: rgba(25, 135, 84, 0.25) !important;
+    color: #fff !important;
+}
+.sidebar-submenu li a.active-sub {
+    background: #198754 !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 6px rgba(25, 135, 84, 0.3);
+}

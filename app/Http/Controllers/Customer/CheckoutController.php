@@ -89,6 +89,20 @@ class CheckoutController extends Controller
         ]);
     }
 
+    // Tambah Poin Loyalty & Update Tier Otomatis
+    $earnedPoints = (int) floor($grandTotal / 10000);
+    $customer->points += $earnedPoints;
+    $customer->tier = $customer->calculateTier();
+    $customer->save();
+
+    if ($earnedPoints > 0) {
+        $customer->pointLogs()->create([
+            'points' => $earnedPoints,
+            'type' => 'earned',
+            'description' => "Poin pesanan Online/QR #{$order->order_number}",
+        ]);
+    }
+
     foreach($carts as $cart){
         OrderDetail::create([
             'order_id' => $order->id,

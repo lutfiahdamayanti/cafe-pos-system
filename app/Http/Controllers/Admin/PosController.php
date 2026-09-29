@@ -157,6 +157,20 @@ class PosController extends Controller
             ]);
         }
 
+        // Tambah Poin Loyalty & Update Tier Otomatis
+        $earnedPoints = (int) floor($total / 10000);
+        $customer->points += $earnedPoints;
+        $customer->tier = $customer->calculateTier();
+        $customer->save();
+
+        if ($earnedPoints > 0) {
+            $customer->pointLogs()->create([
+                'points' => $earnedPoints,
+                'type' => 'earned',
+                'description' => "Poin pesanan POS #{$order->order_number}",
+            ]);
+        }
+
         return redirect()
             ->route('admin.orders.index')
             ->with('success', 'Pesanan berhasil dibuat.');
