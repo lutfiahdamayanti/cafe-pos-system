@@ -8,7 +8,16 @@
             <h2 class="fw-bold">Menu</h2>
             <p class="text-muted mb-0">Kelola seluruh menu cafe.</p>
         </div>
-        <a href="{{ route('admin.menu.create') }}" class="btn btn-success"><i class="bi bi-plus-circle"></i> Tambah Menu</a>
+
+        <div class="d-flex gap-2">
+            <a href="{{ route('admin.category.index') }}" class="btn btn-success">
+                <i class="bi bi-tags"></i> Kelola Kategori
+            </a>
+
+            <a href="{{ route('admin.menu.create') }}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Tambah Menu
+            </a>
+        </div>
     </div>
 
     <div class="card shadow-sm border-0 rounded-4">
@@ -20,6 +29,7 @@
                         <th>Nama</th>
                         <th>Kategori</th>
                         <th>Harga</th>
+                        <th>Food Cost</th>
                         <th>Stok</th>
                         <th>Status</th>
                         <th width="180">Aksi</th>
@@ -32,6 +42,7 @@
                         <td>{{ $menu->name }}</td>
                         <td>{{ $menu->category->name }}</td>
                         <td>Rp {{ number_format($menu->price,0,',','.') }}</td>
+                        <td>Rp {{ number_format($menu->food_cost ?? 0, 0, ',', '.') }}</td>
                         <td>
                             @if($menu->stock == 0)
                                 <span class="badge bg-danger">Habis</span>
@@ -45,9 +56,9 @@
                             @if($menu->stock == 0)
                                 <span class="badge bg-danger">Habis</span>
                             @elseif($menu->stock <= 5)
-                                <span class="badge bg-warning text-dark">Hampir Habis</span>
+                                <span class="badge bg-warning text-dark">{{ $menu->stock }} Tersisa</span>
                             @else
-                                <span class="badge bg-success">Tersedia</span>
+                                <span class="badge bg-success">{{ $menu->stock }} Tersisa</span>
                             @endif
                         </td>
                         <td>

@@ -129,11 +129,7 @@
                                         </select>
                                     </div>
                                     <div class="col-5">
-                                        <input type="number"
-                                            name="payments[0][amount]"
-                                            class="form-control payment-amount"
-                                            placeholder="Nominal"
-                                            min="0">
+                                        <input type="number" name="payments[0][amount]" class="form-control payment-amount" placeholder="Nominal" min="0">
                                     </div>
                                 </div>
                             </div>
@@ -166,14 +162,7 @@
                     <hr>
                     <div class="mb-3">
                         <label>Diskon</label>
-                        <input type="number"
-                            name="discount"
-                            id="discount"
-                            class="form-control"
-                            value="0"
-                            min="0"
-                            placeholder="Masukkan diskon"
-                            oninput="renderCart()">
+                        <input type="number" name="discount" id="discount" class="form-control" value="0" min="0" placeholder="Masukkan diskon" oninput="renderCart()">
                     </div>
                     <div id="grandTotal">Rp 0</div>
                     <button type="submit" class="btn btn-success w-100 mt-3">Simpan Pesanan</button>
@@ -216,21 +205,17 @@ customerSelect.addEventListener('change',function(){
 
 function renderCart(){
     let html='',hidden='',subtotal=0;
-
     cart.forEach((item,index)=>{
         subtotal+=item.price*item.qty;
-
         html+=`
         <div class="border-bottom py-3">
             <div class="d-flex justify-content-between align-items-start">
                 <strong>${item.name}</strong>
-                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeItem(${index})">Hapus</button>
+                <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeItem(${index})">Hapus</button>
             </div>
-
             <small>Ukuran : ${item.size}</small>
             ${item.options.map(o=>`<br><small>• ${o.name} : ${o.value}</small>`).join('')}
             ${item.note?`<br><small><b>Catatan :</b> ${item.note}</small>`:''}
-
             <div class="d-flex justify-content-between align-items-center mt-2">
                 <div class="d-flex align-items-center gap-2">
                     <button type="button" class="btn btn-sm btn-outline-success" onclick="decreaseQty(${index})">−</button>
@@ -240,31 +225,25 @@ function renderCart(){
                 <strong>Rp ${(item.price*item.qty).toLocaleString()}</strong>
             </div>
         </div>`;
-
         hidden+=`
         <input type="hidden" name="menus[${index}][id]" value="${item.id}">
         <input type="hidden" name="menus[${index}][qty]" value="${item.qty}">
         <input type="hidden" name="menus[${index}][size]" value="${item.size}">
         <input type="hidden" name="menus[${index}][note]" value="${item.note}">`;
-
         item.options.forEach(option=>{
             hidden+=`<input type="hidden" name="menus[${index}][options][]" value="${option.id}">`;
         });
     });
-
     if(!cart.length)html='<p class="text-muted">Belum ada menu.</p>';
-
     let discount=parseInt($('discount').value)||0;
     if(discount>subtotal){
         discount=subtotal;
         $('discount').value=discount;
     }
-
     let afterDiscount=subtotal-discount;
     let tax=afterDiscount*0.11;
     let service=3000;
     let total=afterDiscount+tax+service;
-
     $('cart-items').innerHTML=html;
     $('hidden-cart').innerHTML=hidden;
     $('grandTotal').innerHTML=`
@@ -288,7 +267,6 @@ document.querySelectorAll('.add-menu').forEach(btn=>{
         const size=card.querySelector('.size-select');
         const sizeValue=size?size.value:'-';
         let price=parseInt(this.dataset.price),options=[];
-
         card.querySelectorAll('.option-select').forEach(select=>{
             if(select.value){
                 const opt=select.options[select.selectedIndex];
@@ -300,22 +278,18 @@ document.querySelectorAll('.add-menu').forEach(btn=>{
                 });
             }
         });
-
         const note=card.querySelector('.note').value;
         const id=this.dataset.id;
         const name=this.dataset.name;
-
         const found=cart.find(item=>
             item.id==id &&
             item.size==sizeValue &&
             JSON.stringify(item.options)==JSON.stringify(options) &&
             item.note==note
         );
-
         found?found.qty++:cart.push({
             id,name,price,qty:1,size:sizeValue,options,note
         });
-
         renderCart();
     });
 });
@@ -327,7 +301,6 @@ function updatePaymentTotal(){
     });
     $('payment-total').innerText='Rp '+total.toLocaleString('id-ID');
 }
-
 $('add-payment').addEventListener('click',()=>{
     $('payment-list').insertAdjacentHTML('beforeend',`
         <div class="payment-item mb-2">
@@ -347,7 +320,6 @@ $('add-payment').addEventListener('click',()=>{
     paymentIndex++;
     updatePaymentTotal();
 });
-
 document.addEventListener('input',e=>{
     if(e.target.classList.contains('payment-amount'))updatePaymentTotal();
 });
@@ -356,12 +328,10 @@ $('split-bill-btn').addEventListener('click',()=>{
     const box=$('split-bill-box');
     const list=$('payment-list');
     const add=$('add-payment');
-
     splitBillActive=!splitBillActive;
     box.style.display=splitBillActive?'block':'none';
     list.style.display=splitBillActive?'none':'block';
     add.style.display=splitBillActive?'none':'inline-block';
-
     if(!splitBillActive){
         $('split-result').innerHTML='';
         list.innerHTML=`
@@ -385,44 +355,34 @@ $('split-bill-btn').addEventListener('click',()=>{
 
 $('calculate-split').addEventListener('click',()=>{
     const count=parseInt($('split-count').value)||0;
-
     if(count<2){
         alert('Jumlah orang minimal 2.');
         return;
     }
-
     let subtotal=cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
-
     if(subtotal<=0){
         alert('Tambahkan menu terlebih dahulu.');
         return;
     }
-
     let discount=parseInt($('discount').value)||0;
-
     if(discount>subtotal){
         discount=subtotal;
         $('discount').value=discount;
     }
-
     const afterDiscount=subtotal-discount;
     const tax=Math.round(afterDiscount*0.11);
     const service=3000;
     const total=afterDiscount+tax+service;
     const baseAmount=Math.floor(total/count);
     const remainder=total%count;
-
     $('split-result').innerHTML=`
         <div class="alert alert-info">
             <strong>Total Pesanan:</strong>
             Rp ${total.toLocaleString('id-ID')}
         </div>`;
-
     $('payment-list').innerHTML='';
-
     for(let i=0;i<count;i++){
         let amount=baseAmount+(i===0?remainder:0);
-
         $('split-result').insertAdjacentHTML('beforeend',`
             <div class="row g-2 mb-2">
                 <div class="col-3"><input type="text" class="form-control" value="Orang ${i+1}" readonly></div>
@@ -439,11 +399,9 @@ $('calculate-split').addEventListener('click',()=>{
                 </div>
             </div>`);
     }
-
     paymentIndex=count;
     updatePaymentTotal();
 });
-
 $('open-cash-drawer').addEventListener('click',()=>{
     const status=$('cash-drawer-status');
     status.innerText='Laci kasir dibuka.';

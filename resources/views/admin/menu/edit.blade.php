@@ -1,6 +1,8 @@
+```blade
 @extends('layouts.admin')
 @section('title','Update Menu')
 @section('content')
+
 <div class="container py-4">
     <form action="{{ route('admin.menu.update', $menu->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -32,6 +34,11 @@
                     <div class="col-md-4">
                         <label>Harga</label>
                         <input type="number" name="price" class="form-control" value="{{ old('price', $menu->price) }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label>Estimasi Food Cost</label>
+                        <input type="number" name="food_cost" class="form-control" value="{{ old('food_cost', $menu->food_cost) }}" readonly>
+                        <small class="text-muted">Perkiraan biaya bahan untuk 1 porsi.</small>
                     </div>
                     <input type="hidden" name="large_price" value="{{ old('large_price', $menu->large_price) }}">
                     <div class="col-md-4">
@@ -76,6 +83,34 @@
                     <input type="checkbox" name="best_seller" class="form-check-input" {{ $menu->best_seller ? 'checked' : '' }}>
                     <label class="form-check-label">Best Seller</label>
                 </div>
+
+                <hr>
+                <h5 class="fw-bold">Resep / Bahan Menu</h5>
+
+                <div id="ingredient-wrapper">
+                    @foreach($menu->recipeIngredients as $i => $ingredient)
+                        <div class="row mt-2 ingredient-item">
+                            <div class="col-md-4">
+                                <input type="text" name="recipe_ingredients[{{ $i }}][name]" class="form-control" placeholder="Nama bahan" value="{{ $ingredient->name }}">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="number" name="recipe_ingredients[{{ $i }}][quantity]" class="form-control" placeholder="Jumlah" step="0.01" value="{{ $ingredient->quantity }}">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="text" name="recipe_ingredients[{{ $i }}][unit]" class="form-control" placeholder="Satuan" value="{{ $ingredient->unit }}">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="number" name="recipe_ingredients[{{ $i }}][cost]" class="form-control" placeholder="Biaya" step="0.01" value="{{ $ingredient->cost }}">
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-danger remove-ingredient">X</button>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <button type="button" id="add-ingredient" class="btn btn-success btn-sm mt-3">+ Tambah Bahan</button>
+
                 <hr>
                 <h5 class="fw-bold">Pilihan Menu</h5>
                 <div id="option-wrapper">
@@ -88,7 +123,7 @@
                             </div>
                             <div class="values">
                                 @foreach($option->values as $j=>$value)
-                                    <<div class="row mt-2">
+                                    <div class="row mt-2">
                                         <div class="col-md-5">
                                             <input type="text" class="form-control" name="options[{{ $i }}][values][{{ $j }}][value]" value="{{ $value->value }}">
                                         </div>
@@ -114,6 +149,7 @@
         </div>
     </form>
 </div>
+
 @push('scripts')
 <script>
 let optionIndex={{ $menu->options->count() }};
@@ -131,8 +167,8 @@ document.getElementById('add-option').addEventListener('click',function(){
     `);
     optionIndex++;
 });
+
 document.addEventListener('click',function(e){
-    // Tambah Value
     if(e.target.classList.contains('add-value')){
         let card=e.target.closest('.option-item');
         let values=card.querySelector('.values');
@@ -152,13 +188,42 @@ document.addEventListener('click',function(e){
             </div>
         `);
     }
-    // Hapus Option
     if(e.target.classList.contains('remove-option')){
         e.target.closest('.option-item').remove();
     }
-    // Hapus Value
     if(e.target.classList.contains('remove-value')){
         e.target.closest('.row').remove();
+    }
+});
+
+let ingredientIndex={{ $menu->recipeIngredients->count() }};
+
+document.getElementById('add-ingredient').addEventListener('click',function(){
+    document.getElementById('ingredient-wrapper').insertAdjacentHTML('beforeend',`
+        <div class="row mt-2 ingredient-item">
+            <div class="col-md-4">
+                <input type="text" name="recipe_ingredients[${ingredientIndex}][name]" class="form-control" placeholder="Nama bahan">
+            </div>
+            <div class="col-md-3">
+                <input type="number" name="recipe_ingredients[${ingredientIndex}][quantity]" class="form-control" placeholder="Jumlah" step="0.01">
+            </div>
+            <div class="col-md-2">
+                <input type="text" name="recipe_ingredients[${ingredientIndex}][unit]" class="form-control" placeholder="Satuan">
+            </div>
+            <div class="col-md-2">
+                <input type="number" name="recipe_ingredients[${ingredientIndex}][cost]" class="form-control" placeholder="Biaya" step="0.01">
+            </div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-danger remove-ingredient">X</button>
+            </div>
+        </div>
+    `);
+    ingredientIndex++;
+});
+
+document.addEventListener('click',function(e){
+    if(e.target.classList.contains('remove-ingredient')){
+        e.target.closest('.ingredient-item').remove();
     }
 });
 </script>

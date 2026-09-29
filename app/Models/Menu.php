@@ -12,6 +12,7 @@ class Menu extends Model
     'description',
     'ingredients',
     'price',
+    'food_cost',
     'image',
     'rating',
     'stock',
@@ -38,5 +39,10 @@ class Menu extends Model
     public function options()
     {
         return $this->hasMany(MenuOption::class);
+    }
+
+    public function recipeIngredients()
+    {
+        return $this->hasMany(Ingredient::class);
     }
 }

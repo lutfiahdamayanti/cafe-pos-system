@@ -34,10 +34,16 @@ class MenuController extends Controller
             'name' => 'required',
             'description' => 'required',
             'price' => 'required|numeric',
+            'food_cost' => 'nullable|numeric|min:0',
             'large_price' => 'required|numeric',
             'rating' => 'required|numeric|min:1|max:5',
             'stock' => 'required|integer',
             'preparation_time' => 'required|integer',
+            'recipe_ingredients' => 'nullable|array',
+            'recipe_ingredients.*.name' => 'nullable|string|max:255',
+            'recipe_ingredients.*.quantity' => 'nullable|numeric|min:0',
+            'recipe_ingredients.*.unit' => 'nullable|string|max:50',
+            'recipe_ingredients.*.cost' => 'nullable|numeric|min:0',
         ]);
 
         $image = null;
@@ -51,8 +57,9 @@ class MenuController extends Controller
             'category_id'       => $request->category_id,
             'name'              => $request->name,
             'description'       => $request->description,
-            'ingredients'       => $request->ingredients,
+            'ingredients' => $request->ingredients,
             'price'             => $request->price,
+            'food_cost' => $request->food_cost,
             'large_price'       => $request->large_price,
             'stock'             => $request->stock,
             'rating'            => $request->rating,
@@ -64,6 +71,28 @@ class MenuController extends Controller
             'is_new'            => $request->has('new'),
             'is_available'      => $request->has('is_active'),
             'image'             => $image,
+        ]);
+        $foodCost = 0;
+
+        if ($request->has('recipe_ingredients')) {
+            foreach ($request->recipe_ingredients as $ingredient) {
+                if (!empty($ingredient['name'])) {
+                    $cost = $ingredient['cost'] ?? 0;
+
+                    $menu->recipeIngredients()->create([
+                        'name' => $ingredient['name'],
+                        'quantity' => $ingredient['quantity'] ?? 0,
+                        'unit' => $ingredient['unit'] ?? '',
+                        'cost' => $cost,
+                    ]);
+
+                    $foodCost += $cost;
+                }
+            }
+        }
+
+        $menu->update([
+            'food_cost' => $foodCost,
         ]);
 
         if($request->has('options')){
@@ -82,7 +111,6 @@ class MenuController extends Controller
             }
         }
 
-        // Audit Log
         AuditLog::create([
             'user' => 'Admin',
             'activity' => 'Menambahkan menu: ' . $menu->name,
@@ -93,12 +121,14 @@ class MenuController extends Controller
 
     public function show(string $id)
     {
-        //
     }
 
     public function edit(string $id)
     {
-        $menu = Menu::with('options.values')->findOrFail($id);
+        $menu = Menu::with([
+            'options.values',
+            'recipeIngredients'
+        ])->findOrFail($id);
         $categories = Category::all();
         return view('admin.menu.edit', compact('menu', 'categories'));
     }
@@ -110,10 +140,16 @@ class MenuController extends Controller
             'name' => 'required',
             'description' => 'required',
             'price' => 'required|numeric',
+            'food_cost' => 'nullable|numeric|min:0',
             'large_price' => 'required|numeric',
             'rating' => 'required|numeric|min:1|max:5',
             'stock' => 'required|integer',
             'preparation_time' => 'required|integer',
+            'recipe_ingredients' => 'nullable|array',
+            'recipe_ingredients.*.name' => 'nullable|string|max:255',
+            'recipe_ingredients.*.quantity' => 'nullable|numeric|min:0',
+            'recipe_ingredients.*.unit' => 'nullable|string|max:50',
+            'recipe_ingredients.*.cost' => 'nullable|numeric|min:0',
         ]);
 
         $menu = Menu::findOrFail($id);
@@ -132,16 +168,40 @@ class MenuController extends Controller
             'description' => $request->description,
             'ingredients' => $request->ingredients,
             'price' => $request->price,
+            'food_cost' => $request->food_cost,
             'large_price' => $request->large_price,
             'stock' => $request->stock,
             'preparation_time' => $request->preparation_time,
             'rating' => $request->rating,
-
             'calories' => $request->calories,
             'allergen' => $request->allergen,
-
             'promo' => $request->has('promo'),
             'best_seller' => $request->has('best_seller'),
+            'is_new' => $request->has('new'),
+            'is_available' => $request->has('is_active'),
+            'image' => $image,
+        ]);
+        $menu->recipeIngredients()->delete();
+
+        $foodCost = 0;
+
+        foreach ($request->recipe_ingredients ?? [] as $ingredient) {
+            if (!empty($ingredient['name'])) {
+                $cost = $ingredient['cost'] ?? 0;
+
+                $menu->recipeIngredients()->create([
+                    'name' => $ingredient['name'],
+                    'quantity' => $ingredient['quantity'] ?? 0,
+                    'unit' => $ingredient['unit'] ?? '',
+                    'cost' => $cost,
+                ]);
+
+                $foodCost += $cost;
+            }
+        }
+
+        $menu->update([
+            'food_cost' => $foodCost,
         ]);
 
         $menu->options()->delete();
@@ -164,7 +224,6 @@ class MenuController extends Controller
             }
         }
 
-        // Audit Log
         AuditLog::create([
             'user' => 'Admin',  
             'activity' => 'Mengubah menu: ' . $menu->name,
@@ -177,7 +236,6 @@ class MenuController extends Controller
     {
         $menu = Menu::findOrFail($id);
 
-        // Audit Log
         AuditLog::create([
             'user' => 'Admin',
             'activity' => 'Menghapus menu: ' . $menu->name,
