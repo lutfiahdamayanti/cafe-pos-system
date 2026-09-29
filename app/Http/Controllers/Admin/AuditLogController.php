@@ -27,7 +27,9 @@ class AuditLogController extends Controller
         $filename = 'backup_' . now()->format('Ymd_His') . '.sql';
         $path = storage_path('app\\' . $filename);
 
-        $mysqldump = 'D:\APLIKASI\xampp\\mysql\\bin\\mysqldump.exe';
+        $mysqldump = file_exists('C:\\xampp\\mysql\\bin\\mysqldump.exe')
+            ? 'C:\\xampp\\mysql\\bin\\mysqldump.exe'
+            : (file_exists('D:\\APLIKASI\\xampp\\mysql\\bin\\mysqldump.exe') ? 'D:\\APLIKASI\\xampp\\mysql\\bin\\mysqldump.exe' : 'mysqldump');
 
         $command = "\"$mysqldump\" "
             . "--host=$host "
