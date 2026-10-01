@@ -27,6 +27,8 @@ use App\Http\Controllers\Admin\PosController;
 use App\Http\Controllers\Admin\PromoLoyaltyController;
 use App\Http\Controllers\Admin\OwnerReportController;
 use App\Http\Controllers\Admin\MultiOutletController;
+use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\Admin\AdvancedOperationController;
 
 /* ========================================= CUSTOMER ========================================*/
 Route::get('/', [MenuController::class, 'index'])
@@ -227,6 +229,61 @@ Route::prefix('admin')
                 // 5. Hak Akses per Cabang
                 Route::get('/hak-akses', [MultiOutletController::class, 'hakAkses'])->name('hak-akses');
                 Route::patch('/hak-akses/{user}', [MultiOutletController::class, 'assignOutlet'])->name('hak-akses.assign');
+            });
+
+            // ========================= MANAJEMEN KARYAWAN / SDM SUB-MENUS =========================
+            Route::prefix('hr')->name('hr.')->group(function () {
+                // 1. Absensi Masuk & Pulang
+                Route::get('/absensi', [EmployeeController::class, 'absensi'])->name('absensi');
+                Route::post('/absensi/clock-in', [EmployeeController::class, 'clockIn'])->name('absensi.clock-in');
+                Route::patch('/absensi/{attendance}/clock-out', [EmployeeController::class, 'clockOut'])->name('absensi.clock-out');
+                Route::post('/absensi/manual', [EmployeeController::class, 'storeManualAttendance'])->name('absensi.manual');
+
+                // 2. Status Kehadiran (Hadir · Izin · Sakit · Cuti)
+                Route::get('/status-kehadiran', [EmployeeController::class, 'statusKehadiran'])->name('status-kehadiran');
+                Route::patch('/status-kehadiran/{attendance}', [EmployeeController::class, 'updateStatusKehadiran'])->name('status-kehadiran.update');
+
+                // 3. Shift Kerja
+                Route::get('/shift', [EmployeeController::class, 'shiftKerja'])->name('shift');
+                Route::post('/shift', [EmployeeController::class, 'storeShift'])->name('shift.store');
+                Route::put('/shift/{shift}', [EmployeeController::class, 'updateShift'])->name('shift.update');
+                Route::delete('/shift/{shift}', [EmployeeController::class, 'destroyShift'])->name('shift.destroy');
+                Route::post('/shift/schedule', [EmployeeController::class, 'assignSchedule'])->name('shift.schedule');
+
+                // 4. Gaji & Payroll Bulanan
+                Route::get('/payroll', [EmployeeController::class, 'payroll'])->name('payroll');
+                Route::post('/payroll/generate', [EmployeeController::class, 'generatePayroll'])->name('payroll.generate');
+                Route::patch('/payroll/{payroll}/status', [EmployeeController::class, 'updatePayrollStatus'])->name('payroll.status');
+
+                // 5. KPI Karyawan
+                Route::get('/kpi', [EmployeeController::class, 'kpi'])->name('kpi');
+                Route::post('/kpi', [EmployeeController::class, 'storeOrUpdateKpi'])->name('kpi.store');
+
+                // 6. Approval Cuti
+                Route::get('/cuti', [EmployeeController::class, 'approvalCuti'])->name('cuti');
+                Route::post('/cuti', [EmployeeController::class, 'storeLeaveRequest'])->name('cuti.store');
+                Route::patch('/cuti/{leave}/approve', [EmployeeController::class, 'approveLeave'])->name('cuti.approve');
+                Route::patch('/cuti/{leave}/reject', [EmployeeController::class, 'rejectLeave'])->name('cuti.reject');
+            });
+
+            // ========================= OPERASIONAL LANJUTAN SUB-MENUS =========================
+            Route::prefix('operasional')->name('operasional.')->group(function () {
+                // 1. Digital Recipe Management
+                Route::get('/resep', [AdvancedOperationController::class, 'digitalRecipes'])->name('resep');
+                Route::get('/resep/{menu}', [AdvancedOperationController::class, 'showRecipe'])->name('resep.show');
+                Route::put('/resep/{menu}', [AdvancedOperationController::class, 'updateRecipe'])->name('resep.update');
+
+                // 2. QR Table Ordering
+                Route::get('/qr-meja', [AdvancedOperationController::class, 'qrTableOrdering'])->name('qr-meja');
+                Route::post('/qr-meja', [AdvancedOperationController::class, 'storeTable'])->name('qr-meja.store');
+                Route::put('/qr-meja/{table}', [AdvancedOperationController::class, 'updateTable'])->name('qr-meja.update');
+                Route::patch('/qr-meja/{table}/status', [AdvancedOperationController::class, 'updateTableStatus'])->name('qr-meja.update-status');
+                Route::delete('/qr-meja/{table}', [AdvancedOperationController::class, 'destroyTable'])->name('qr-meja.destroy');
+
+                // 3. Level Membership Lanjutan
+                Route::get('/membership-lanjutan', [AdvancedOperationController::class, 'membershipLanjutan'])->name('membership-lanjutan');
+                Route::put('/membership-lanjutan/{rule}', [AdvancedOperationController::class, 'updateTierRule'])->name('membership-lanjutan.update');
+                Route::post('/membership-lanjutan/recalculate', [AdvancedOperationController::class, 'recalculateAdvancedTiers'])->name('membership-lanjutan.recalculate');
             });
         });
 

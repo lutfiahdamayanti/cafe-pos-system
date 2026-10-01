@@ -23,7 +23,10 @@ class Menu extends Model
     'best_seller',
     'is_new',
     'is_available',
-    'large_price'
+    'large_price',
+    'recipe_steps',
+    'serving_temp',
+    'taste_notes'
     ];
 
     public function category()

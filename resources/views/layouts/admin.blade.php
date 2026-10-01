@@ -195,6 +195,81 @@
                         </ul>
                     </div>
                 </li>
+
+                {{-- DROPDOWN MANAJEMEN KARYAWAN / SDM --}}
+                <li class="sidebar-dropdown">
+                    <a href="#hrMenu" data-bs-toggle="collapse" class="d-flex align-items-center justify-content-between {{ request()->is('admin/hr*') ? 'active-parent' : '' }}" aria-expanded="{{ request()->is('admin/hr*') ? 'true' : 'false' }}">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-person-lines-fill text-success"></i>
+                            <span>Manajemen Karyawan</span>
+                        </div>
+                        <i class="bi bi-chevron-down dropdown-arrow"></i>
+                    </a>
+                    <div class="collapse {{ request()->is('admin/hr*') ? 'show' : '' }}" id="hrMenu">
+                        <ul class="sidebar-submenu">
+                            <li>
+                                <a href="{{ route('admin.hr.absensi') }}" class="{{ request()->routeIs('admin.hr.absensi*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-fingerprint text-primary"></i> Absensi Masuk & Pulang
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.hr.status-kehadiran') }}" class="{{ request()->routeIs('admin.hr.status-kehadiran*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-person-check-fill text-success"></i> Status Kehadiran
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.hr.shift') }}" class="{{ request()->routeIs('admin.hr.shift*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-clock-history text-warning"></i> Shift Kerja
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.hr.payroll') }}" class="{{ request()->routeIs('admin.hr.payroll*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-cash-stack text-info"></i> Gaji & Payroll Bulanan
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.hr.kpi') }}" class="{{ request()->routeIs('admin.hr.kpi*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-graph-up-arrow text-danger"></i> KPI Karyawan
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.hr.cuti') }}" class="{{ request()->routeIs('admin.hr.cuti*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-calendar2-check-fill text-warning"></i> Approval Cuti
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                {{-- DROPDOWN OPERASIONAL LANJUTAN --}}
+                <li class="sidebar-dropdown">
+                    <a href="#operasionalMenu" data-bs-toggle="collapse" class="d-flex align-items-center justify-content-between {{ request()->is('admin/operasional*') ? 'active-parent' : '' }}" aria-expanded="{{ request()->is('admin/operasional*') ? 'true' : 'false' }}">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-gear-wide-connected text-primary"></i>
+                            <span>Operasional Lanjutan</span>
+                        </div>
+                        <i class="bi bi-chevron-down dropdown-arrow"></i>
+                    </a>
+                    <div class="collapse {{ request()->is('admin/operasional*') ? 'show' : '' }}" id="operasionalMenu">
+                        <ul class="sidebar-submenu">
+                            <li>
+                                <a href="{{ route('admin.operasional.resep') }}" class="{{ request()->routeIs('admin.operasional.resep*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-book-half text-warning"></i> Digital Recipe Management
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.operasional.qr-meja') }}" class="{{ request()->routeIs('admin.operasional.qr-meja*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-qr-code-scan text-success"></i> QR Table Ordering
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.operasional.membership-lanjutan') }}" class="{{ request()->routeIs('admin.operasional.membership-lanjutan*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-gem text-info"></i> Level Membership Lanjutan
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
             @endif
 
             {{-- OWNER --}}
