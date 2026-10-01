@@ -32,10 +32,44 @@
                         <i class="bi bi-grid"></i> Dashboard
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('admin.reports.index') }}">
-                        <i class="bi bi-bar-chart"></i> Laporan
+                {{-- DROPDOWN LAPORAN OWNER --}}
+                <li class="sidebar-dropdown">
+                    <a href="#ownerReportsMenu" data-bs-toggle="collapse" class="d-flex align-items-center justify-content-between {{ request()->is('admin/owner-reports*') ? 'active-parent' : '' }}" aria-expanded="{{ request()->is('admin/owner-reports*') ? 'true' : 'false' }}">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-file-earmark-bar-graph-fill text-info"></i>
+                            <span>Laporan Owner</span>
+                        </div>
+                        <i class="bi bi-chevron-down dropdown-arrow"></i>
                     </a>
+                    <div class="collapse {{ request()->is('admin/owner-reports*') ? 'show' : '' }}" id="ownerReportsMenu">
+                        <ul class="sidebar-submenu">
+                            <li>
+                                <a href="{{ route('admin.owner-reports.omzet-tren') }}" class="{{ request()->routeIs('admin.owner-reports.omzet-tren') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-graph-up-arrow text-success"></i> Omzet & Tren Penjualan
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.owner-reports.food-cost-cogs') }}" class="{{ request()->routeIs('admin.owner-reports.food-cost-cogs') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-calculator-fill text-warning"></i> Food Cost & COGS
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.owner-reports.laba-margin') }}" class="{{ request()->routeIs('admin.owner-reports.laba-margin') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-pie-chart-fill text-primary"></i> Laba Kotor & Margin
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.owner-reports.produk-menguntungkan') }}" class="{{ request()->routeIs('admin.owner-reports.produk-menguntungkan') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-star-fill text-danger"></i> Produk Menguntungkan
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.owner-reports.pertumbuhan-pelanggan') }}" class="{{ request()->routeIs('admin.owner-reports.pertumbuhan-pelanggan') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-person-up text-info"></i> Pertumbuhan Pelanggan
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
                 {{-- DROPDOWN CRM PELANGGAN --}}
                 <li class="sidebar-dropdown">

@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\PosController;
 use App\Http\Controllers\Admin\PromoLoyaltyController;
+use App\Http\Controllers\Admin\OwnerReportController;
 
 /* ========================================= CUSTOMER ========================================*/
 Route::get('/', [MenuController::class, 'index'])
@@ -177,6 +178,25 @@ Route::prefix('admin')
                 // 5. Referral Program (Fitur 6)
                 Route::get('/referrals', [PromoLoyaltyController::class, 'referrals'])->name('referrals');
                 Route::post('/referrals', [PromoLoyaltyController::class, 'storeReferral'])->name('referrals.store');
+            });
+
+            // ========================= LAPORAN OWNER SUB-MENUS =========================
+            Route::prefix('owner-reports')->name('owner-reports.')->group(function () {
+                // 1. Omzet & Tren Penjualan
+                Route::get('/omzet-tren', [OwnerReportController::class, 'omzetTren'])->name('omzet-tren');
+
+                // 2. Food Cost & COGS
+                Route::get('/food-cost-cogs', [OwnerReportController::class, 'foodCostCogs'])->name('food-cost-cogs');
+                Route::post('/menus/{menu}/food-cost', [OwnerReportController::class, 'updateMenuFoodCost'])->name('menu-food-cost.update');
+
+                // 3. Laba Kotor & Margin
+                Route::get('/laba-margin', [OwnerReportController::class, 'labaMargin'])->name('laba-margin');
+
+                // 4. Produk Paling Menguntungkan
+                Route::get('/produk-menguntungkan', [OwnerReportController::class, 'produkMenguntungkan'])->name('produk-menguntungkan');
+
+                // 5. Pertumbuhan Pelanggan
+                Route::get('/pertumbuhan-pelanggan', [OwnerReportController::class, 'pertumbuhanPelanggan'])->name('pertumbuhan-pelanggan');
             });
         });
 
