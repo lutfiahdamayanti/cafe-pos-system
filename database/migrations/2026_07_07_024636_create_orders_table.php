@@ -9,34 +9,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-
             $table->id();
-
             $table->string('order_number')->unique();
-
             $table->string('customer_name');
-
             $table->string('phone');
-
             $table->string('table_number')->nullable();
-
             $table->enum('visit_type',[
                 'Dine In',
-                'Take Away'
+                'Pickup',
+                'Delivery',
+                'Pre-order'
             ]);
-
             $table->string('payment');
-
             $table->text('note')->nullable();
-
             $table->double('subtotal');
-
+            $table->double('discount')->default(0);
             $table->double('tax');
-
             $table->double('service');
-
             $table->double('total');
-
             $table->enum('status',[
                 'Pending',
                 'Accepted',
@@ -45,7 +35,6 @@ return new class extends Migration
                 'Completed',
                 'Cancelled'
             ])->default('Pending');
-
             $table->timestamps();
 
         });

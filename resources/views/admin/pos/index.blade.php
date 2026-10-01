@@ -16,23 +16,6 @@
                                 <div class="pos-menu-content">
                                     <h5>{{ $menu->name }}</h5>
                                     <div class="mt-3 pos-option-area">
-                                        @php
-                                            $sizeOption=$menu->options->where('name','Ukuran')->first();
-                                        @endphp
-                                        @if($sizeOption)
-                                        <label class="fw-bold mb-1">Ukuran</label>
-                                        <select class="form-select size-select mb-2">
-                                            <option value="">-- Pilih --</option>
-                                            @foreach($sizeOption->values as $value)
-                                            <option value="{{ $value->value }}" data-price="{{ $value->extra_price }}">
-                                                {{ $value->value }}
-                                                @if($value->extra_price > 0)
-                                                    (+Rp {{ number_format($value->extra_price,0,',','.') }})
-                                                @endif
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                        @endif
                                         @foreach($menu->options as $option)
                                         <label class="fw-bold mt-2">{{ $option->name }}</label>
                                         <select class="form-select option-select mb-2">
