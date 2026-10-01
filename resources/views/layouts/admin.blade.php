@@ -81,6 +81,46 @@
                         </ul>
                     </div>
                 </li>
+
+                {{-- DROPDOWN PROMO & LOYALTY --}}
+                <li class="sidebar-dropdown">
+                    <a href="#promoSmenu" data-bs-toggle="collapse" class="d-flex align-items-center justify-content-between {{ request()->is('admin/promo*') ? 'active-parent' : '' }}" aria-expanded="{{ request()->is('admin/promo*') ? 'true' : 'false' }}">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-tag-fill text-danger"></i>
+                            <span>Promo & Loyalty</span>
+                        </div>
+                        <i class="bi bi-chevron-down dropdown-arrow"></i>
+                    </a>
+                    <div class="collapse {{ request()->is('admin/promo*') ? 'show' : '' }}" id="promoSmenu">
+                        <ul class="sidebar-submenu">
+                            <li>
+                                <a href="{{ route('admin.promo.vouchers') }}" class="{{ request()->routeIs('admin.promo.vouchers*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-ticket-perforated-fill text-warning"></i> Voucher & Kupon
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.promo.point-rewards') }}" class="{{ request()->routeIs('admin.promo.point-rewards*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-gift-fill text-primary"></i> Point Reward
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.promo.stamp-cards') }}" class="{{ request()->routeIs('admin.promo.stamp-cards*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-grid-3x3-gap-fill text-success"></i> Stamp Card Digital
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.promo.cashback') }}" class="{{ request()->routeIs('admin.promo.cashback*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-cash-coin text-info"></i> Program Cashback
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.promo.referrals') }}" class="{{ request()->routeIs('admin.promo.referrals*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-person-plus-fill text-danger"></i> Referral Program
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
             @endif
 
             {{-- OWNER --}}

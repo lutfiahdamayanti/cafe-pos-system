@@ -20,6 +20,8 @@ class Customer extends Model
         'total_spending',
         'tier',
         'points',
+        'referral_code',
+        'referred_by_id',
         'address',
         'notes',
         'last_visit',
@@ -50,6 +52,43 @@ class Customer extends Model
     public function pointLogs()
     {
         return $this->hasMany(CustomerPointLog::class)->latest();
+    }
+
+    public function pointClaims()
+    {
+        return $this->hasMany(PointRewardClaim::class)->latest();
+    }
+
+    public function stamps()
+    {
+        return $this->hasMany(CustomerStamp::class);
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(Referral::class, 'referrer_id')->latest();
+    }
+
+    public function referredBy()
+    {
+        return $this->belongsTo(Customer::class, 'referred_by_id');
+    }
+
+    public function cashbackLogs()
+    {
+        return $this->hasMany(CashbackLog::class)->latest();
+    }
+
+    public function getReferralCode(): string
+    {
+        if (!$this->referral_code) {
+            $prefix = strtoupper(substr(preg_replace('/[^A-Za-z]/', '', $this->name), 0, 4));
+            if (strlen($prefix) < 3) $prefix = 'CAFE';
+            $code = 'REF-' . $prefix . $this->id . rand(10, 99);
+            $this->update(['referral_code' => $code]);
+            return $code;
+        }
+        return $this->referral_code;
     }
 
     /**

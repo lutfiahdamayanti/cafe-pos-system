@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\SuperAdminController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\PosController;
+use App\Http\Controllers\Admin\PromoLoyaltyController;
 
 /* ========================================= CUSTOMER ========================================*/
 Route::get('/', [MenuController::class, 'index'])
@@ -142,6 +143,41 @@ Route::prefix('admin')
             Route::post('/customers/{customer}/adjust-points', [CustomerController::class, 'adjustPoints'])
                 ->name('customers.adjust-points');
             Route::resource('customers', CustomerController::class);
+
+            // ========================= PROMO & LOYALTY SUB-MENUS =========================
+            Route::prefix('promo')->name('promo.')->group(function () {
+                // 1. Voucher & Kupon Promo (Fitur 1 & 2)
+                Route::get('/vouchers', [PromoLoyaltyController::class, 'vouchers'])->name('vouchers');
+                Route::post('/vouchers', [PromoLoyaltyController::class, 'storeVoucher'])->name('vouchers.store');
+                Route::put('/vouchers/{voucher}', [PromoLoyaltyController::class, 'updateVoucher'])->name('vouchers.update');
+                Route::patch('/vouchers/{voucher}/toggle', [PromoLoyaltyController::class, 'toggleVoucher'])->name('vouchers.toggle');
+                Route::delete('/vouchers/{voucher}', [PromoLoyaltyController::class, 'destroyVoucher'])->name('vouchers.destroy');
+
+                // 2. Point Reward (Fitur 3)
+                Route::get('/point-rewards', [PromoLoyaltyController::class, 'pointRewards'])->name('point-rewards');
+                Route::post('/point-rewards', [PromoLoyaltyController::class, 'storePointReward'])->name('point-rewards.store');
+                Route::put('/point-rewards/{pointReward}', [PromoLoyaltyController::class, 'updatePointReward'])->name('point-rewards.update');
+                Route::delete('/point-rewards/{pointReward}', [PromoLoyaltyController::class, 'destroyPointReward'])->name('point-rewards.destroy');
+                Route::post('/point-rewards/claim', [PromoLoyaltyController::class, 'claimReward'])->name('point-rewards.claim');
+                Route::patch('/point-rewards/claims/{claim}', [PromoLoyaltyController::class, 'updateClaimStatus'])->name('point-rewards.claim-status');
+
+                // 3. Stamp Card Digital (Fitur 4)
+                Route::get('/stamp-cards', [PromoLoyaltyController::class, 'stampCards'])->name('stamp-cards');
+                Route::put('/stamp-cards/program/{program}', [PromoLoyaltyController::class, 'updateStampProgram'])->name('stamp-cards.program.update');
+                Route::post('/stamp-cards/add', [PromoLoyaltyController::class, 'addCustomerStamp'])->name('stamp-cards.add');
+                Route::post('/stamp-cards/{customerStamp}/redeem', [PromoLoyaltyController::class, 'redeemCustomerStamp'])->name('stamp-cards.redeem');
+
+                // 4. Program Cashback (Fitur 5)
+                Route::get('/cashback', [PromoLoyaltyController::class, 'cashback'])->name('cashback');
+                Route::post('/cashback', [PromoLoyaltyController::class, 'storeCashbackRule'])->name('cashback.store');
+                Route::patch('/cashback/{rule}/toggle', [PromoLoyaltyController::class, 'toggleCashbackRule'])->name('cashback.toggle');
+                Route::delete('/cashback/{rule}', [PromoLoyaltyController::class, 'destroyCashbackRule'])->name('cashback.destroy');
+                Route::post('/cashback/grant', [PromoLoyaltyController::class, 'grantCashback'])->name('cashback.grant');
+
+                // 5. Referral Program (Fitur 6)
+                Route::get('/referrals', [PromoLoyaltyController::class, 'referrals'])->name('referrals');
+                Route::post('/referrals', [PromoLoyaltyController::class, 'storeReferral'])->name('referrals.store');
+            });
         });
 
         /* ======================================= OWNER, MANAGER & CASHIER ====================================*/
