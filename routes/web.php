@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\PosController;
 use App\Http\Controllers\Admin\PromoLoyaltyController;
 use App\Http\Controllers\Admin\OwnerReportController;
+use App\Http\Controllers\Admin\MultiOutletController;
 
 /* ========================================= CUSTOMER ========================================*/
 Route::get('/', [MenuController::class, 'index'])
@@ -197,6 +198,35 @@ Route::prefix('admin')
 
                 // 5. Pertumbuhan Pelanggan
                 Route::get('/pertumbuhan-pelanggan', [OwnerReportController::class, 'pertumbuhanPelanggan'])->name('pertumbuhan-pelanggan');
+            });
+
+            // ========================= MULTI-OUTLET SUB-MENUS =========================
+            Route::prefix('multi-outlet')->name('multi-outlet.')->group(function () {
+                // 1. Kelola Banyak Cabang
+                Route::get('/cabang', [MultiOutletController::class, 'cabang'])->name('cabang');
+                Route::post('/cabang', [MultiOutletController::class, 'storeCabang'])->name('cabang.store');
+                Route::put('/cabang/{outlet}', [MultiOutletController::class, 'updateCabang'])->name('cabang.update');
+                Route::patch('/cabang/{outlet}/toggle', [MultiOutletController::class, 'toggleStatusCabang'])->name('cabang.toggle');
+                Route::delete('/cabang/{outlet}', [MultiOutletController::class, 'destroyCabang'])->name('cabang.destroy');
+
+                // 2. Performa & Laporan per Cabang
+                Route::get('/performa', [MultiOutletController::class, 'performa'])->name('performa');
+
+                // 3. Transfer Stok Antar Cabang
+                Route::get('/transfer-stok', [MultiOutletController::class, 'transferStok'])->name('transfer-stok');
+                Route::post('/transfer-stok', [MultiOutletController::class, 'storeTransfer'])->name('transfer-stok.store');
+                Route::patch('/transfer-stok/{transfer}/status', [MultiOutletController::class, 'updateStatusTransfer'])->name('transfer-stok.update-status');
+
+                // 4. Gudang Pusat
+                Route::get('/gudang-pusat', [MultiOutletController::class, 'gudangPusat'])->name('gudang-pusat');
+                Route::post('/gudang-pusat', [MultiOutletController::class, 'storeWarehouseStock'])->name('gudang-pusat.store');
+                Route::put('/gudang-pusat/{stock}', [MultiOutletController::class, 'updateWarehouseStock'])->name('gudang-pusat.update');
+                Route::post('/gudang-pusat/{stock}/restock', [MultiOutletController::class, 'restockWarehouseStock'])->name('gudang-pusat.restock');
+                Route::delete('/gudang-pusat/{stock}', [MultiOutletController::class, 'destroyWarehouseStock'])->name('gudang-pusat.destroy');
+
+                // 5. Hak Akses per Cabang
+                Route::get('/hak-akses', [MultiOutletController::class, 'hakAkses'])->name('hak-akses');
+                Route::patch('/hak-akses/{user}', [MultiOutletController::class, 'assignOutlet'])->name('hak-akses.assign');
             });
         });
 

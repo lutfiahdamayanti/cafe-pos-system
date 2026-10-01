@@ -155,6 +155,46 @@
                         </ul>
                     </div>
                 </li>
+
+                {{-- DROPDOWN MULTI-OUTLET --}}
+                <li class="sidebar-dropdown">
+                    <a href="#multiOutletMenu" data-bs-toggle="collapse" class="d-flex align-items-center justify-content-between {{ request()->is('admin/multi-outlet*') ? 'active-parent' : '' }}" aria-expanded="{{ request()->is('admin/multi-outlet*') ? 'true' : 'false' }}">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-buildings-fill text-info"></i>
+                            <span>Multi-Outlet</span>
+                        </div>
+                        <i class="bi bi-chevron-down dropdown-arrow"></i>
+                    </a>
+                    <div class="collapse {{ request()->is('admin/multi-outlet*') ? 'show' : '' }}" id="multiOutletMenu">
+                        <ul class="sidebar-submenu">
+                            <li>
+                                <a href="{{ route('admin.multi-outlet.cabang') }}" class="{{ request()->routeIs('admin.multi-outlet.cabang*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-shop text-primary"></i> Kelola Banyak Cabang
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.multi-outlet.performa') }}" class="{{ request()->routeIs('admin.multi-outlet.performa*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-bar-chart-line-fill text-success"></i> Performa & Laporan
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.multi-outlet.transfer-stok') }}" class="{{ request()->routeIs('admin.multi-outlet.transfer-stok*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-arrow-left-right text-warning"></i> Transfer Stok Antar Cabang
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.multi-outlet.gudang-pusat') }}" class="{{ request()->routeIs('admin.multi-outlet.gudang-pusat*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-box-seam-fill text-danger"></i> Gudang Pusat
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.multi-outlet.hak-akses') }}" class="{{ request()->routeIs('admin.multi-outlet.hak-akses*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-person-badge-fill text-info"></i> Hak Akses per Cabang
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
             @endif
 
             {{-- OWNER --}}

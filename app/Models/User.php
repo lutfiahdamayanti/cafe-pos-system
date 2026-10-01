@@ -14,7 +14,8 @@ use Illuminate\Notifications\Notifiable;
     'name',
     'email',
     'password',
-    'role'
+    'role',
+    'outlet_id'
 ])]
 #[Hidden([
     'password',
@@ -23,6 +24,11 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+
+    public function outlet()
+    {
+        return $this->belongsTo(Outlet::class);
+    }
 
     protected function casts(): array
     {
