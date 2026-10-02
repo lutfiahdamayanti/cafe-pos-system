@@ -3,40 +3,61 @@
 @section('content')
 
 <div class="container-fluid">
-    {{-- FILTER PERIODE --}}
     <div class="mb-4">
         <a href="{{ route('admin.reports.index',['period'=>'daily']) }}" class="btn {{ $period == 'daily' ? 'btn-success' : 'btn-outline-success' }}">Hari Ini</a>
         <a href="{{ route('admin.reports.index',['period'=>'weekly']) }}" class="btn {{ $period == 'weekly' ? 'btn-success' : 'btn-outline-success' }}">Minggu Ini</a>
         <a href="{{ route('admin.reports.index',['period'=>'monthly']) }}" class="btn {{ $period == 'monthly' ? 'btn-success' : 'btn-outline-success' }}">Bulan Ini</a>
         <a href="{{ route('admin.reports.index',['period'=>'yearly']) }}" class="btn {{ $period == 'yearly' ? 'btn-success' : 'btn-outline-success' }}">Tahun Ini</a>
     </div>
-
-    {{-- RINGKASAN --}}
     <div class="row g-4 mb-5">
-        <div class="col-lg-3 col-md-6"><div class="dashboard-card"><h6>Total Pesanan</h6><h3>{{ $orders->count() }}</h3></div></div>
-        <div class="col-lg-3 col-md-6"><div class="dashboard-card"><h6>Pendapatan Kotor</h6><h3 class="text-success">Rp {{ number_format($grossRevenue,0,',','.') }}</h3></div></div>
+        <div class="col-lg-3 col-md-6">
+            <div class="dashboard-card">
+                <h6>
+                    @if($period == 'daily')
+                        Jumlah Transaksi Hari Ini
+                    @elseif($period == 'weekly')
+                        Jumlah Transaksi Minggu Ini
+                    @elseif($period == 'monthly')
+                        Jumlah Transaksi Bulan Ini
+                    @elseif($period == 'yearly')
+                        Jumlah Transaksi Tahun Ini
+                    @endif
+                </h6>
+                <h3>{{ $orders->count() }}</h3>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="dashboard-card">
+                <h6>
+                    @if($period == 'daily')
+                        Penjualan Hari Ini
+                    @elseif($period == 'weekly')
+                        Penjualan Minggu Ini
+                    @elseif($period == 'monthly')
+                        Penjualan Bulan Ini
+                    @elseif($period == 'yearly')
+                        Penjualan Tahun Ini
+                    @endif
+                </h6>
+                <h3>Rp {{ number_format($grossRevenue, 0, ',', '.') }}</h3>
+            </div>
+        </div>        
         <div class="col-lg-3 col-md-6"><div class="dashboard-card"><h6>Pendapatan Bersih</h6><h3>Rp {{ number_format($netRevenue,0,',','.') }}</h3></div></div>
         <div class="col-lg-3 col-md-6"><div class="dashboard-card"><h6>Total Pajak</h6><h3>Rp {{ number_format($tax,0,',','.') }}</h3></div></div>
     </div>
-
-    {{-- STATUS --}}
     <div class="row g-4 mb-5">
         <div class="col-lg-3 col-md-6"><div class="dashboard-card"><h6>Biaya Layanan</h6><h3>Rp {{ number_format($service,0,',','.') }}</h3></div></div>
         <div class="col-lg-3 col-md-6"><div class="dashboard-card"><h6>Selesai</h6><h3 class="text-success">{{ $completed }}</h3></div></div>
         <div class="col-lg-3 col-md-6"><div class="dashboard-card"><h6>Dibatalkan</h6><h3 class="text-danger">{{ $cancelled }}</h3></div></div>
         <div class="col-lg-3 col-md-6"><div class="dashboard-card"><h6>Pengembalian Dana</h6><h3 class="text-warning">{{ $refund }}</h3></div></div>
     </div>
-
-    {{-- TABEL ORDER --}}
     <div class="card shadow-sm border-0">
         <div class="card-body">
             <h4 class="fw-bold mb-4">Daftar Pesanan</h4>
             <div class="table-responsive">
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
-                        <tr>
-                            <th>No Pesanan</th><th>Pelanggan</th><th>Pembayaran</th><th>Status</th><th>Total</th><th>Tanggal</th>
-                        </tr>
+                        <tr><th>No Pesanan</th><th>Pelanggan</th><th>Pembayaran</th><th>Status</th><th>Total</th><th>Tanggal</th></tr>
                     </thead>
                     <tbody>
                         @forelse($orders as $order)
@@ -70,15 +91,12 @@
             </div>
         </div>
     </div>
-
-    {{-- ================= GRAFIK PENDAPATAN ================= --}}
     <div class="card shadow-sm border-0 mt-4">
         <div class="card-body">
             <h4 class="fw-bold mb-4">Grafik Pendapatan</h4>
             <canvas id="revenueChart" height="100"></canvas>
         </div>
     </div>
-
     <div class="card shadow-sm border-0 mt-4">
         <div class="card-body">
             <h4 class="fw-bold mb-4">Statistik Metode Pembayaran</h4>
@@ -87,7 +105,6 @@
             </div>
         </div>
     </div>
-
     <div class="card shadow-sm border-0 mt-4">
         <div class="card-body">
             <h4 class="fw-bold mb-4">10 Menu Best Seller</h4>
@@ -104,7 +121,6 @@
             </table>
         </div>
     </div>
-
     <div class="card shadow-sm border-0 mt-4">
         <div class="card-body">
             <h4 class="fw-bold mb-4">10 Menu Kurang Laris</h4>
@@ -113,7 +129,7 @@
                 <tbody>
                     @foreach($worstSeller as $item)
                         <tr>
-                            <td>{{ $item->menu->name ?? '-' }}</td>
+                            <td>{{ $item->name }}</td>
                             <td>{{ $item->total_qty }}</td>
                         </tr>
                     @endforeach
@@ -121,7 +137,6 @@
             </table>
         </div>
     </div>
-
     <div class="card shadow-sm border-0 mt-4">
         <div class="card-body">
             <h4 class="fw-bold mb-4">Jam Tersibuk</h4>
@@ -138,7 +153,6 @@
             </table>
         </div>
     </div>
-
     <div class="card shadow-sm border-0 mt-4">
         <div class="card-body">
             <h4 class="fw-bold mb-4">Hari Tersibuk</h4>
@@ -155,7 +169,6 @@
             </table>
         </div>
     </div>
-
     <div class="card shadow-sm border-0 mt-4">
         <div class="card-body">
             <h4 class="fw-bold mb-4">Pelanggan Lama vs Pelanggan Baru</h4>

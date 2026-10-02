@@ -148,13 +148,16 @@ class ReportController extends Controller
 
         // ================= TOP 10 WORST SELLER =================
 
-        $worstSeller = OrderDetail::select(
-            'menu_id',
-            DB::raw('SUM(qty) as total_qty')
-        )
-            ->with('menu')
-            ->whereIn('order_id', $orderIds)
-            ->groupBy('menu_id')
+        $worstSeller = \App\Models\Menu::leftJoin('order_details', function ($join) use ($orderIds) {
+            $join->on('menus.id', '=', 'order_details.menu_id')
+                ->whereIn('order_details.order_id', $orderIds);
+        })
+            ->select(
+                'menus.id',
+                'menus.name',
+                DB::raw('COALESCE(SUM(order_details.qty), 0) as total_qty')
+            )
+            ->groupBy('menus.id', 'menus.name')
             ->orderBy('total_qty')
             ->take(10)
             ->get();
