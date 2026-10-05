@@ -247,4 +247,9 @@ class MenuController extends Controller
         return redirect()->route('admin.menu.index')
             ->with('success', 'Menu berhasil dihapus.');
     }
+    public function recipe(Menu $menu)
+    {
+        $menu->load('recipeIngredients');
+        return view('admin.menu.recipe', compact('menu'));
+    }
 }

@@ -101,6 +101,8 @@ Route::prefix('admin')
         /* ======================================== OWNER ========================================*/
         Route::middleware('role:owner')->group(function () {
             Route::resource('menu', AdminMenuController::class);
+            Route::get('/menu/{menu}/recipe', [AdminMenuController::class, 'recipe'])
+                ->name('menu.recipe');
             Route::resource('category', CategoryController::class);
             Route::get('/audit-logs', [AuditLogController::class, 'index'])
                 ->name('audit.index');
@@ -112,6 +114,10 @@ Route::prefix('admin')
                 ->name('qr.index');
             Route::get('/qr-ordering/print', [QrController::class, 'print'])
                 ->name('qr.print');
+            Route::post('/qr-ordering', [QrController::class, 'store'])
+                ->name('qr.store');
+            Route::delete('/qr-ordering/{qrTable}', [QrController::class, 'destroy'])
+                ->name('qr.destroy');
         });
 
 
