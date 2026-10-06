@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\OwnerReportController;
 use App\Http\Controllers\Admin\MultiOutletController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\AdvancedOperationController;
+use App\Http\Controllers\Admin\BusinessDashboardController;
 
 /* ========================================= CUSTOMER ========================================*/
 Route::get('/', [MenuController::class, 'index'])
@@ -290,6 +291,21 @@ Route::prefix('admin')
                 Route::get('/membership-lanjutan', [AdvancedOperationController::class, 'membershipLanjutan'])->name('membership-lanjutan');
                 Route::put('/membership-lanjutan/{rule}', [AdvancedOperationController::class, 'updateTierRule'])->name('membership-lanjutan.update');
                 Route::post('/membership-lanjutan/recalculate', [AdvancedOperationController::class, 'recalculateAdvancedTiers'])->name('membership-lanjutan.recalculate');
+            });
+
+            // ========================= DASHBOARD BISNIS SUB-MENUS =========================
+            Route::prefix('business-dashboard')->name('business-dashboard.')->group(function () {
+                // 1. Analitik per Cabang
+                Route::get('/cabang', [BusinessDashboardController::class, 'analitikCabang'])->name('cabang');
+
+                // 2. Analitik Produk
+                Route::get('/produk', [BusinessDashboardController::class, 'analitikProduk'])->name('produk');
+
+                // 3. Analitik Pelanggan
+                Route::get('/pelanggan', [BusinessDashboardController::class, 'analitikPelanggan'])->name('pelanggan');
+
+                // 4. Analitik Karyawan
+                Route::get('/karyawan', [BusinessDashboardController::class, 'analitikKaryawan'])->name('karyawan');
             });
         });
 

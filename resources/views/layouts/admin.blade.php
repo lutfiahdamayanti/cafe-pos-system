@@ -269,6 +269,41 @@
                         </ul>
                     </div>
                 </li>
+
+                {{-- DROPDOWN DASHBOARD BISNIS --}}
+                <li class="sidebar-dropdown">
+                    <a href="#businessDashboardMenu" data-bs-toggle="collapse" class="d-flex align-items-center justify-content-between {{ request()->is('admin/business-dashboard*') ? 'active-parent' : '' }}" aria-expanded="{{ request()->is('admin/business-dashboard*') ? 'true' : 'false' }}">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-speedometer2 text-danger"></i>
+                            <span>Dashboard Bisnis</span>
+                        </div>
+                        <i class="bi bi-chevron-down dropdown-arrow"></i>
+                    </a>
+                    <div class="collapse {{ request()->is('admin/business-dashboard*') ? 'show' : '' }}" id="businessDashboardMenu">
+                        <ul class="sidebar-submenu">
+                            <li>
+                                <a href="{{ route('admin.business-dashboard.cabang') }}" class="{{ request()->routeIs('admin.business-dashboard.cabang*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-shop text-primary"></i> Analitik per Cabang
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.business-dashboard.produk') }}" class="{{ request()->routeIs('admin.business-dashboard.produk*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-box-seam text-warning"></i> Analitik Produk
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.business-dashboard.pelanggan') }}" class="{{ request()->routeIs('admin.business-dashboard.pelanggan*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-people-fill text-success"></i> Analitik Pelanggan
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.business-dashboard.karyawan') }}" class="{{ request()->routeIs('admin.business-dashboard.karyawan*') ? 'active-sub' : '' }}">
+                                    <i class="bi bi-person-badge-fill text-info"></i> Analitik Karyawan
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
             @endif
 
             {{-- DROPDOWN MANAJEMEN MENU --}}
