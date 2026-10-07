@@ -309,6 +309,32 @@ textarea.menu-form-control { min-height:auto; }
     .menu-section-header { padding:16px; }
     .menu-create-card .card-body { padding:18px !important; }
 }
+/* ====================RECIPE / BAHAN MENU==================== */
+.ingredient-item {display:grid;grid-template-columns:42px minmax(220px,2fr) minmax(130px,1fr) minmax(130px,1fr) minmax(170px,1fr) 44px;gap:16px;align-items:end;width:100%;padding:20px;margin-top:16px;background:#fff;border:1px solid #e9ecef;border-radius:16px;transition:.2s ease;}
+.ingredient-item:hover { box-shadow:0 4px 14px rgba(0,0,0,.05); }
+.ingredient-number {width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:#e8f5e9;color:#198754;font-size:14px;font-weight:700;}
+.ingredient-field { min-width:0; }
+.ingredient-field label {display:block;margin-bottom:7px;font-size:14px;font-weight:600;color:#343a40;white-space:nowrap;}
+.ingredient-field .form-control,
+.ingredient-field .form-select {width:100%!important;min-height:46px;padding:10px 13px;font-size:15px;border:1px solid #dee2e6;border-radius:10px;background-color:#fff;}
+.ingredient-field .form-control:focus,
+.ingredient-field .form-select:focus {border-color:#198754;box-shadow:0 0 0 .2rem rgba(25,135,84,.08);}
+.ingredient-field .form-select { padding-right:40px; }
+.ingredient-field .input-group {display:flex!important;flex-wrap:nowrap!important;width:100%;}
+.ingredient-field .input-group-text {display:flex;align-items:center;justify-content:center;flex:0 0 auto;min-width:42px;min-height:46px;padding:0 10px;background:#f8f9fa;border:1px solid #dee2e6;border-right:0;border-radius:10px 0 0 10px;}
+.ingredient-field .input-group .form-control {min-width:0;border-radius:0 10px 10px 0;}
+.remove-ingredient {width:42px;height:42px;display:flex;align-items:center;justify-content:center;padding:0;border-radius:10px;}
+#add-ingredient {min-height:44px;padding:9px 16px;font-size:15px;font-weight:600;border-radius:10px;}
+@media (max-width:1100px) {
+    .ingredient-item {grid-template-columns:42px minmax(200px,1.5fr) minmax(120px,1fr) minmax(120px,1fr) minmax(150px,1fr) 44px;gap:12px;}
+}
+@media (max-width:768px) {
+    .ingredient-item {grid-template-columns:42px 1fr;gap:12px;}
+    .ingredient-number { grid-row:span 1; }
+    .ingredient-field,
+    .remove-ingredient { grid-column:2; }
+    .ingredient-field label { white-space:normal; }
+}
 /* ================= QR ================= */
 @media print {
     body * { visibility:hidden !important; }
@@ -438,4 +464,61 @@ textarea.menu-form-control { min-height:auto; }
     .dashboard-status-card{min-height:115px}
     .dashboard-orders-header{padding:17px}
     .dashboard-filter{padding:15px}
+}
+/* =======================INVENTORY STAT CARDS========================== */
+.inventory-stat-card {position:relative;display:flex;align-items:center;justify-content:space-between;min-height:138px;padding:22px 20px 20px 24px;background:#fff;border:1px solid #e9ecef;border-radius:16px;box-shadow:0 5px 16px rgba(0,0,0,.07);overflow:hidden;transition:transform .2s ease,box-shadow .2s ease;cursor:pointer;}
+.inventory-stat-card:hover {transform:translateY(-2px);box-shadow:0 7px 18px rgba(0,0,0,.08);}
+.inventory-stat-success { border-left:4px solid #198754; }
+.inventory-stat-warning { border-left:4px solid #ffc107; }
+.inventory-stat-danger { border-left:4px solid #dc3545; }
+.inventory-stat-content { min-width:0; }
+.inventory-stat-label {margin-bottom:5px;color:#6c757d;font-size:14px;font-weight:400;}
+.inventory-stat-value {margin-bottom:4px;color:#212529;font-size:30px;line-height:1.1;font-weight:700;}
+.inventory-stat-description {color:#6c757d;font-size:13px;}
+.inventory-stat-icon {width:54px;height:54px;min-width:54px;margin-left:15px;display:flex;align-items:center;justify-content:center;border-radius:14px;font-size:22px;}
+.inventory-icon-success {background:#e8f5ec;color:#198754;}
+.inventory-icon-warning {background:#fff2cc;color:#d99a00;}
+.inventory-icon-danger {background:#f8d7da;color:#dc3545;}
+@media (max-width:768px) {
+    .inventory-stat-card { min-height:125px; }
+    .inventory-stat-value { font-size:26px; }
+    .inventory-stat-icon {width:48px;height:48px;min-width:48px;font-size:19px;}
+}
+/* =====================INVENTORY - FORM EDIT====================== */
+.inventory-form-page{padding-bottom:40px}
+.inventory-form-page .inventory-header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px 24px;background:#fff;border:1px solid #e9ecef;border-radius:16px;box-shadow:0 4px 14px rgba(0,0,0,.05)}
+.inventory-form-page .inventory-header-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:12px;background:#e8f5e9;color:#198754;font-size:20px}
+.inventory-form-page .inventory-title{font-size:26px;font-weight:700;color:#212529}
+.inventory-form-page .inventory-subtitle{color:#6c757d;font-size:14px}
+.inventory-form-page .inventory-back-btn{min-height:42px;padding:8px 16px;border-radius:10px}
+.inventory-form-card{overflow:hidden;border-radius:18px!important}
+.inventory-form-card-header{padding:20px 24px;background:#fff;border-bottom:1px solid #edf0f2}
+.inventory-form-section-icon{width:42px;height:42px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:11px;background:#e8f5e9;color:#198754;font-size:18px}
+.inventory-form-section{width:100%}
+.inventory-form-section-title{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:700;color:#212529}
+.inventory-form-section-title i{color:#198754;font-size:17px}
+.inventory-form-section-line{width:100%;height:1px;margin:12px 0 22px;background:#edf0f2}
+.inventory-form-label{display:block;margin-bottom:8px;font-size:14px;font-weight:600;color:#343a40}
+.inventory-form-help{display:block;margin-top:6px;font-size:12px;line-height:1.5;color:#6c757d}
+.inventory-form-control{width:100%;min-height:46px;padding:10px 13px;border:1px solid #dee2e6!important;border-radius:10px!important;font-size:15px;background:#fff}
+.inventory-form-control:focus{border-color:#198754!important;box-shadow:0 0 0 .2rem rgba(25,135,84,.08)!important}
+.inventory-input-group{display:flex!important;flex-wrap:nowrap!important}
+.inventory-input-group .input-group-text{min-width:44px;display:flex;align-items:center;justify-content:center;border:1px solid #dee2e6;border-right:0;background:#f8f9fa;color:#6c757d;border-radius:10px 0 0 10px}
+.inventory-input-group .inventory-form-control{border-radius:0 10px 10px 0!important}
+.inventory-error-alert{border:0;border-left:4px solid #dc3545;border-radius:10px;background:#fff5f5;color:#842029}
+.inventory-form-footer{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-top:42px;padding-top:22px;border-top:1px solid #edf0f2}
+.inventory-cancel-btn,.inventory-save-btn{min-height:44px;padding:9px 18px;border-radius:10px;font-size:14px;font-weight:600}
+.inventory-save-btn{box-shadow:0 3px 8px rgba(25,135,84,.14)}
+@media (max-width:768px){
+    .inventory-form-page .inventory-header{align-items:flex-start;flex-direction:column}
+    .inventory-form-page .inventory-back-btn{width:100%}
+    .inventory-form-card-header{padding:18px}
+    .inventory-form-card .card-body{padding:20px!important}
+}
+@media (max-width:576px){
+    .inventory-form-page .inventory-header{padding:18px}
+    .inventory-form-page .inventory-title{font-size:22px}
+    .inventory-form-section-title{font-size:15px}
+    .inventory-form-footer{flex-direction:column-reverse;align-items:stretch}
+    .inventory-cancel-btn,.inventory-save-btn{width:100%}
 }

@@ -7,6 +7,7 @@ use App\Models\Menu;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Customer;
+use App\Models\InventoryItem;
 use Illuminate\Http\Request;
 
 class PosController extends Controller
@@ -15,7 +16,6 @@ class PosController extends Controller
     {
         $menus = Menu::with('options.values')->get();
         $customers = Customer::orderBy('name')->get();
-
         $tables = [
             'A01','A02','A03','A04',
             'A05','A06','A07','A08'
@@ -43,36 +43,28 @@ class PosController extends Controller
         foreach ($request->menus as $item) {
             $menu = Menu::with('options.values')->findOrFail($item['id']);
             $price = $menu->price;
-
             if (!empty($item['size']) && $item['size'] == 'Large') {
                 $price += $menu->large_price;
             }
-
             if (!empty($item['options'])) {
                 foreach ($item['options'] as $valueId) {
                     $value = \App\Models\MenuOptionValue::find($valueId);
-
                     if ($value) {
                         $price += $value->extra_price;
                     }
                 }
             }
-
             $subtotal += ($price * $item['qty']);
         }
-
         $discount = $request->discount ?? 0;
-
         if ($discount > $subtotal) {
             $discount = $subtotal;
         }
-
         $afterDiscount = $subtotal - $discount;
         $tax = round($afterDiscount * 0.11);
         $service = 3000;
         $total = round($afterDiscount + $tax + $service);
         $paymentTotal = collect($request->payments)->sum('amount');
-
         if ($paymentTotal != (int) $total) {
             return back()
                 ->withInput()
@@ -80,7 +72,6 @@ class PosController extends Controller
                     'payments' => 'Total pembayaran harus sama dengan total pesanan.'
                 ]);
         }
-
         $order = Order::create([
             'order_number'  => 'ORD' . date('YmdHis'),
             'customer_name' => $request->customer_name,
@@ -101,29 +92,24 @@ class PosController extends Controller
         ]);
 
         foreach ($request->menus as $item) {
-            $menu = Menu::findOrFail($item['id']);
+            $menu = Menu::with('recipeIngredients.inventoryItem')
+                ->findOrFail($item['id']);
             $price = $menu->price;
-
             if (!empty($item['size']) && $item['size'] == 'Large') {
                 $price += $menu->large_price;
             }
-
             $selectedOptions = [];
             $extraPrice = 0;
-
             if (!empty($item['options'])) {
                 foreach ($item['options'] as $valueId) {
                     $value = \App\Models\MenuOptionValue::with('option')->find($valueId);
-
                     if ($value) {
                         $selectedOptions[$value->option->name] = $value->value;
                         $extraPrice += $value->extra_price;
                     }
                 }
             }
-
             $price += $extraPrice;
-
             OrderDetail::create([
                 'order_id' => $order->id,
                 'menu_id'  => $menu->id,
@@ -134,10 +120,29 @@ class PosController extends Controller
                 'price'    => $price,
                 'total'    => $price * $item['qty']
             ]);
-
             $menu->decrement('stock', $item['qty']);
+                foreach ($menu->recipeIngredients as $ingredient) {
+                if (!$ingredient->inventory_item_id || !$ingredient->inventoryItem) {
+                    continue;
+                }
+                $inventoryItem = $ingredient->inventoryItem;
+                $recipeQuantity = (float) $ingredient->quantity;
+                $orderQuantity = (int) $item['qty'];
+                $deductQuantity = $recipeQuantity * $orderQuantity;
+                $inventoryUnit = strtolower(trim($inventoryItem->unit));
+                $recipeUnit = strtolower(trim($ingredient->unit));
+                if ($inventoryUnit === 'kg' && $recipeUnit === 'gram') {
+                    $deductQuantity = $deductQuantity / 1000;
+                } elseif ($inventoryUnit === 'gram' && $recipeUnit === 'kg') {
+                    $deductQuantity = $deductQuantity * 1000;
+                } elseif ($inventoryUnit === 'liter' && $recipeUnit === 'ml') {
+                    $deductQuantity = $deductQuantity / 1000;
+                } elseif ($inventoryUnit === 'ml' && $recipeUnit === 'liter') {
+                    $deductQuantity = $deductQuantity * 1000;
+                }
+                $inventoryItem->decrement('stock', $deductQuantity);
+            }
         }
-
         $customer = Customer::firstOrCreate(
             ['phone' => $request->phone],
             [
@@ -147,7 +152,6 @@ class PosController extends Controller
                 'last_visit' => now()
             ]
         );
-
         if (!$customer->wasRecentlyCreated) {
             $customer->update([
                 'name' => $request->customer_name,
@@ -156,13 +160,10 @@ class PosController extends Controller
                 'last_visit' => now()
             ]);
         }
-
-        // Tambah Poin Loyalty & Update Tier Otomatis
         $earnedPoints = (int) floor($total / 10000);
         $customer->points += $earnedPoints;
         $customer->tier = $customer->calculateTier();
         $customer->save();
-
         if ($earnedPoints > 0) {
             $customer->pointLogs()->create([
                 'points' => $earnedPoints,
@@ -170,7 +171,6 @@ class PosController extends Controller
                 'description' => "Poin pesanan POS #{$order->order_number}",
             ]);
         }
-
         return redirect()
             ->route('admin.orders.index')
             ->with('success', 'Pesanan berhasil dibuat.');

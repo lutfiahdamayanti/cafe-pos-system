@@ -10,10 +10,10 @@ return new class extends Migration
     {
         Schema::create('ingredients', function (Blueprint $table) {
             $table->id();
-
             $table->foreignId('menu_id')
                   ->constrained('menus')
                   ->cascadeOnDelete();
+            $table->unsignedBigInteger('inventory_item_id')->nullable();
             $table->string('name');
             $table->decimal('quantity', 10, 2);
             $table->string('unit', 50);

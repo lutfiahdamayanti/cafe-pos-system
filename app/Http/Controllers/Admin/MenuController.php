@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\AuditLog;
 use App\Models\MenuOption;
 use App\Models\MenuOptionValue;
+use App\Models\InventoryItem;
 
 class MenuController extends Controller
 {
@@ -17,14 +18,44 @@ class MenuController extends Controller
         $menus = Menu::with('category')
             ->latest()
             ->get();
-
         return view('admin.menu.index', compact('menus'));
     }
 
     public function create()
     {
         $categories = Category::all();
-        return view('admin.menu.create', compact('categories'));
+        $inventoryItems = InventoryItem::where('is_active', true)
+            ->orderBy('name')
+            ->get();
+        return view('admin.menu.create', compact(
+            'categories',
+            'inventoryItems'
+        ));
+    }
+
+    private function calculateIngredientCost(
+        InventoryItem $inventoryItem,
+        float $quantity,
+        string $recipeUnit
+    ): float {
+        $inventoryUnit = strtolower(trim($inventoryItem->unit));
+        $recipeUnit = strtolower(trim($recipeUnit));
+        if ($inventoryUnit === $recipeUnit) {
+            return $quantity * (float) $inventoryItem->cost_per_unit;
+        }
+        if ($inventoryUnit === 'kg' && $recipeUnit === 'gram') {
+            return ($quantity / 1000) * (float) $inventoryItem->cost_per_unit;
+        }
+        if ($inventoryUnit === 'gram' && $recipeUnit === 'kg') {
+            return ($quantity * 1000) * (float) $inventoryItem->cost_per_unit;
+        }
+        if ($inventoryUnit === 'liter' && $recipeUnit === 'ml') {
+            return ($quantity / 1000) * (float) $inventoryItem->cost_per_unit;
+        }
+        if ($inventoryUnit === 'ml' && $recipeUnit === 'liter') {
+            return ($quantity * 1000) * (float) $inventoryItem->cost_per_unit;
+        }
+        return $quantity * (float) $inventoryItem->cost_per_unit;
     }
 
     public function store(Request $request)
@@ -40,6 +71,7 @@ class MenuController extends Controller
             'stock' => 'required|integer',
             'preparation_time' => 'required|integer',
             'recipe_ingredients' => 'nullable|array',
+            'recipe_ingredients.*.inventory_item_id' => 'nullable|exists:inventory_items,id',
             'recipe_ingredients.*.name' => 'nullable|string|max:255',
             'recipe_ingredients.*.quantity' => 'nullable|numeric|min:0',
             'recipe_ingredients.*.unit' => 'nullable|string|max:50',
@@ -47,6 +79,7 @@ class MenuController extends Controller
         ]);
 
         $image = null;
+
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $image = time() . '_' . $file->getClientOriginalName();
@@ -54,40 +87,64 @@ class MenuController extends Controller
         }
 
         $menu = Menu::create([
-            'category_id'       => $request->category_id,
-            'name'              => $request->name,
-            'description'       => $request->description,
+            'category_id' => $request->category_id,
+            'name' => $request->name,
+            'description' => $request->description,
             'ingredients' => $request->ingredients,
-            'price'             => $request->price,
+            'price' => $request->price,
             'food_cost' => $request->food_cost,
-            'large_price'       => $request->large_price,
-            'stock'             => $request->stock,
-            'rating'            => $request->rating,
-            'preparation_time'  => $request->preparation_time,
-            'calories'          => $request->calories,
-            'allergen'          => $request->allergen,
-            'promo'             => $request->has('promo'),
-            'best_seller'       => $request->has('best_seller'),
-            'is_new'            => $request->has('new'),
-            'is_available'      => $request->has('is_active'),
-            'image'             => $image,
+            'large_price' => $request->large_price,
+            'stock' => $request->stock,
+            'rating' => $request->rating,
+            'preparation_time' => $request->preparation_time,
+            'calories' => $request->calories,
+            'allergen' => $request->allergen,
+            'promo' => $request->has('promo'),
+            'best_seller' => $request->has('best_seller'),
+            'is_new' => $request->has('new'),
+            'is_available' => $request->has('is_active'),
+            'image' => $image,
         ]);
+
         $foodCost = 0;
-
-        if ($request->has('recipe_ingredients')) {
-            foreach ($request->recipe_ingredients as $ingredient) {
-                if (!empty($ingredient['name'])) {
-                    $cost = $ingredient['cost'] ?? 0;
-
-                    $menu->recipeIngredients()->create([
-                        'name' => $ingredient['name'],
-                        'quantity' => $ingredient['quantity'] ?? 0,
-                        'unit' => $ingredient['unit'] ?? '',
-                        'cost' => $cost,
-                    ]);
-
-                    $foodCost += $cost;
+        foreach ($request->recipe_ingredients ?? [] as $ingredient) {
+            $quantity = (float) ($ingredient['quantity'] ?? 0);
+            if (!empty($ingredient['inventory_item_id'])) {
+                $inventoryItem = InventoryItem::find(
+                    $ingredient['inventory_item_id']
+                );
+                if (!$inventoryItem) {
+                    continue;
                 }
+                $recipeUnit = $ingredient['unit']
+                    ?? $inventoryItem->unit;
+                $cost = $this->calculateIngredientCost(
+                    $inventoryItem,
+                    $quantity,
+                    $recipeUnit
+                );
+                $menu->recipeIngredients()->create([
+                    'inventory_item_id' => $inventoryItem->id,
+                    'name' => $inventoryItem->name,
+                    'quantity' => $quantity,
+                    'unit' => $recipeUnit,
+                    'cost' => $cost,
+                ]);
+                $foodCost += $cost;
+
+            } else {
+                if (empty($ingredient['name'])) {
+                    continue;
+                }
+                $cost = (float) ($ingredient['cost'] ?? 0);
+                $menu->recipeIngredients()->create([
+                    'inventory_item_id' => null,
+                    'name' => $ingredient['name'],
+                    'quantity' => $quantity,
+                    'unit' => $ingredient['unit'] ?? '',
+                    'cost' => $cost,
+                ]);
+                $foodCost += $cost;
             }
         }
 
@@ -95,27 +152,27 @@ class MenuController extends Controller
             'food_cost' => $foodCost,
         ]);
 
-        if($request->has('options')){
-            foreach($request->options as $option){
+        if ($request->has('options')) {
+            foreach ($request->options as $option) {
                 $menuOption = $menu->options()->create([
-                    'name'=>$option['name']
+                    'name' => $option['name']
                 ]);
-                if(isset($option['values'])){
-                    foreach($option['values'] as $value){
+                if (isset($option['values'])) {
+                    foreach ($option['values'] as $value) {
                         $menuOption->values()->create([
-                            'value'=>$value['value'],
-                            'extra_price'=>$value['price'] ?? 0
+                            'value' => $value['value'],
+                            'extra_price' => $value['price'] ?? 0
                         ]);
                     }
                 }
             }
         }
-
         AuditLog::create([
             'user' => 'Admin',
             'activity' => 'Menambahkan menu: ' . $menu->name,
         ]);
-        return redirect()->route('admin.menu.index')
+        return redirect()
+            ->route('admin.menu.index')
             ->with('success', 'Menu berhasil ditambahkan.');
     }
 
@@ -130,7 +187,14 @@ class MenuController extends Controller
             'recipeIngredients'
         ])->findOrFail($id);
         $categories = Category::all();
-        return view('admin.menu.edit', compact('menu', 'categories'));
+        $inventoryItems = InventoryItem::where('is_active', true)
+            ->orderBy('name')
+            ->get();
+        return view('admin.menu.edit', compact(
+            'menu',
+            'categories',
+            'inventoryItems'
+        ));
     }
 
     public function update(Request $request, string $id)
@@ -146,6 +210,7 @@ class MenuController extends Controller
             'stock' => 'required|integer',
             'preparation_time' => 'required|integer',
             'recipe_ingredients' => 'nullable|array',
+            'recipe_ingredients.*.inventory_item_id' => 'nullable|exists:inventory_items,id',
             'recipe_ingredients.*.name' => 'nullable|string|max:255',
             'recipe_ingredients.*.quantity' => 'nullable|numeric|min:0',
             'recipe_ingredients.*.unit' => 'nullable|string|max:50',
@@ -155,13 +220,17 @@ class MenuController extends Controller
         $menu = Menu::findOrFail($id);
         $image = $menu->image;
         if ($request->hasFile('image')) {
-            if ($menu->image && file_exists(public_path('images/' . $menu->image))) {
+            if (
+                $menu->image &&
+                file_exists(public_path('images/' . $menu->image))
+            ) {
                 unlink(public_path('images/' . $menu->image));
             }
             $file = $request->file('image');
             $image = time() . '_' . $file->getClientOriginalName();
             $file->move(public_path('images'), $image);
         }
+
         $menu->update([
             'category_id' => $request->category_id,
             'name' => $request->name,
@@ -181,21 +250,47 @@ class MenuController extends Controller
             'is_available' => $request->has('is_active'),
             'image' => $image,
         ]);
+
         $menu->recipeIngredients()->delete();
 
         $foodCost = 0;
-
         foreach ($request->recipe_ingredients ?? [] as $ingredient) {
-            if (!empty($ingredient['name'])) {
-                $cost = $ingredient['cost'] ?? 0;
-
+            $quantity = (float) ($ingredient['quantity'] ?? 0);
+            if (!empty($ingredient['inventory_item_id'])) {
+                $inventoryItem = InventoryItem::find(
+                    $ingredient['inventory_item_id']
+                );
+                if (!$inventoryItem) {
+                    continue;
+                }
+                $recipeUnit = $ingredient['unit']
+                    ?? $inventoryItem->unit;
+                $cost = $this->calculateIngredientCost(
+                    $inventoryItem,
+                    $quantity,
+                    $recipeUnit
+                );
                 $menu->recipeIngredients()->create([
+                    'inventory_item_id' => $inventoryItem->id,
+                    'name' => $inventoryItem->name,
+                    'quantity' => $quantity,
+                    'unit' => $recipeUnit,
+                    'cost' => $cost,
+                ]);
+                $foodCost += $cost;
+
+            } else {
+                if (empty($ingredient['name'])) {
+                    continue;
+                }
+                $cost = (float) ($ingredient['cost'] ?? 0);
+                $menu->recipeIngredients()->create([
+                    'inventory_item_id' => null,
                     'name' => $ingredient['name'],
-                    'quantity' => $ingredient['quantity'] ?? 0,
+                    'quantity' => $quantity,
                     'unit' => $ingredient['unit'] ?? '',
                     'cost' => $cost,
                 ]);
-
                 $foodCost += $cost;
             }
         }
@@ -205,48 +300,55 @@ class MenuController extends Controller
         ]);
 
         $menu->options()->delete();
-        if($request->has('options')){
-            foreach($request->options as $option){
-                if(empty($option['name'])) continue;
+        if ($request->has('options')) {
+            foreach ($request->options as $option) {
+                if (empty($option['name'])) {
+                    continue;
+                }
                 $menuOption = $menu->options()->create([
-                    'name'=>$option['name']
+                    'name' => $option['name']
                 ]);
-
-                if(isset($option['values'])){
-                    foreach($option['values'] as $value){
-                        if(empty($value['value'])) continue;
+                if (isset($option['values'])) {
+                    foreach ($option['values'] as $value) {
+                        if (empty($value['value'])) {
+                            continue;
+                        }
                         $menuOption->values()->create([
-                            'value'=>$value['value'],
-                            'extra_price'=>$value['price'] ?? 0
+                            'value' => $value['value'],
+                            'extra_price' => $value['price'] ?? 0
                         ]);
                     }
                 }
             }
         }
-
         AuditLog::create([
-            'user' => 'Admin',  
+            'user' => 'Admin',
             'activity' => 'Mengubah menu: ' . $menu->name,
         ]);
-        return redirect()->route('admin.menu.index')
+        return redirect()
+            ->route('admin.menu.index')
             ->with('success', 'Menu berhasil diperbarui.');
     }
 
     public function destroy(string $id)
     {
         $menu = Menu::findOrFail($id);
-
         AuditLog::create([
             'user' => 'Admin',
             'activity' => 'Menghapus menu: ' . $menu->name,
         ]);
-        if ($menu->image && file_exists(public_path('images/' . $menu->image))) {
+        if (
+            $menu->image &&
+            file_exists(public_path('images/' . $menu->image))
+        ) {
             unlink(public_path('images/' . $menu->image));
         }
         $menu->delete();
-        return redirect()->route('admin.menu.index')
+        return redirect()
+            ->route('admin.menu.index')
             ->with('success', 'Menu berhasil dihapus.');
     }
+
     public function recipe(Menu $menu)
     {
         $menu->load('recipeIngredients');

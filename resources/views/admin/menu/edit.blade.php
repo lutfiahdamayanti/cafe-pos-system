@@ -152,9 +152,14 @@
                     @foreach($menu->recipeIngredients as $i=>$ingredient)
                         <div class="ingredient-item">
                             <div class="ingredient-number">{{ $i+1 }}</div>
-                            <div class="ingredient-field">
+                           <div class="ingredient-field">
                                 <label>Nama Bahan</label>
-                                <input type="text" name="recipe_ingredients[{{ $i }}][name]" class="form-control menu-form-control" placeholder="Contoh: Tepung" value="{{ $ingredient->name }}">
+                                <select name="recipe_ingredients[{{ $i }}][inventory_item_id]" class="form-select menu-form-control">
+                                    <option value="">Pilih bahan</option>
+                                    @foreach($inventoryItems as $inventoryItem)
+                                        <option value="{{ $inventoryItem->id }}" {{ $ingredient->inventory_item_id == $inventoryItem->id ? 'selected' : '' }}{{ $inventoryItem->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="ingredient-field">
                                 <label>Jumlah</label>
@@ -162,11 +167,21 @@
                             </div>
                             <div class="ingredient-field">
                                 <label>Satuan</label>
-                                <input type="text" name="recipe_ingredients[{{ $i }}][unit]" class="form-control menu-form-control" placeholder="gram" value="{{ $ingredient->unit }}">
+                                <select name="recipe_ingredients[{{ $i }}][unit]" class="form-select menu-form-control">
+                                    <option value="">Pilih satuan</option>
+                                    <option value="gram" {{ $ingredient->unit === 'gram' ? 'selected' : '' }}>Gram</option>
+                                    <option value="kg" {{ $ingredient->unit === 'kg' ? 'selected' : '' }}>Kg</option>
+                                    <option value="ml" {{ $ingredient->unit === 'ml' ? 'selected' : '' }}>Ml</option>
+                                    <option value="liter" {{ $ingredient->unit === 'liter' ? 'selected' : '' }}>Liter</option>
+                                    <option value="pcs" {{ $ingredient->unit === 'pcs' ? 'selected' : '' }}>Pcs</option>
+                                </select>
                             </div>
                             <div class="ingredient-field">
                                 <label>Biaya</label>
-                                <div class="input-group"><span class="input-group-text">Rp</span><input type="number" name="recipe_ingredients[{{ $i }}][cost]" class="form-control menu-form-control" placeholder="0" step="0.01" value="{{ $ingredient->cost }}"></div>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp</span>
+                                    <input type="text" class="form-control menu-form-control" value="{{ number_format($ingredient->cost, 0, ',', '.') }}" readonly>
+                                </div>
                             </div>
                             <button type="button" class="btn remove-ingredient" title="Hapus bahan"><i class="bi bi-trash"></i></button>
                         </div>
@@ -226,7 +241,6 @@
 @push('scripts')
 <script>
 let optionIndex={{ $menu->options->count() }};
-
 document.getElementById('add-option').addEventListener('click',function(){
     document.getElementById('option-wrapper').insertAdjacentHTML('beforeend',`
         <div class="menu-option-card option-item">
@@ -239,8 +253,9 @@ document.getElementById('add-option').addEventListener('click',function(){
 });
 
 document.addEventListener('click',function(e){
-    if(e.target.closest('.add-value')){
-        let button=e.target.closest('.add-value'),card=button.closest('.option-item'),values=card.querySelector('.values'),input=card.querySelector('input'),index=input.name.match(/\d+/)[0],total=values.children.length;
+    const addValue=e.target.closest('.add-value'),removeOption=e.target.closest('.remove-option'),removeValue=e.target.closest('.remove-value'),removeIngredient=e.target.closest('.remove-ingredient');
+    if(addValue){
+        const card=addValue.closest('.option-item'),values=card.querySelector('.values'),index=card.querySelector('input').name.match(/\d+/)[0],total=values.children.length;
         values.insertAdjacentHTML('beforeend',`
             <div class="option-value-row">
                 <div class="option-value-number">${total+1}</div>
@@ -249,21 +264,39 @@ document.addEventListener('click',function(e){
                 <button type="button" class="btn remove-value"><i class="bi bi-x-lg"></i></button>
             </div>`);
     }
-    if(e.target.closest('.remove-option')) e.target.closest('.option-item').remove();
-    if(e.target.closest('.remove-value')) e.target.closest('.option-value-row').remove();
-    if(e.target.closest('.remove-ingredient')) e.target.closest('.ingredient-item').remove();
+    if(removeOption) removeOption.closest('.option-item').remove();
+    if(removeValue) removeValue.closest('.option-value-row').remove();
+    if(removeIngredient) removeIngredient.closest('.ingredient-item').remove();
+});
+
+const inventoryItems=@json($inventoryItems->values());
+function updateIngredientFields(item){
+    const select=item.querySelector('select[name*="[inventory_item_id]"]'),quantityInput=item.querySelector('input[name*="[quantity]"]'),unitInput=item.querySelector('[name*="[unit]"]'),costInput=item.querySelector('input[readonly]');
+    if(!select||!quantityInput||!unitInput||!costInput)return;
+    const inventoryItem=inventoryItems.find(inventory=>String(inventory.id)===String(select.value));
+    if(!inventoryItem){unitInput.value='';costInput.value='0';return;}
+    unitInput.value=inventoryItem.unit;
+    const quantity=parseFloat(quantityInput.value)||0,cost=quantity*parseFloat(inventoryItem.cost_per_unit||0);
+    costInput.value=new Intl.NumberFormat('id-ID').format(cost);
+}
+
+document.addEventListener('change',function(e){
+    if(e.target.matches('select[name*="[inventory_item_id]"]')) updateIngredientFields(e.target.closest('.ingredient-item'));
+});
+
+document.addEventListener('input',function(e){
+    if(e.target.matches('input[name*="[quantity]"]')) updateIngredientFields(e.target.closest('.ingredient-item'));
 });
 
 let ingredientIndex={{ $menu->recipeIngredients->count() }};
-
 document.getElementById('add-ingredient').addEventListener('click',function(){
     document.getElementById('ingredient-wrapper').insertAdjacentHTML('beforeend',`
         <div class="ingredient-item">
             <div class="ingredient-number">${ingredientIndex+1}</div>
-            <div class="ingredient-field"><label>Nama Bahan</label><input type="text" name="recipe_ingredients[${ingredientIndex}][name]" class="form-control menu-form-control" placeholder="Contoh: Tepung"></div>
+            <div class="ingredient-field"><label>Nama Bahan</label><select name="recipe_ingredients[${ingredientIndex}][inventory_item_id]" class="form-select menu-form-control"><option value="">Pilih bahan</option>@foreach($inventoryItems as $inventoryItem)<option value="{{ $inventoryItem->id }}">{{ $inventoryItem->name }}</option>@endforeach</select></div>
             <div class="ingredient-field"><label>Jumlah</label><input type="number" name="recipe_ingredients[${ingredientIndex}][quantity]" class="form-control menu-form-control" placeholder="0" step="0.01"></div>
-            <div class="ingredient-field"><label>Satuan</label><input type="text" name="recipe_ingredients[${ingredientIndex}][unit]" class="form-control menu-form-control" placeholder="gram"></div>
-            <div class="ingredient-field"><label>Biaya</label><div class="input-group"><span class="input-group-text">Rp</span><input type="number" name="recipe_ingredients[${ingredientIndex}][cost]" class="form-control menu-form-control" placeholder="0" step="0.01"></div></div>
+            <div class="ingredient-field"><label>Satuan</label><select name="recipe_ingredients[${ingredientIndex}][unit]" class="form-select menu-form-control"><option value="">Pilih satuan</option><option value="gram">Gram</option><option value="kg">Kg</option><option value="ml">Ml</option><option value="liter">Liter</option><option value="pcs">Pcs</option></select></div>
+            <div class="ingredient-field"><label>Biaya</label><div class="input-group"><span class="input-group-text">Rp</span><input type="text" class="form-control menu-form-control" value="0" readonly></div></div>
             <button type="button" class="btn remove-ingredient"><i class="bi bi-trash"></i></button>
         </div>`);
     ingredientIndex++;

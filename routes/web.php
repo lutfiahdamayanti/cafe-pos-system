@@ -30,6 +30,7 @@ use App\Http\Controllers\Admin\MultiOutletController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\AdvancedOperationController;
 use App\Http\Controllers\Admin\BusinessDashboardController;
+use App\Http\Controllers\Admin\InventoryController;
 
 /* ========================================= CUSTOMER ========================================*/
 Route::get('/', [MenuController::class, 'index'])
@@ -128,6 +129,20 @@ Route::prefix('admin')
                 ->name('dashboard');
             Route::get('/reports', [ReportController::class, 'index'])
                 ->name('reports.index');
+            
+            // ========================= INVENTORY BAHAN BAKU =========================
+            Route::get('/inventory', [InventoryController::class, 'index'])
+                ->name('inventory.index');
+            Route::get('/inventory/create', [InventoryController::class, 'create'])
+                ->name('inventory.create');
+            Route::post('/inventory', [InventoryController::class, 'store'])
+                ->name('inventory.store');
+            Route::get('/inventory/{inventoryItem}/edit', [InventoryController::class, 'edit'])
+                ->name('inventory.edit');
+            Route::put('/inventory/{inventoryItem}', [InventoryController::class, 'update'])
+                ->name('inventory.update');
+            Route::delete('/inventory/{inventoryItem}', [InventoryController::class, 'destroy'])
+                ->name('inventory.destroy');
 
             // ========================= CRM PELANGGAN SUB-MENUS =========================
             Route::get('/customers/database-pelanggan', [CustomerController::class, 'databasePelanggan'])

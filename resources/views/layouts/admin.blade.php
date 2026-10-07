@@ -336,6 +336,52 @@
                     </ul>
                 </div>
             </li>
+            {{-- DROPDOWN INVENTORY BAHAN BAKU --}}
+            <li class="sidebar-dropdown">
+                <a href="#inventoryMenu" data-bs-toggle="collapse"
+                class="d-flex align-items-center justify-content-between {{ request()->is('admin/inventory*') ? 'active-parent' : '' }}"
+                aria-expanded="{{ request()->is('admin/inventory*') ? 'true' : 'false' }}">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-box-seam-fill text-success"></i>
+                        <span>Inventory Bahan Baku</span>
+                    </div>
+                    <i class="bi bi-chevron-down dropdown-arrow"></i>
+                </a>
+                <div class="collapse {{ request()->is('admin/inventory*') ? 'show' : '' }}" id="inventoryMenu">
+                    <ul class="sidebar-submenu">
+                        <li>
+                            <a href="{{ url('/admin/inventory') }}" class="{{ request()->is('admin/inventory') ? 'active-sub' : '' }}">
+                                <i class="bi bi-box-seam text-success"></i>
+                                Stok Bahan
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url('/admin/inventory/low-stock') }}" class="{{ request()->is('admin/inventory/low-stock') ? 'active-sub' : '' }}">
+                                <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+                                Alert Stok Menipis
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url('/admin/inventory/restock') }}" class="{{ request()->is('admin/inventory/restock') ? 'active-sub' : '' }}">
+                                <i class="bi bi-arrow-down-circle-fill text-primary"></i>
+                                Restock
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url('/admin/inventory/stock-opname') }}"  class="{{ request()->is('admin/inventory/stock-opname') ? 'active-sub' : '' }}">
+                                <i class="bi bi-clipboard-check-fill text-info"></i>
+                                Stok Opname
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url('/admin/inventory/suppliers') }}" class="{{ request()->is('admin/inventory/suppliers') ? 'active-sub' : '' }}">
+                                <i class="bi bi-truck text-danger"></i>
+                                Data Supplier
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
             {{-- OWNER, MANAGER, CASHIER --}}
             @if(in_array(Auth::user()->role,['owner','manager','cashier']))
                 {{-- DROPDOWN POS / TRANSAKSI --}}
