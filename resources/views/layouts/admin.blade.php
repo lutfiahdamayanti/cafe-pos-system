@@ -356,13 +356,14 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url('/admin/inventory/low-stock') }}" class="{{ request()->is('admin/inventory/low-stock') ? 'active-sub' : '' }}">
+                            <a href="{{ url('/admin/inventory/alert') }}" class="{{ request()->is('admin/inventory/alert') ? 'active-sub' : '' }}">
                                 <i class="bi bi-exclamation-triangle-fill text-warning"></i>
                                 Alert Stok Menipis
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url('/admin/inventory/restock') }}" class="{{ request()->is('admin/inventory/restock') ? 'active-sub' : '' }}">
+                            <a href="{{ route('admin.inventory.restock') }}"
+       class="{{ request()->routeIs('admin.inventory.restock') ? 'active-sub' : '' }}">
                                 <i class="bi bi-arrow-down-circle-fill text-primary"></i>
                                 Restock
                             </a>

@@ -133,6 +133,14 @@ Route::prefix('admin')
             // ========================= INVENTORY BAHAN BAKU =========================
             Route::get('/inventory', [InventoryController::class, 'index'])
                 ->name('inventory.index');
+            Route::get('/inventory/restock', [InventoryController::class, 'restock'])
+                ->name('inventory.restock');
+            Route::post('/inventory/restock', [InventoryController::class, 'storeRestock'])
+                ->name('inventory.store-restock');
+            Route::get('/inventory/alert', [InventoryController::class, 'alert'])
+                ->name('inventory.alert');
+            Route::get('/inventory/low-stock', [InventoryController::class, 'alert'])
+                ->name('inventory.low-stock');
             Route::get('/inventory/create', [InventoryController::class, 'create'])
                 ->name('inventory.create');
             Route::post('/inventory', [InventoryController::class, 'store'])

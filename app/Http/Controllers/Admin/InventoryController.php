@@ -26,6 +26,56 @@ class InventoryController extends Controller
         ));
     }
 
+    public function restock()
+    {
+        $inventoryItems = InventoryItem::orderBy('name')->get();
+        return view('admin.inventory.restock', compact('inventoryItems'));
+    }
+
+    public function storeRestock(Request $request)
+    {
+        $request->validate([
+            'inventory_item_id' => 'required|exists:inventory_items,id',
+            'quantity' => 'required|numeric|gt:0',
+        ]);
+        $inventoryItem = InventoryItem::findOrFail(
+            $request->inventory_item_id
+        );
+        $inventoryItem->increment(
+            'stock',
+            $request->quantity
+        );
+        return redirect()
+            ->route('admin.inventory.restock')
+            ->with(
+                'success',
+                'Stok ' . $inventoryItem->name . ' berhasil ditambahkan.'
+            );
+    }
+
+    public function alert()
+    {
+        $inventoryItems = InventoryItem::whereColumn('stock', '<=', 'minimum_stock')
+            ->orderBy('stock', 'asc')
+            ->get();
+        $totalAlert = $inventoryItems->count();
+        $totalHabis = $inventoryItems
+            ->where('stock', '<=', 0)
+            ->count();
+        $totalMenipis = $inventoryItems
+            ->where('stock', '>', 0)
+            ->count();
+        return view(
+            'admin.inventory.alert',
+            compact(
+                'inventoryItems',
+                'totalAlert',
+                'totalMenipis',
+                'totalHabis'
+            )
+        );
+    }
+
     public function create()
     {
         return view('admin.inventory.create');

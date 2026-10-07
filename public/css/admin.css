@@ -522,3 +522,56 @@ textarea.menu-form-control { min-height:auto; }
     .inventory-form-footer{flex-direction:column-reverse;align-items:stretch}
     .inventory-cancel-btn,.inventory-save-btn{width:100%}
 }
+/* ========================================= INVENTORY ALERT ========================================= */
+.inventory-alert-card{overflow:hidden;border-radius:14px}
+.inventory-alert-summary{display:inline-flex;align-items:center;padding:7px 12px;background:#fff3cd;color:#856404;border-radius:8px;font-size:13px;font-weight:600}
+.inventory-alert-table th{padding:14px 12px;font-size:13px;font-weight:700;color:#343a40;white-space:nowrap}
+.inventory-alert-table td{padding:14px 12px;font-size:14px}
+.inventory-alert-table tbody tr{transition:background-color .15s ease}
+.inventory-empty-alert{text-align:center;padding:56px 20px}
+.inventory-empty-icon{width:58px;height:58px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#e8f5e9;color:#198754;font-size:27px}
+@media (max-width:768px){
+    .inventory-alert-summary{width:100%;justify-content:center}
+    .inventory-alert-table{min-width:850px}
+}
+/* ========================================= RESTOCK PAGE ========================================= */
+.inventory-restock-page{width:100%}
+.inventory-restock-header-icon{background:#e8f5e9;color:#198754}
+.inventory-restock-alert{border-radius:10px}
+.restock-card{width:100%;background:#fff;border:1px solid #e9ecef;border-radius:16px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.restock-card-header{padding:20px 24px;border-bottom:1px solid #e9ecef}
+.restock-card-header h5{font-size:18px;font-weight:700;color:#212529}
+.restock-card-header small{color:#6c757d;font-size:13px}
+.restock-card-body{padding:24px}
+.restock-section-title{display:flex;align-items:center;gap:16px;width:100%;margin-bottom:24px}
+.restock-section-heading{display:flex;align-items:center;gap:8px;flex:0 0 auto;color:#212529;font-size:15px;font-weight:700;white-space:nowrap}
+.restock-section-heading i{color:#198754;font-size:17px}
+.restock-section-line{flex:1;height:1px;background:#e9ecef}
+.restock-label{display:block;margin-bottom:8px;color:#343a40;font-size:14px;font-weight:600}
+.restock-control{width:100%;min-height:46px;padding:10px 13px;border:1px solid #dee2e6;border-radius:10px;font-size:15px}
+.restock-control:focus{border-color:#198754;box-shadow:0 0 0 .2rem rgba(25,135,84,.08)}
+.restock-input-group{display:flex;flex-wrap:nowrap}
+.restock-input-group .form-control{min-width:0;border-radius:10px 0 0 10px}
+.restock-input-group .input-group-text{min-width:78px;min-height:46px;display:flex;align-items:center;justify-content:center;background:#f8f9fa;border:1px solid #dee2e6;border-left:0;border-radius:0 10px 10px 0;color:#495057;font-size:14px;font-weight:600}
+.restock-help{display:block;margin-top:7px;color:#6c757d;font-size:12px}
+.restock-current-stock{display:flex;align-items:center;gap:14px;padding:16px 18px;background:#f8f9fa;border:1px solid #e9ecef;border-radius:12px}
+.restock-info-icon{width:42px;height:42px;flex:0 0 42px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:#e8f5e9;color:#198754;font-size:17px}
+.restock-current-stock small{display:block;margin-bottom:3px;color:#6c757d;font-size:12px}
+.restock-current-stock strong{display:block;color:#212529;font-size:16px;font-weight:700}
+.restock-preview{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:17px 20px;background:#eaf7ee;border:1px solid #cfe8d7;border-radius:12px}
+.restock-preview small{display:block;margin-bottom:3px;color:#198754;font-size:13px;font-weight:700}
+.restock-preview span{color:#6c757d;font-size:12px}
+.restock-preview strong{color:#198754;font-size:24px;font-weight:700;white-space:nowrap}
+.restock-footer{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-top:28px;padding-top:20px;border-top:1px solid #e9ecef}
+.restock-cancel-btn{min-height:44px;padding:9px 18px;border:1px solid #dee2e6;background:#fff;color:#495057;border-radius:10px}
+.restock-save-btn{min-height:44px;padding:9px 18px;background:#198754;color:#fff;border-radius:10px;font-weight:600}
+.restock-save-btn:hover{background:#157347;color:#fff}
+@media (max-width:768px){
+    .restock-card-body{padding:18px}
+    .restock-card-header{padding:18px}
+    .restock-section-title{gap:10px}
+    .restock-preview{align-items:flex-start;flex-direction:column}
+    .restock-preview strong{font-size:22px}
+    .restock-footer{justify-content:stretch}
+    .restock-cancel-btn,.restock-save-btn{flex:1}
+}
