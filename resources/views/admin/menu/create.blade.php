@@ -92,36 +92,134 @@
 
 @push('scripts')
 <script>
-let optionIndex=0,ingredientIndex=0;
-document.getElementById("add-option").onclick=function(){
-    let html=`<div class="card mt-3 option-card border-0 shadow-sm rounded-4"><div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3"><strong><i class="bi bi-sliders text-success"></i> Pilihan Menu</strong></div>
-        <div class="mb-3"><label class="form-label fw-semibold">Nama Pilihan</label><input type="text" name="options[${optionIndex}][name]" class="form-control" placeholder="Contoh : Ukuran"></div>
-        <div class="values mb-3"></div><button type="button" class="btn btn-sm btn-success add-value rounded-3"><i class="bi bi-plus-circle"></i> Tambah Nilai</button>
-    </div></div>`;
-    document.getElementById("option-container").insertAdjacentHTML("beforeend",html); optionIndex++;
-};
+let optionIndex=0;
+let ingredientIndex=0;
+document.getElementById('add-option').addEventListener('click',function(){
+    let html=`
+        <div class="card mt-3 option-card border-0 shadow-sm rounded-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3"><strong><i class="bi bi-sliders text-success"></i> Pilihan Menu</strong></div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Nama Pilihan</label>
+                    <input type="text" name="options[${optionIndex}][name]" class="form-control" placeholder="Contoh: Ukuran">
+                </div>
+                <div class="values mb-3"></div>
+                <button type="button" class="btn btn-sm btn-success add-value rounded-3"><i class="bi bi-plus-circle"></i> Tambah Nilai</button>
+            </div>
+        </div>
+    `;
+    document.getElementById('option-container').insertAdjacentHTML('beforeend',html);
+    optionIndex++;
+});
 
-document.addEventListener("click",function(e){
-    if(e.target.classList.contains("add-value")){
-        let values=e.target.previousElementSibling,count=values.children.length,card=e.target.closest(".option-card"),index=card.querySelector("input").name.match(/\d+/)[0];
-        values.insertAdjacentHTML("beforeend",`<div class="row g-2 mt-2 option-value-row"><div class="col-md-6"><input type="text" class="form-control" placeholder="Nilai" name="options[${index}][values][${count}][value]"></div><div class="col-md-4"><input type="number" class="form-control" placeholder="Harga Tambahan" name="options[${index}][values][${count}][price]"></div></div>`);
+document.addEventListener('click',function(e){
+    if(e.target.classList.contains('add-value')){
+        let values=e.target.previousElementSibling;
+        let count=values.children.length;
+        let card=e.target.closest('.option-card');
+        let index=card.querySelector('input[name*="[name]"]').name.match(/\d+/)[0];
+        values.insertAdjacentHTML('beforeend',`
+            <div class="row g-2 mt-2 option-value-row">
+                <div class="col-md-6"><input type="text" class="form-control" placeholder="Nilai" name="options[${index}][values][${count}][value]"></div>
+                <div class="col-md-4">
+                    <input type="number" class="form-control" placeholder="Harga Tambahan" name="options[${index}][values][${count}][price]">
+                </div>
+            </div>
+        `);
     }
 });
 
+const inventoryItems=@json($inventoryItems);
+
+function calculateIngredientCost(quantity,recipeUnit,inventoryUnit,costPerUnit){
+    quantity=parseFloat(quantity)||0;
+    costPerUnit=parseFloat(costPerUnit)||0;
+    recipeUnit=(recipeUnit||'').toLowerCase().trim();
+    inventoryUnit=(inventoryUnit||'').toLowerCase().trim();
+    if(quantity<=0||costPerUnit<0)return 0;
+    if(recipeUnit===inventoryUnit)return quantity*costPerUnit;
+    if(recipeUnit==='gram'&&inventoryUnit==='kg')return(quantity/1000)*costPerUnit;
+    if(recipeUnit==='kg'&&inventoryUnit==='gram')return(quantity*1000)*costPerUnit;
+    if(recipeUnit==='ml'&&inventoryUnit==='liter')return(quantity/1000)*costPerUnit;
+    if(recipeUnit==='liter'&&inventoryUnit==='ml')return(quantity*1000)*costPerUnit;
+    return 0;
+}
+
+function updateIngredientFields(item){
+    const select=item.querySelector('select[name*="[inventory_item_id]"]');
+    const quantityInput=item.querySelector('input[name*="[quantity]"]');
+    const unitInput=item.querySelector('select[name*="[unit]"]');
+    const costInput=item.querySelector('input[name*="[cost]"]');
+    if(!select||!quantityInput||!unitInput||!costInput)return;
+    const inventoryItem=inventoryItems.find(inventory=>String(inventory.id)===String(select.value));
+    if(!inventoryItem){costInput.value='0';updateFoodCost();return;}
+    const quantity=parseFloat(quantityInput.value)||0;
+    const cost=calculateIngredientCost(quantity,unitInput.value,inventoryItem.unit,inventoryItem.cost_per_unit);
+    costInput.value=cost.toFixed(2);
+    updateFoodCost();
+}
+
+function updateFoodCost(){
+    const costInputs=document.querySelectorAll('input[name*="[cost]"]');
+    let total=0;
+    costInputs.forEach(function(input){
+        total+=parseFloat(input.value)||0;
+    });
+    const foodCostInput=document.querySelector('input[name="food_cost"]');
+    if(foodCostInput)foodCostInput.value=total.toFixed(2);
+}
+
+document.addEventListener('change',function(e){
+    if(e.target.matches('select[name*="[inventory_item_id]"]')||e.target.matches('select[name*="[unit]"]')){
+        const item=e.target.closest('.ingredient-item');
+        if(item)updateIngredientFields(item);
+    }
+});
+
+document.addEventListener('input',function(e){
+    if(e.target.matches('input[name*="[quantity]"]')){
+        const item=e.target.closest('.ingredient-item');
+        if(item)updateIngredientFields(item);
+    }
+    if(e.target.matches('input[name*="[cost]"]'))updateFoodCost();
+});
+
 document.getElementById('add-ingredient').addEventListener('click',function(){
-    document.getElementById('ingredient-wrapper').insertAdjacentHTML('beforeend',`<div class="ingredient-item"><div class="ingredient-number">${ingredientIndex+1}</div>
-    <div class="ingredient-field"><label>Nama Bahan</label><select name="recipe_ingredients[${ingredientIndex}][inventory_item_id]" class="form-select menu-form-control"><option value="">Pilih bahan</option>@foreach($inventoryItems as $inventoryItem)<option value="{{ $inventoryItem->id }}">{{ $inventoryItem->name }}</option>@endforeach</select></div>
-    <div class="ingredient-field"><label>Jumlah</label><input type="number" name="recipe_ingredients[${ingredientIndex}][quantity]" class="form-control menu-form-control" placeholder="0" step="0.01" min="0"></div>
-    <div class="ingredient-field"><label>Satuan</label><select name="recipe_ingredients[${ingredientIndex}][unit]" class="form-select menu-form-control"><option value="">Pilih satuan</option><option value="gram">Gram</option><option value="kg">Kg</option><option value="ml">Ml</option><option value="liter">Liter</option><option value="pcs">Pcs</option></select></div>
-    <div class="ingredient-field"><label>Biaya</label><div class="input-group"><span class="input-group-text">Rp</span><input type="number" name="recipe_ingredients[${ingredientIndex}][cost]" class="form-control menu-form-control" value="0" min="0" step="0.01"></div></div>
-    <button type="button" class="btn remove-ingredient" title="Hapus bahan"><i class="bi bi-trash"></i></button></div>`);
+    document.getElementById('ingredient-wrapper').insertAdjacentHTML('beforeend',`
+        <div class="ingredient-item">
+            <div class="ingredient-number">${ingredientIndex+1}</div>
+            <div class="ingredient-field">
+                <label>Nama Bahan</label>
+                <select name="recipe_ingredients[${ingredientIndex}][inventory_item_id]" class="form-select menu-form-control">
+                    <option value="">Pilih bahan</option>
+                    @foreach($inventoryItems as $inventoryItem)<option value="{{ $inventoryItem->id }}">{{ $inventoryItem->name }}</option>@endforeach
+                </select>
+            </div>
+            <div class="ingredient-field"><label>Jumlah</label><input type="number" name="recipe_ingredients[${ingredientIndex}][quantity]" class="form-control menu-form-control" placeholder="0" step="0.01" min="0"></div>
+            <div class="ingredient-field">
+                <label>Satuan</label>
+                <select name="recipe_ingredients[${ingredientIndex}][unit]" class="form-select menu-form-control">
+                    <option value="">Pilih satuan</option>
+                    <option value="gram">Gram</option>
+                    <option value="kg">Kg</option>
+                    <option value="ml">Ml</option>
+                    <option value="liter">Liter</option>
+                    <option value="pcs">Pcs</option>
+                </select>
+            </div>
+            <div class="ingredient-field"><label>Biaya</label><div class="input-group"><span class="input-group-text">Rp</span><input type="number" name="recipe_ingredients[${ingredientIndex}][cost]" class="form-control menu-form-control ingredient-cost" value="0" step="0.01" min="0"></div></div>
+            <button type="button" class="btn remove-ingredient" title="Hapus bahan"><i class="bi bi-trash"></i></button>
+        </div>
+    `);
     ingredientIndex++;
 });
 
 document.addEventListener('click',function(e){
     const button=e.target.closest('.remove-ingredient');
-    if(button) button.closest('.ingredient-item').remove();
+    if(button){
+        button.closest('.ingredient-item').remove();
+        updateFoodCost();
+    }
 });
 </script>
 @endpush

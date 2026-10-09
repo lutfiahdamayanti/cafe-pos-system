@@ -51,13 +51,13 @@
                     <label class="form-label fw-semibold">Cari Bahan</label>
                     <div class="input-group">
                         <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                        <input type="text" class="form-control" placeholder="Cari nama bahan...">
+                        <input type="text" id="inventorySearch" class="form-control" placeholder="Cari nama bahan...">
                     </div>
                 </div>
 
                 <div class="col-md-3">
                     <label class="form-label fw-semibold">Status Stok</label>
-                    <select class="form-select">
+                    <select id="inventoryStatus" class="form-select">
                         <option value="">Semua Status</option>
                         <option value="aman">Aman</option>
                         <option value="menipis">Menipis</option>
@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="col-md-3">
-                    <button type="button" class="btn btn-outline-secondary w-100">
+                    <button type="button" id="resetInventoryFilter" class="btn btn-outline-secondary w-100">
                         <i class="bi bi-arrow-counterclockwise"></i> Reset Filter
                     </button>
                 </div>
@@ -98,7 +98,7 @@
                     </thead>
                     <tbody>
                         @forelse($inventoryItems as $item)
-                            <tr>
+                            <tr class="inventory-row" data-name="{{ strtolower($item->name) }}" data-status="{{ $item->stock <= 0 ? 'habis' : ($item->stock <= $item->minimum_stock ? 'menipis' : 'aman') }}">
                                 <td>{{ $loop->iteration }}</td>
                                 <td><strong>{{ $item->name }}</strong></td>
                                 <td>{{ $item->category ?? '-' }}</td>
@@ -116,13 +116,10 @@
                                 </td>
                                 <td>
                                     <div class="d-flex gap-1">
-                                        <a href="{{ route('admin.inventory.edit', $item) }}"
-                                           class="btn btn-sm btn-outline-primary" title="Edit">
+                                        <a href="{{ route('admin.inventory.edit', $item) }}" class="btn btn-sm btn-outline-primary" title="Edit">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <form action="{{ route('admin.inventory.destroy', $item) }}"
-                                              method="POST"
-                                              onsubmit="return confirm('Yakin ingin menghapus bahan ini?')">
+                                        <form action="{{ route('admin.inventory.destroy', $item) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus bahan ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
@@ -151,6 +148,29 @@
             </div>
         </div>
     </div>
-
 </div>
+
+@push('scripts')
+<script>
+const inventorySearch = document.getElementById('inventorySearch');
+const inventoryStatus = document.getElementById('inventoryStatus');
+const resetInventoryFilter = document.getElementById('resetInventoryFilter');
+const inventoryRows = document.querySelectorAll('.inventory-row');
+
+function filterInventory() {
+    const searchValue = inventorySearch.value.toLowerCase().trim();
+    const statusValue = inventoryStatus.value;
+    inventoryRows.forEach(function(row) {
+        const name = row.dataset.name || '';
+        const status = row.dataset.status || '';
+        const matchName = name.includes(searchValue);
+        const matchStatus = !statusValue || status === statusValue;
+        row.style.display = matchName && matchStatus ? '' : 'none';
+    });
+}
+inventorySearch.addEventListener('input',filterInventory);
+inventoryStatus.addEventListener('change',filterInventory);
+resetInventoryFilter.addEventListener('click',function () {inventorySearch.value = '';inventoryStatus.value = '';filterInventory();});
+</script>
+@endpush
 @endsection

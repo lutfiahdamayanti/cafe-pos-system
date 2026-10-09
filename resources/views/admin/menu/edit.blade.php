@@ -16,7 +16,6 @@
 
     <form action="{{ route('admin.menu.update',$menu->id) }}" method="POST" enctype="multipart/form-data">
         @csrf @method('PUT')
-
         <div class="menu-edit-card mb-4">
             <div class="menu-edit-card-header">
                 <div><h5 class="fw-bold mb-1"><i class="bi bi-info-circle-fill text-success me-2"></i>Informasi Menu</h5><small class="text-muted">Informasi utama menu cafe</small></div>
@@ -157,7 +156,7 @@
                                 <select name="recipe_ingredients[{{ $i }}][inventory_item_id]" class="form-select menu-form-control">
                                     <option value="">Pilih bahan</option>
                                     @foreach($inventoryItems as $inventoryItem)
-                                        <option value="{{ $inventoryItem->id }}" {{ $ingredient->inventory_item_id == $inventoryItem->id ? 'selected' : '' }}{{ $inventoryItem->name }}</option>
+                                        <option value="{{ $inventoryItem->id }}" {{ $ingredient->inventory_item_id == $inventoryItem->id ? 'selected' : '' }}>{{ $inventoryItem->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -180,7 +179,7 @@
                                 <label>Biaya</label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp</span>
-                                    <input type="text" class="form-control menu-form-control" value="{{ number_format($ingredient->cost, 0, ',', '.') }}" readonly>
+                                    <input type="number" name="recipe_ingredients[{{ $i }}][cost]" class="form-control menu-form-control ingredient-cost" value="{{ $ingredient->cost }}" step="0.01" min="0">
                                 </div>
                             </div>
                             <button type="button" class="btn remove-ingredient" title="Hapus bahan"><i class="bi bi-trash"></i></button>
@@ -270,14 +269,39 @@ document.addEventListener('click',function(e){
 });
 
 const inventoryItems=@json($inventoryItems->values());
-function updateIngredientFields(item){
-    const select=item.querySelector('select[name*="[inventory_item_id]"]'),quantityInput=item.querySelector('input[name*="[quantity]"]'),unitInput=item.querySelector('[name*="[unit]"]'),costInput=item.querySelector('input[readonly]');
-    if(!select||!quantityInput||!unitInput||!costInput)return;
-    const inventoryItem=inventoryItems.find(inventory=>String(inventory.id)===String(select.value));
-    if(!inventoryItem){unitInput.value='';costInput.value='0';return;}
-    unitInput.value=inventoryItem.unit;
-    const quantity=parseFloat(quantityInput.value)||0,cost=quantity*parseFloat(inventoryItem.cost_per_unit||0);
-    costInput.value=new Intl.NumberFormat('id-ID').format(cost);
+function calculateIngredientCost(quantity, recipeUnit, inventoryUnit, costPerUnit) {
+    quantity = parseFloat(quantity) || 0;
+    costPerUnit = parseFloat(costPerUnit) || 0;
+    recipeUnit = (recipeUnit || '').toLowerCase().trim();
+    inventoryUnit = (inventoryUnit || '').toLowerCase().trim();
+    if (quantity <= 0 || costPerUnit < 0) {return 0;}
+    if (recipeUnit === inventoryUnit) {return quantity * costPerUnit;}
+    if (recipeUnit === 'gram' && inventoryUnit === 'kg') {return (quantity / 1000) * costPerUnit;}
+    if (recipeUnit === 'kg' && inventoryUnit === 'gram') {return (quantity * 1000) * costPerUnit;}
+    if (recipeUnit === 'ml' && inventoryUnit === 'liter') {return (quantity / 1000) * costPerUnit;}
+    if (recipeUnit === 'liter' && inventoryUnit === 'ml') { return (quantity * 1000) * costPerUnit;}
+    return 0;
+}
+
+
+function updateIngredientFields(item) {
+    const select = item.querySelector('select[name*="[inventory_item_id]"]');
+    const quantityInput = item.querySelector('input[name*="[quantity]"]');
+    const unitInput = item.querySelector('select[name*="[unit]"]');
+    const costInput = item.querySelector('input[name*="[cost]"]');
+    if (!select || !quantityInput || !unitInput || !costInput) {
+        return;
+    }
+    const inventoryItem = inventoryItems.find(
+        inventory =>
+            String(inventory.id) === String(select.value)
+    );
+    if (!inventoryItem) {
+        return;
+    }
+    const quantity = parseFloat(quantityInput.value) || 0;
+    const cost = calculateIngredientCost(quantity,unitInput.value,inventoryItem.unit,inventoryItem.cost_per_unit);
+    costInput.value = cost.toFixed(2);
 }
 
 document.addEventListener('change',function(e){
@@ -296,7 +320,7 @@ document.getElementById('add-ingredient').addEventListener('click',function(){
             <div class="ingredient-field"><label>Nama Bahan</label><select name="recipe_ingredients[${ingredientIndex}][inventory_item_id]" class="form-select menu-form-control"><option value="">Pilih bahan</option>@foreach($inventoryItems as $inventoryItem)<option value="{{ $inventoryItem->id }}">{{ $inventoryItem->name }}</option>@endforeach</select></div>
             <div class="ingredient-field"><label>Jumlah</label><input type="number" name="recipe_ingredients[${ingredientIndex}][quantity]" class="form-control menu-form-control" placeholder="0" step="0.01"></div>
             <div class="ingredient-field"><label>Satuan</label><select name="recipe_ingredients[${ingredientIndex}][unit]" class="form-select menu-form-control"><option value="">Pilih satuan</option><option value="gram">Gram</option><option value="kg">Kg</option><option value="ml">Ml</option><option value="liter">Liter</option><option value="pcs">Pcs</option></select></div>
-            <div class="ingredient-field"><label>Biaya</label><div class="input-group"><span class="input-group-text">Rp</span><input type="text" class="form-control menu-form-control" value="0" readonly></div></div>
+            <div class="ingredient-field"><label>Biaya</label><div class="input-group"><span class="input-group-text">Rp</span><input type="number" name="recipe_ingredients[${ingredientIndex}][cost]" class="form-control menu-form-control ingredient-cost" value="0" step="0.01" min="0"></div></div>
             <button type="button" class="btn remove-ingredient"><i class="bi bi-trash"></i></button>
         </div>`);
     ingredientIndex++;
