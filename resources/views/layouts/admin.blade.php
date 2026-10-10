@@ -362,20 +362,19 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('admin.inventory.restock') }}"
-       class="{{ request()->routeIs('admin.inventory.restock') ? 'active-sub' : '' }}">
+                            <a href="{{ route('admin.inventory.restock') }}" class="{{ request()->routeIs('admin.inventory.restock') ? 'active-sub' : '' }}">
                                 <i class="bi bi-arrow-down-circle-fill text-primary"></i>
                                 Restock
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url('/admin/inventory/stock-opname') }}"  class="{{ request()->is('admin/inventory/stock-opname') ? 'active-sub' : '' }}">
+                            <a href="{{ route('admin.inventory.opname') }}"  class="{{ request()->routeIs('admin.inventory.opname*') ? 'active-sub' : '' }}">
                                 <i class="bi bi-clipboard-check-fill text-info"></i>
                                 Stok Opname
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url('/admin/inventory/suppliers') }}" class="{{ request()->is('admin/inventory/suppliers') ? 'active-sub' : '' }}">
+                            <a href="{{ route('admin.inventory.suppliers.index') }}" class="{{ request()->routeIs('admin.inventory.suppliers.*') ? 'active-sub' : '' }}">
                                 <i class="bi bi-truck text-danger"></i>
                                 Data Supplier
                             </a>

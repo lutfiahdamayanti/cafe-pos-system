@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\InventoryItem;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
@@ -28,28 +29,46 @@ class InventoryController extends Controller
 
     public function restock()
     {
-        $inventoryItems = InventoryItem::orderBy('name')->get();
-        return view('admin.inventory.restock', compact('inventoryItems'));
+        $inventoryItems = InventoryItem::with('suppliers')
+            ->orderBy('name')
+            ->get();
+        return view(
+            'admin.inventory.restock',
+            compact('inventoryItems')
+        );
     }
 
     public function storeRestock(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'inventory_item_id' => 'required|exists:inventory_items,id',
+            'supplier_id' => 'required|exists:suppliers,id',
             'quantity' => 'required|numeric|gt:0',
         ]);
         $inventoryItem = InventoryItem::findOrFail(
-            $request->inventory_item_id
+            $validated['inventory_item_id']
         );
+        $supplierTerhubung = $inventoryItem->suppliers()
+            ->where('suppliers.id', $validated['supplier_id'])
+            ->exists();
+        if (!$supplierTerhubung) {
+            return back()
+                ->withErrors([
+                    'supplier_id' => 'Supplier tersebut belum terhubung dengan bahan ini.',
+                ])
+                ->withInput();
+        }
+        $supplier = Supplier::findOrFail($validated['supplier_id']);
         $inventoryItem->increment(
             'stock',
-            $request->quantity
+            $validated['quantity']
         );
         return redirect()
             ->route('admin.inventory.restock')
             ->with(
                 'success',
-                'Stok ' . $inventoryItem->name . ' berhasil ditambahkan.'
+                'Stok ' . $inventoryItem->name .
+                ' berhasil ditambahkan dari supplier ' . $supplier->name . '.'
             );
     }
 

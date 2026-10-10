@@ -31,6 +31,8 @@ use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\AdvancedOperationController;
 use App\Http\Controllers\Admin\BusinessDashboardController;
 use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\Admin\StockOpnameController;
+use App\Http\Controllers\Admin\SupplierController;
 
 /* ========================================= CUSTOMER ========================================*/
 Route::get('/', [MenuController::class, 'index'])
@@ -141,6 +143,12 @@ Route::prefix('admin')
                 ->name('inventory.alert');
             Route::get('/inventory/low-stock', [InventoryController::class, 'alert'])
                 ->name('inventory.low-stock');
+            Route::get('/inventory/opname', [StockOpnameController::class, 'index'])
+                ->name('inventory.opname');
+            Route::post('/inventory/opname', [StockOpnameController::class, 'store'])
+                ->name('inventory.opname.store');
+            Route::delete('/inventory/opname/{opname}', [StockOpnameController::class, 'destroy'])
+                ->name('inventory.opname.destroy');
             Route::get('/inventory/create', [InventoryController::class, 'create'])
                 ->name('inventory.create');
             Route::post('/inventory', [InventoryController::class, 'store'])
@@ -151,6 +159,8 @@ Route::prefix('admin')
                 ->name('inventory.update');
             Route::delete('/inventory/{inventoryItem}', [InventoryController::class, 'destroy'])
                 ->name('inventory.destroy');
+            Route::resource('inventory/suppliers', SupplierController::class)
+                ->names('inventory.suppliers');
 
             // ========================= CRM PELANGGAN SUB-MENUS =========================
             Route::get('/customers/database-pelanggan', [CustomerController::class, 'databasePelanggan'])

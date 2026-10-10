@@ -24,12 +24,12 @@
                 </div>
 
                 <div class="row g-4">
-                    <div class="col-md-7">
+                    <div class="col-md-4">
                         <label class="restock-label">Bahan Baku</label>
                         <select name="inventory_item_id" id="inventory_item_id" class="form-select restock-control" required>
                             <option value="">Pilih bahan baku</option>
                             @foreach($inventoryItems as $item)
-                                <option value="{{ $item->id }}" data-stock="{{ $item->stock }}" data-unit="{{ $item->unit }}">{{ $item->name }}</option>
+                                <option value="{{ $item->id }}" data-stock="{{ $item->stock }}" data-unit="{{ $item->unit }}" data-suppliers="{{ $item->suppliers->map(fn ($supplier) => [ 'id' => $supplier->id, 'name' => $supplier->name ])->values()->toJson() }}"> {{ $item->name }}</option>
                             @endforeach
                         </select>
                         @error('inventory_item_id')
@@ -38,14 +38,21 @@
                         <small class="restock-help">Pilih bahan yang stoknya ingin ditambahkan.</small>
                     </div>
 
-                    <div class="col-md-5">
-                        <label class="restock-label">Jumlah Restock</label>
+                    <div class="col-md-4">
+                        <label for="supplier_id" class="restock-label">Supplier</label>
+                        <select name="supplier_id" id="supplier_id" class="form-select restock-control"><option value="">Pilih bahan terlebih dahulu</option></select>
+                        @error('supplier_id')
+                            <div class="text-danger small mt-2">{{ $message }}</div>
+                        @enderror
+                        <small class="restock-help">Pilih pemasok yang mengirim bahan ini.</small>
+                    </div>
 
+                    <div class="col-md-4">
+                        <label class="restock-label">Jumlah Restock</label>
                         <div class="input-group restock-input-group">
                             <input type="number" name="quantity" id="restock_quantity" class="form-control restock-control" placeholder="0" min="0" step="0.01" required>
                             <span class="input-group-text" id="restock_unit">Satuan</span>
                         </div>
-
                         @error('quantity')
                             <div class="text-danger small mt-2">{{ $message }}</div>
                         @enderror
@@ -84,36 +91,64 @@
 
 @push('scripts')
 <script>
-const inventorySelect=document.getElementById('inventory_item_id');
-const restockQuantity=document.getElementById('restock_quantity');
-const currentStock=document.getElementById('current_stock');
-const restockUnit=document.getElementById('restock_unit');
-const restockPreview=document.getElementById('restock_preview');
-const newStock=document.getElementById('new_stock');
+const inventorySelect = document.getElementById('inventory_item_id');
+const restockQuantity = document.getElementById('restock_quantity');
+const currentStock = document.getElementById('current_stock');
+const restockUnit = document.getElementById('restock_unit');
+const restockPreview = document.getElementById('restock_preview');
+const newStock = document.getElementById('new_stock');
+const supplierSelect = document.getElementById('supplier_id');
 
-function updateRestockPreview(){
-    const option=inventorySelect.options[inventorySelect.selectedIndex];
+function updateSupplierOptions() {
+    const option = inventorySelect.options[inventorySelect.selectedIndex];
+    supplierSelect.innerHTML = '';
+    if (!option || !option.value) {
+        supplierSelect.add(new Option('Pilih bahan terlebih dahulu', ''));
+        supplierSelect.disabled = true;
+        return;
+    }
+    let suppliers = [];
+    try {
+        suppliers = JSON.parse(option.dataset.suppliers || '[]');
+    } catch (error) {
+        suppliers = [];
+    }
+    if (suppliers.length === 0) {
+        supplierSelect.add(new Option('Belum ada supplier terhubung', ''));
+        supplierSelect.disabled = true;
+        return;
+    }
+    supplierSelect.disabled = false;
+    supplierSelect.add(new Option('Pilih supplier', ''));
+    suppliers.forEach(supplier => supplierSelect.add(new Option(supplier.name, supplier.id)));
+}
 
-    if(!option||!option.value){
-        currentStock.textContent='Pilih bahan terlebih dahulu';
-        restockUnit.textContent='Satuan';
+function updateRestockPreview() {
+    const option = inventorySelect.options[inventorySelect.selectedIndex];
+    if (!option || !option.value) {
+        currentStock.textContent = 'Pilih bahan terlebih dahulu';
+        restockUnit.textContent = 'Satuan';
         restockPreview.classList.add('d-none');
         return;
     }
-
-    const stock=parseFloat(option.dataset.stock)||0;
-    const unit=option.dataset.unit||'';
-    const quantity=parseFloat(restockQuantity.value)||0;
-    const total=stock+quantity;
-
-    currentStock.textContent=new Intl.NumberFormat('id-ID').format(stock)+' '+unit;
-    restockUnit.textContent=unit;
-    newStock.textContent=new Intl.NumberFormat('id-ID').format(total)+' '+unit;
+    const stock = parseFloat(option.dataset.stock) || 0;
+    const unit = option.dataset.unit || '';
+    const quantity = parseFloat(restockQuantity.value) || 0;
+    const formatNumber = value => new Intl.NumberFormat('id-ID').format(value);
+    currentStock.textContent = formatNumber(stock) + ' ' + unit;
+    restockUnit.textContent = unit;
+    newStock.textContent = formatNumber(stock + quantity) + ' ' + unit;
     restockPreview.classList.remove('d-none');
 }
 
-inventorySelect.addEventListener('change',updateRestockPreview);
-restockQuantity.addEventListener('input',updateRestockPreview);
+inventorySelect.addEventListener('change', function () {
+    updateSupplierOptions();
+    updateRestockPreview();
+});
+restockQuantity.addEventListener('input', updateRestockPreview);
+
+updateSupplierOptions();
+updateRestockPreview();
 </script>
 @endpush
 @endsection
