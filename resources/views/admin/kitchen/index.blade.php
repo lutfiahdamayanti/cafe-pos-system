@@ -36,9 +36,41 @@
                         <hr>
                         <h6 class="fw-bold mb-3">Daftar Pesanan</h6>
                         @foreach($order->details as $detail)
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>{{ $detail->menu->name }}</span>
-                                <strong>x{{ $detail->qty }}</strong>
+                            @php
+                                $options = $detail->options;
+                                if (is_string($options)) {
+                                    $decoded = json_decode($options, true);
+                                    if (json_last_error() === JSON_ERROR_NONE) {
+                                        $options = $decoded;
+                                    }
+                                }
+                            @endphp
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center"><strong>{{ $detail->menu->name }}</strong><strong>x{{ $detail->qty }}</strong></div>
+                                @if(!empty($detail->size) && trim($detail->size) !== '-')
+                                    <span class="badge bg-info text-dark mt-1">{{ strtoupper($detail->size) }}</span>
+                                @endif
+                                @if(is_array($options))
+                                    <div class="small text-muted mt-1">
+                                        @foreach($options as $optionName => $optionValue)
+                                            @if(is_array($optionValue))
+                                                @php
+                                                    $label = $optionValue['name']
+                                                        ?? $optionValue['label']
+                                                        ?? $optionValue['value']
+                                                        ?? null;
+                                                @endphp
+                                                @if(is_scalar($label) && filled($label))
+                                                    <div>+ {{ is_string($optionName) ? $optionName . ': ' : '' }}{{ $label }}</div>
+                                                @endif
+                                            @elseif(is_scalar($optionValue) && filled($optionValue))
+                                                <div>+ {{ is_string($optionName) ? $optionName . ': ' : '' }}{{ $optionValue }}</div>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                    @elseif(is_string($options) && filled($options))
+                                    <div class="small text-muted mt-1">+ {{ $options }}</div>
+                                @endif
                             </div>
                         @endforeach
                         @if($order->note)
