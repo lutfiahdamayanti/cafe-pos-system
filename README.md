@@ -1,381 +1,244 @@
 # Cafe & Restaurant POS System
-Cafe & Restaurant POS System adalah aplikasi berbasis web yang dibuat untuk membantu proses pemesanan, transaksi, pengelolaan menu, pelayanan pelanggan, hingga pengelolaan operasional cafe dan restaurant secara terintegrasi
+Cafe & Restaurant POS System adalah aplikasi berbasis web yang dirancang untuk membantu proses pemesanan, transaksi, pengelolaan menu, pemrosesan pesanan dapur, pencatatan penjualan, dan pengelolaan persediaan bahan baku cafe secara terintegrasi.
 Sistem ini memiliki dua sisi utama, yaitu **Customer Website** untuk pelanggan dan **Admin System** untuk mengelola operasional cafe.
+Dokumentasi ini menjelaskan **Modul Operasional Inti (Transaksi & Dapur)**, mulai dari Kasir POS sampai Inventory Bahan Baku.
+---
 
-# Fitur Utama
-## Customer
-Customer dapat menggunakan website untuk melihat menu dan melakukan pemesanan secara mandiri.
+# Modul Operasional Inti (Transaksi & Dapur)
+## 1. Kasir POS (Point of Sale)
+POS digunakan oleh kasir untuk mencatat pesanan pelanggan, menghitung tagihan, memvalidasi pembayaran, dan menyimpan transaksi.
+Fitur utama:
+- Memilih menu yang dipesan pelanggan.
+- Mengatur jumlah setiap item.
+- Memilih ukuran menu jika tersedia.
+- Memilih opsi atau tambahan menu jika tersedia.
+- Menambahkan catatan pesanan.
+- Memilih data pelanggan atau memasukkan informasi pelanggan.
+- Memilih jenis kunjungan, seperti Dine In, Pickup, Delivery, dan Pre-order sesuai pilihan yang tersedia pada POS.
+- Mencatat nomor meja untuk pesanan makan di tempat.
+- Menghitung subtotal pesanan.
+- Menerapkan diskon.
+- Menghitung pajak dan biaya layanan.
+- Menghitung total pembayaran.
+- Memasukkan informasi metode dan nominal pembayaran.
+- Memvalidasi jumlah pembayaran sebelum transaksi disimpan.
+- Membuat nomor pesanan dan menyimpan transaksi.
+- Menyimpan rincian item pesanan untuk diproses oleh modul selanjutnya.
+POS menjadi bagian awal dari alur operasional karena data transaksi yang tersimpan digunakan oleh modul Kitchen dan laporan.
 
-### Home
-Halaman utama menampilkan:
-- Informasi cafe
-- Hero section
-- Menu favorit
-- Kategori menu
-- Promo
-- Keunggulan cafe
-- Informasi fasilitas
-- Navigasi menuju menu dan informasi cafe
+## 2. Manajemen Menu & Recipe
+Modul Menu & Recipe digunakan untuk mengelola daftar makanan dan minuman yang dijual serta komposisi bahan yang digunakan untuk membuat setiap menu.
 
-### Menu
-Customer dapat:
-- Melihat seluruh menu
-- Melihat menu berdasarkan kategori
-- Mencari menu
-- Melihat harga
-- Melihat rating
-- Melihat waktu persiapan
-- Melihat status ketersediaan menu
-- Melihat menu Best Seller
-- Melihat menu Promo
-- Melihat menu terbaru
-- Menandai menu sebagai Favorite
+### 2.1 Manajemen Menu
+Admin dapat mengelola informasi menu yang digunakan pada sistem.
+Fitur utama:
+- Menambahkan menu baru.
+- Melihat daftar menu.
+- Mengedit informasi menu.
+- Menghapus menu.
+- Mengelola kategori menu.
+- Mengatur nama dan deskripsi menu.
+- Mengatur harga jual.
+- Mengatur harga ukuran Large jika tersedia.
+- Mengatur gambar menu.
+- Mengatur waktu persiapan.
+- Mengatur status ketersediaan menu.
+- Mengelola informasi tambahan seperti kalori dan allergen jika tersedia.
+- Mengatur status Best Seller, Promo, atau menu baru sesuai fitur yang tersedia.
+Data menu digunakan oleh POS untuk menampilkan produk yang dapat dipesan pelanggan atau dipilih oleh kasir.
 
-### Detail Menu
-Setiap menu memiliki halaman detail yang menampilkan:
-- Foto menu
-- Nama menu
-- Kategori
-- Harga
-- Deskripsi
-- Komposisi
-- Rating
-- Waktu persiapan
-- Kalori
-- Informasi allergen
-- Ketersediaan stok
-- Pilihan ukuran
-- Pilihan tambahan
-- Jumlah pesanan
-- Catatan pesanan
+### 2.2 Ukuran dan Opsi Tambahan Menu
+Menu dapat memiliki pilihan tambahan sesuai konfigurasi yang tersedia.
+Contoh pilihan:
+- Ukuran Small atau Large.
+- Varian menu.
+- Topping tambahan.
+- Extra cheese.
+- Pilihan saus.
+- Tambahan harga untuk opsi tertentu.
+Pilihan yang dipilih pelanggan perlu tersimpan pada detail pesanan agar informasi tersebut dapat ditampilkan kembali pada halaman Kitchen.
 
-### Favorite
-Customer dapat menandai menu yang disukai sebagai Favorite sehingga menu tersebut dapat dikenali sebagai menu favorit.
+### 2.3 Recipe (Resep Bahan Baku)
+Recipe digunakan untuk mencatat komposisi bahan yang diperlukan untuk membuat suatu menu.
+Fitur utama:
+- Menghubungkan menu dengan bahan baku.
+- Menentukan nama bahan yang digunakan.
+- Menentukan jumlah bahan untuk satu sajian.
+- Menentukan satuan bahan, seperti gram, kilogram, mililiter, liter, atau pcs.
+- Menghubungkan bahan resep dengan data Inventory jika tersedia.
+- Menyimpan informasi biaya bahan untuk membantu estimasi food cost.
+Resep yang terhubung dengan bahan Inventory dapat digunakan sebagai dasar pengurangan stok bahan saat transaksi diproses.
 
-### Cart
-Customer dapat:
-- Menambahkan menu ke keranjang
-- Mengubah jumlah menu
-- Menghapus menu
-- Melihat harga setiap menu
-- Melihat subtotal
-- Melihat pajak
-- Melihat service charge
-- Melihat total pembayaran
+### 2.4 Food Cost
+Food cost merupakan perkiraan biaya bahan yang digunakan untuk membuat suatu menu.
+Informasi biaya bahan dapat digunakan untuk:
+- Mengetahui estimasi biaya produksi menu.
+- Membandingkan biaya bahan dengan harga jual.
+- Membantu evaluasi harga jual.
+- Mendukung analisis biaya produk.
+Ketepatan perhitungan bergantung pada kelengkapan resep, jumlah bahan, satuan, dan harga bahan yang tercatat.
 
-### Checkout
-Pada halaman checkout customer dapat mengisi:
-- Nama
-- Nomor telepon
-- Nomor meja
-- Catatan pesanan
-- Tipe kunjungan
-- Metode pembayaran
+## 3. Kitchen Display System (KDS)
+Kitchen digunakan oleh staf dapur untuk melihat pesanan masuk, membaca rincian pesanan, dan memperbarui status pengerjaan.
+Akses halaman: `/admin/kitchen`
+Fitur utama:
+- Menampilkan daftar pesanan yang perlu diproses.
+- Menampilkan nomor pesanan.
+- Menampilkan nama pelanggan.
+- Menampilkan nomor meja jika tersedia.
+- Menampilkan jenis kunjungan.
+- Menampilkan waktu masuk pesanan.
+- Menampilkan jumlah seluruh item.
+- Menampilkan daftar menu dan kuantitasnya.
+- Menampilkan ukuran menu jika tersedia.
+- Menampilkan pilihan tambahan seperti topping, saus, atau extra apabila tersimpan pada detail pesanan.
+- Menampilkan catatan khusus pesanan.
+- Menampilkan estimasi waktu persiapan.
+- Menampilkan durasi memasak setelah proses dimulai.
+- Memberikan notifikasi ketika pesanan baru terdeteksi.
+- Mengubah status pengerjaan pesanan.
 
-Tipe kunjungan:
-- Dine In
-- Take Away
+### Status Pengerjaan Kitchen
+Alur utama pengerjaan dapur:
+1. **Accepted** — pesanan diterima dan menunggu mulai dikerjakan.
+2. **Processing** — pesanan sedang dibuat.
+3. **Ready** — pesanan selesai dibuat dan siap disajikan.
+Status pesanan selanjutnya dapat diperbarui sesuai alur penyelesaian transaksi pada sistem.
+Kitchen membantu staf dapur memantau antrean dan membaca detail permintaan pelanggan dengan lebih teratur.
 
-Metode pembayaran:
-- QRIS
-- Virtual Account
-- E-Wallet
-- Cash
+## 4. Ringkasan Harian dan Laporan Penjualan
+Modul ringkasan dan laporan digunakan untuk membantu pemilik atau pengelola memantau aktivitas transaksi serta performa penjualan cafe.
+### 4.1 Dashboard Operasional
+Dashboard menyajikan ringkasan kondisi operasional berdasarkan data yang tersedia.
+Informasi yang dapat ditampilkan meliputi:
+- Jumlah pesanan.
+- Pendapatan dari transaksi yang memenuhi kriteria laporan.
+- Pesanan menunggu.
+- Pesanan yang sedang diproses.
+- Pesanan siap.
+- Pesanan selesai.
+- Pesanan dibatalkan.
 
-### QR Ordering
-Customer dapat melakukan pemesanan melalui QR Code yang tersedia pada meja.
-QR Code dapat digunakan untuk mengenali nomor meja sehingga customer tidak perlu memasukkan nomor meja secara manual.
+### 4.2 Laporan Penjualan
+Laporan digunakan untuk melihat data transaksi berdasarkan periode yang tersedia.
+Periode laporan:
+- Daily (Harian).
+- Weekly (Mingguan).
+- Monthly (Bulanan).
+- Yearly (Tahunan).
 
-### Queue Number
-Setiap pesanan mendapatkan nomor antrean.
-Nomor antrean digunakan untuk membantu customer mengetahui urutan pesanan.
+Informasi laporan dapat mencakup:
+- Jumlah transaksi.
+- Pendapatan.
+- Pajak.
+- Biaya layanan.
+- Rata-rata nilai transaksi (Average Order Value/AOV).
+- Menu terlaris.
+- Menu dengan penjualan rendah.
+- Jam ramai.
+- Pelanggan baru.
+- Pelanggan yang kembali melakukan transaksi.
+Laporan membantu pengelola mengevaluasi penjualan, mengetahui menu yang diminati, dan memahami waktu operasional yang ramai.
 
-### Estimated Time
-Sistem memberikan estimasi waktu pesanan berdasarkan proses dan waktu persiapan menu.
+## 5. Inventory Bahan Baku
+Inventory digunakan untuk mengelola persediaan bahan baku yang diperlukan untuk operasional cafe.
+Akses utama: `/admin/inventory`
+### 5.1 Manajemen Data Bahan Baku
+Fitur utama:
+- Menambahkan bahan baku.
+- Melihat daftar bahan baku.
+- Mengedit informasi bahan.
+- Menghapus bahan sesuai ketentuan sistem.
+- Mengelola kategori bahan.
+- Mengatur satuan bahan.
+- Mencatat jumlah stok.
+- Menentukan batas minimum stok.
+- Mencatat biaya per unit.
+- Mengatur status aktif bahan.
+Data Inventory menjadi sumber pencatatan persediaan yang dapat dihubungkan dengan resep menu.
 
-### Order Tracking
-Customer dapat melihat perkembangan pesanan melalui status:
-- Pending
-- Accepted
-- Processing
-- Ready
-- Completed
+### 5.2 Peringatan Stok Rendah
+Sistem memantau stok bahan berdasarkan batas minimum yang ditentukan.
+Fitur utama:
+- Menampilkan bahan dengan stok rendah.
+- Menampilkan bahan yang stoknya habis.
+- Membandingkan stok saat ini dengan batas minimum.
+- Membantu menentukan bahan yang perlu segera diisi ulang.
+Peringatan stok membantu pengelola mengurangi risiko kehabisan bahan ketika cafe sedang beroperasi.
 
-Pesanan juga dapat memiliki status:
-- Cancelled
-- Refund
-- Void
+### 5.3 Restock Bahan Baku
+Restock digunakan untuk mencatat penerimaan bahan dan memperbarui jumlah stok.
+Fitur utama:
+- Memilih bahan baku yang akan ditambah.
+- Memilih supplier yang terhubung dengan bahan tersebut.
+- Memasukkan jumlah bahan yang benar-benar diterima.
+- Memvalidasi data restock.
+- Menambahkan jumlah penerimaan ke stok bahan.
+Jumlah stok diperbarui berdasarkan kuantitas aktual yang dimasukkan saat restock.
 
-### Facilities
-Customer dapat melihat informasi fasilitas cafe seperti:
-- Free WiFi
-- Area Parkir
-- Charging Station
-- Meeting Area
-- Premium Coffee
-- QR Ordering
+### 5.4 Stock Opname
+Stock opname digunakan untuk mencocokkan stok pada sistem dengan jumlah fisik bahan yang tersedia.
+Fitur utama:
+- Menampilkan stok menurut sistem.
+- Memasukkan jumlah stok fisik.
+- Menghitung selisih antara stok sistem dan stok aktual.
+- Menyimpan catatan hasil pemeriksaan.
+- Memperbarui stok Inventory berdasarkan jumlah aktual.
+- Menyimpan riwayat pemeriksaan stok.
+Stock opname membantu menjaga kesesuaian data persediaan dengan kondisi fisik bahan baku.
 
-### About
-Halaman About berisi informasi mengenai cafe, cerita cafe, visi, misi, dan alasan customer memilih cafe.
+### 5.5 Manajemen Supplier
+Modul Supplier digunakan untuk menyimpan data pemasok bahan baku dan menghubungkannya dengan bahan yang dapat disuplai.
+Fitur utama:
+- Menambahkan supplier.
+- Melihat daftar supplier.
+- Mengedit informasi supplier.
+- Menghapus supplier sesuai ketentuan sistem.
+- Menyimpan nama supplier.
+- Menyimpan nama kontak.
+- Menyimpan nomor telepon dan email.
+- Menyimpan alamat dan catatan supplier.
+- Menghubungkan supplier dengan bahan baku.
+- Mencatat informasi kuantitas dan satuan pasokan pada relasi supplier dan bahan.
+Relasi supplier dengan bahan digunakan untuk membantu memilih pemasok yang sesuai ketika proses restock dilakukan.
+---
 
-### Contact
-Customer dapat melihat informasi kontak cafe dan informasi yang dapat digunakan untuk menghubungi cafe.
+# Alur Kerja
+Alur operasional utama sistem:
+1. Admin mengelola menu, kategori, dan resep bahan baku.
+2. Kasir memilih menu dan mencatat detail pesanan.
+3. Sistem menghitung subtotal, diskon, pajak, biaya layanan, dan total pembayaran.
+4. Sistem memvalidasi pembayaran dan menyimpan transaksi.
+5. Pesanan yang sesuai ditampilkan pada halaman Kitchen.
+6. Staf dapur memproses pesanan dan memperbarui status sampai Ready.
+7. Data transaksi digunakan untuk menyusun ringkasan dan laporan penjualan.
+8. Stok bahan dipantau melalui modul Inventory.
+9. Pengelola melakukan restock ketika diperlukan dan stock opname untuk mencocokkan stok sistem dengan stok fisik.
 
-# Fitur Admin
-Admin System digunakan oleh pihak cafe untuk mengelola seluruh proses operasional.
+## Tabel Database Utama
+Tabel yang berkaitan dengan operasional Developer 2.1 meliputi:
+| Tabel | Fungsi |
+|---|---|
+| `orders` | Menyimpan informasi utama transaksi dan status pesanan. |
+| `order_details` | Menyimpan rincian menu, jumlah, ukuran, opsi, harga, dan catatan item. |
+| `menus` | Menyimpan data makanan dan minuman yang dijual. |
+| `categories` | Menyimpan kategori menu. |
+| `menu_options` | Menyimpan konfigurasi pilihan menu. |
+| `menu_option_values` | Menyimpan nilai pilihan menu dan tambahan harga. |
+| `ingredients` | Menyimpan komposisi bahan resep menu. |
+| `inventory_items` | Menyimpan data bahan baku, satuan, stok, dan stok minimum. |
+| `stock_opnames` | Menyimpan catatan pemeriksaan dan penyesuaian stok fisik. |
+| `suppliers` | Menyimpan data pemasok bahan baku. |
+| `inventory_item_supplier` | Menghubungkan supplier dengan bahan baku yang dipasok. |
 
-## Dashboard
-Dashboard menampilkan informasi utama seperti:
-- Total pesanan
-- Total pendapatan
-- Pesanan menunggu
-- Pesanan diproses
-- Pesanan siap
-- Pesanan selesai
-- Pesanan dibatalkan
-- Pesanan terbaru
-Dashboard membantu admin melihat kondisi cafe secara cepat.
+## Catatan Implementasi
+- Pengurangan stok bahan secara otomatis bergantung pada hubungan resep dengan item Inventory yang valid.
+- Informasi ukuran, saus, topping, dan tambahan menu pada Kitchen bergantung pada data pilihan yang tersimpan pada detail pesanan.
+- Notifikasi Kitchen pada alur yang menggunakan polling merupakan pemeriksaan berkala dari browser.
+- Fitur dan perhitungan mengikuti implementasi kode yang tersedia pada project.
+- Penggunaan fitur tertentu tetap bergantung pada konfigurasi menu, data resep, dan validasi transaksi.
+---
 
-# Manajemen Menu
-Admin dapat mengelola menu cafe.
-Fitur:
-- Menambahkan menu
-- Melihat menu
-- Mengedit menu
-- Menghapus menu
-- Mengatur kategori
-- Mengatur harga
-- Mengatur harga ukuran Large
-- Mengatur gambar
-- Mengatur stok
-- Mengatur waktu persiapan
-- Mengatur rating
-- Mengatur kalori
-- Mengatur allergen
-- Mengatur status tersedia
-- Menandai Best Seller
-- Menandai Promo
-- Menandai menu baru
-
-Menu juga dapat memiliki pilihan tambahan seperti:
-- Ukuran
-- Varian
-- Tambahan
-- Extra price
-
-# Manajemen Kategori
-Admin dapat:
-- Menambahkan kategori
-- Melihat kategori
-- Mengedit kategori
-- Menghapus kategori
-Kategori digunakan untuk mengelompokkan menu agar customer lebih mudah mencari makanan dan minuman.
-
-# Manajemen Pesanan
-Admin dapat:
-- Melihat seluruh pesanan
-- Mencari pesanan
-- Melihat detail pesanan
-- Melihat data customer
-- Melihat item pesanan
-- Melihat pembayaran
-- Melihat total transaksi
-- Mengubah status pesanan
-- Membatalkan pesanan
-- Melakukan refund
-- Melakukan void
-
-
-# POS
-POS digunakan oleh kasir untuk membuat transaksi secara langsung.
-Fitur POS:
-- Memilih menu
-- Memilih customer
-- Memilih meja
-- Mengatur jumlah pesanan
-- Memilih ukuran
-- Memilih tambahan
-- Menambahkan catatan
-- Memilih metode pembayaran
-- Menghitung subtotal
-- Menghitung pajak
-- Menghitung service
-- Menghitung total transaksi
-- Membuat order
-
-# Kitchen
-Kitchen digunakan untuk membantu staff dapur melihat dan memproses pesanan.
-Kitchen dapat:
-- Melihat pesanan masuk
-- Melihat detail pesanan
-- Melihat jumlah item
-- Melihat pilihan menu
-- Melihat catatan pesanan
-- Mengubah status pesanan
-- Menandai pesanan sedang diproses
-- Menandai pesanan siap
-Status utama kitchen:
-
-Pending
-   ↓
-Accepted
-   ↓
-Processing
-   ↓
-Ready
-   ↓
-Completed
-
-# Customer Management
-Admin dapat melihat data pelanggan seperti:
-- Nama
-- Nomor telepon
-- Email
-- Jumlah kunjungan
-- Total pengeluaran
-- Kunjungan terakhir
-Data customer dapat digunakan untuk melihat riwayat dan aktivitas pelanggan.
-
-# Riwayat Pesanan
-Admin dapat melihat transaksi yang telah dilakukan.
-Informasi yang dapat dilihat:
-- Nomor pesanan
-- Customer
-- Item
-- Total
-- Pembayaran
-- Status
-- Waktu transaksi
-
-# Reports
-Sistem menyediakan laporan berdasarkan periode:
-- Daily
-- Weekly
-- Monthly
-- Yearly
-
-Informasi laporan meliputi:
-- Total pesanan
-- Pendapatan
-- Pajak
-- Service
-- Pesanan selesai
-- Pesanan dibatalkan
-- Metode pembayaran
-- Menu terlaris
-- Menu dengan penjualan rendah
-- Jam ramai
-- Hari ramai
-- Customer baru
-- Customer yang kembali melakukan transaksi
-
-# Best Seller
-Sistem dapat menampilkan menu yang paling banyak terjual berdasarkan jumlah pesanan.
-Fitur ini membantu cafe mengetahui menu yang paling banyak diminati.
-
-# Worst Seller
-Sistem dapat menampilkan menu dengan jumlah penjualan yang rendah.
-Informasi ini dapat digunakan sebagai bahan evaluasi menu.
-
-# Peak Hours
-Sistem dapat mengetahui jam dengan jumlah transaksi paling tinggi.
-Data ini membantu melihat waktu operasional yang paling ramai.
-
-# Peak Days
-Sistem dapat melihat hari dengan jumlah transaksi paling tinggi.
-
-# Customer Analysis
-Sistem dapat membedakan customer berdasarkan aktivitas transaksi.
-
-### New Customer
-Customer yang baru melakukan transaksi.
-
-### Returning Customer
-Customer yang melakukan transaksi kembali.
-
-# User Management
-Super Admin dapat mengelola pengguna sistem.
-Fitur:
-- Menambahkan user
-- Melihat user
-- Mengedit user
-- Menghapus user
-- Mengatur role user
-
-Role yang tersedia:
-- Super Admin
-- Owner
-- Manager
-- Cashier
-- Kitchen
-
-# Role & Access
-## Super Admin
-Memiliki akses untuk mengelola user dan sistem administrasi.
-
-## Owner
-Memiliki akses terhadap pengelolaan cafe dan fitur utama sistem.
-
-## Manager
-Memiliki akses untuk memantau operasional dan laporan.
-
-## Cashier
-Berfokus pada transaksi dan pengelolaan pesanan.
-
-## Kitchen
-Berfokus pada pengelolaan pesanan dapur.
-
-# Audit Log
-Audit Log digunakan untuk mencatat aktivitas penting dalam sistem.
-Aktivitas yang dapat dicatat antara lain:
-- Menambahkan data
-- Mengubah data
-- Menghapus data
-- Mengubah status pesanan
-- Membatalkan pesanan
-- Melakukan void
-- Aktivitas pengguna
-
-# QR Ordering Management
-Admin dapat mengelola QR Ordering untuk meja cafe.
-QR Ordering digunakan untuk:
-- Mengidentifikasi meja
-- Mempermudah customer melakukan order
-- Menghubungkan order dengan nomor meja
-- Mengurangi kesalahan pencatatan meja
-
-# Backup Database
-Sistem menyediakan fitur backup database untuk menjaga keamanan data.
-Admin dapat membuat backup database dan mengunduh hasil backup.
-
-# Restore Database
-Database dapat dikembalikan menggunakan file backup yang tersedia.
-Fitur ini membantu ketika diperlukan pemulihan data.
-
-# Receipt
-Sistem dapat menghasilkan receipt atau struk transaksi.
-Receipt berisi informasi seperti:
-- Nomor pesanan
-- Customer
-- Item
-- Quantity
-- Harga
-- Subtotal
-- Pajak
-- Service
-- Total
-- Metode pembayaran
-
-# Kitchen Ticket
-Sistem dapat menghasilkan kitchen ticket untuk membantu staff dapur melihat detail pesanan.
-Kitchen ticket berisi:
-- Nomor order
-- Customer
-- Menu
-- Quantity
-- Pilihan menu
-- Catatan
-- Waktu pesanan
 
 # Modul Customer, Growth & Manajemen Bisnis (Back-Office & Administration)
 Modul-modul ini dirancang khusus untuk manajemen back-office (Owner, Manager, dan Administrator). Berbeda dengan sistem kasir (POS) dan dapur (Kitchen) yang berorientasi pada kecepatan transaksi real-time di outlet, rangkaian modul ini berfokus pada strategi retensi pelanggan, optimalisasi promosi, analisis profitabilitas, ekspansi multi-cabang, tata kelola SDM, standarisasi operasional resep, hingga visualisasi analitik eksekutif.
@@ -646,6 +509,124 @@ Modul Dashboard Bisnis adalah pusat analitik dan *Business Intelligence* kompreh
    - **Filter Periode Bulan & Tahun**: Kemudahan memilih bulan dan tahun evaluasi performa kerja karyawan.
 
 ---
+
+## Customer
+Customer dapat menggunakan website untuk melihat menu dan melakukan pemesanan secara mandiri.
+
+### Home
+Halaman utama menampilkan:
+- Informasi cafe
+- Hero section
+- Menu favorit
+- Kategori menu
+- Promo
+- Keunggulan cafe
+- Informasi fasilitas
+- Navigasi menuju menu dan informasi cafe
+
+### Menu
+Customer dapat:
+- Melihat seluruh menu
+- Melihat menu berdasarkan kategori
+- Mencari menu
+- Melihat harga
+- Melihat rating
+- Melihat waktu persiapan
+- Melihat status ketersediaan menu
+- Melihat menu Best Seller
+- Melihat menu Promo
+- Melihat menu terbaru
+- Menandai menu sebagai Favorite
+
+### Detail Menu
+Setiap menu memiliki halaman detail yang menampilkan:
+- Foto menu
+- Nama menu
+- Kategori
+- Harga
+- Deskripsi
+- Komposisi
+- Rating
+- Waktu persiapan
+- Kalori
+- Informasi allergen
+- Ketersediaan stok
+- Pilihan ukuran
+- Pilihan tambahan
+- Jumlah pesanan
+- Catatan pesanan
+
+### Favorite
+Customer dapat menandai menu yang disukai sebagai Favorite sehingga menu tersebut dapat dikenali sebagai menu favorit.
+
+### Cart
+Customer dapat:
+- Menambahkan menu ke keranjang
+- Mengubah jumlah menu
+- Menghapus menu
+- Melihat harga setiap menu
+- Melihat subtotal
+- Melihat pajak
+- Melihat service charge
+- Melihat total pembayaran
+
+### Checkout
+Pada halaman checkout customer dapat mengisi:
+- Nama
+- Nomor telepon
+- Nomor meja
+- Catatan pesanan
+- Tipe kunjungan
+- Metode pembayaran
+
+Tipe kunjungan:
+- Dine In
+- Take Away
+
+Metode pembayaran:
+- QRIS
+- Virtual Account
+- E-Wallet
+- Cash
+
+### QR Ordering
+Customer dapat melakukan pemesanan melalui QR Code yang tersedia pada meja.
+QR Code dapat digunakan untuk mengenali nomor meja sehingga customer tidak perlu memasukkan nomor meja secara manual.
+
+### Queue Number
+Setiap pesanan mendapatkan nomor antrean.
+Nomor antrean digunakan untuk membantu customer mengetahui urutan pesanan.
+
+### Estimated Time
+Sistem memberikan estimasi waktu pesanan berdasarkan proses dan waktu persiapan menu.
+
+### Order Tracking
+Customer dapat melihat perkembangan pesanan melalui status:
+- Pending
+- Accepted
+- Processing
+- Ready
+- Completed
+
+Pesanan juga dapat memiliki status:
+- Cancelled
+- Refund
+- Void
+
+### Facilities
+Customer dapat melihat informasi fasilitas cafe seperti:
+- Free WiFi
+- Area Parkir
+- Charging Station
+- Meeting Area
+- Premium Coffee
+- QR Ordering
+
+### About
+Halaman About berisi informasi mengenai cafe, cerita cafe, visi, misi, dan alasan customer memilih cafe.
+
+### Contact
+Customer dapat melihat informasi kontak cafe dan informasi yang dapat digunakan untuk menghubungi cafe.
 
 # Alur Pemesanan
 Customer
